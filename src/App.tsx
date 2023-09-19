@@ -32,11 +32,11 @@ const router = createBrowserRouter([
         path: '/community',
         element: <Community />,
       },
-      {
-        path: '/mypage',
-        element: <MyPage />,
-      },
     ],
+  },
+  {
+    path: '/mypage',
+    element: <MyPage />,
   },
 ]);
 
