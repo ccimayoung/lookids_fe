@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React from 'react';
 /**
  *
@@ -9,37 +10,16 @@ import React from 'react';
  * @returns
  */
 const Component = ({ color = '#FFCBCB' }: { color: string }) => (
-  <svg
-    width="30"
-    height="24"
-    viewBox="0 0 10 8"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <ellipse
-      cx="2.2248"
-      cy="3.36997"
-      rx="2.2248"
-      ry="3.36997"
-      transform="matrix(0.766466 0.642285 -0.646763 0.762691 6.58984 0)"
+  <svg width="30" height="24" viewBox="0 0 30 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M23.4616 16.284C19.8505 20.5423 14.6328 22.0752 11.8076 19.7077C8.98233 17.3402 9.61942 11.9689 13.2305 7.71049C16.8417 3.4521 22.0594 1.91924 24.8846 4.28674C27.7098 6.65424 27.0727 12.0256 23.4616 16.284Z"
       fill={color}
     />
-    <ellipse
-      cx="2.2248"
-      cy="3.37101"
-      rx="2.2248"
-      ry="3.37101"
-      transform="matrix(0.766467 -0.642283 0.646762 0.762692 0 2.85791)"
+    <path
+      d="M16.7716 7.71289C20.3838 11.9726 21.0218 17.345 18.1966 19.7125C15.3713 22.08 10.1527 20.546 6.54051 16.2863C2.92829 12.0266 2.29031 6.65422 5.11556 4.28673C7.9408 1.91924 13.1594 3.45318 16.7716 7.71289Z"
       fill={color}
     />
   </svg>
 );
-// const Component = ({size = 20, color, style}) => {
-//   return (
-//     <IconWrapper style={style}>
-//       <ArrowLeftIcon size={size} color={color} />
-//     </IconWrapper>
-//   );
-// };
 
 export default Component;

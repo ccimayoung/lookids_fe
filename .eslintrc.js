@@ -2,11 +2,7 @@ module.exports = {
   env: {
     node: true, // Enables Node.js environment
   },
-  extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:@tanstack/eslint-plugin-query/recommended',
-  ],
+  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'plugin:@tanstack/eslint-plugin-query/recommended'],
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint', '@tanstack/query'],
   root: true,
@@ -30,6 +26,8 @@ module.exports = {
     ],
 
     // 변수 선언 규칙 (항상 const 사용)
+    '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/no-unused-vars': 'warn',
     'prefer-const': 'warn',
     '@tanstack/query/exhaustive-deps': 'error',
     '@tanstack/query/prefer-query-object-syntax': 'off',

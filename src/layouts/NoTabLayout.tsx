@@ -1,15 +1,15 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 import { HeaderLogo } from '../components/GlobalIcon';
 
-function Layout() {
+function NoTabLayout() {
   return (
     <BackgroundContainer>
       <LayoutContainer>
         {/* 레이아웃의 상단 내용 */}
         <Header>
-          {/* 상단 내용 */}
           <HeaderLogo />
+          {/* 상단 내용 */}
         </Header>
 
         {/* 중첩된 라우트를 표시할 위치 */}
@@ -19,24 +19,16 @@ function Layout() {
         </Main>
 
         {/* 레이아웃의 하단 내용 */}
-        <Footer>
-          <NavStyled>
-            <NavLinkStyled to="/">트렌드</NavLinkStyled>
-            <NavLinkStyled to="/new-market">신상마켓</NavLinkStyled>
-            <NavLinkStyled to="/resell-market">중고마켓</NavLinkStyled>
-            <NavLinkStyled to="/coordinaton-room">코디룸</NavLinkStyled>
-            <NavLinkStyled to="/mypage">커뮤니티</NavLinkStyled>
-          </NavStyled>
-        </Footer>
+        <Footer />
       </LayoutContainer>
     </BackgroundContainer>
   );
 }
 
-export default Layout;
+export default NoTabLayout;
 
 const LayoutContainer = styled.div`
-  max-width: 575px;
+  max-width: 512px;
   min-width: 395px;
   height: 100%;
   padding-top: 48px;
@@ -79,23 +71,4 @@ const Header = styled.header`
   margin: 0;
   padding: 0;
   padding-left: 24px;
-`;
-const NavStyled = styled.nav`
-  display: flex;
-  background-color: red;
-`;
-const NavLinkStyled = styled(NavLink)`
-  color: ${({ theme }) => theme.colors.grey[2]};
-  background-color: ${({ theme }) => theme.colors.grey[8]};
-  text-decoration: none;
-  font-weight: bold;
-  flex: 1;
-  height: 50px;
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  &.active {
-    background-color: ${({ theme }) => theme.colors.grey[2]};
-    color: ${({ theme }) => theme.colors.grey[0]};
-  }
 `;
