@@ -54,6 +54,11 @@ export const purple = {
   500: '#5A1EFF',
   600: '#000046',
 };
+export const pink = {
+  100: '#FFDEE0',
+  500: '#FFCBCB',
+  600: '#000046',
+};
   
 export const etc = {
   kakao: '#FFE812',
@@ -68,6 +73,7 @@ const colors = {
   yellow,
   green,
   purple,
+  pink,
   etc,
 };
 
