@@ -1,10 +1,8 @@
 import { NavLink, Outlet } from 'react-router-dom';
-import styled, { useTheme } from 'styled-components';
+import styled from 'styled-components';
 import { HeaderLogo } from '../components/GlobalIcon';
 
 function Layout() {
-  const themeApp = useTheme();
-  console.log(themeApp.colors.grey[5]);
   return (
     <BackgroundContainer>
       <LayoutContainer>
@@ -15,10 +13,10 @@ function Layout() {
         </Header>
 
         {/* 중첩된 라우트를 표시할 위치 */}
-        <main>
+        <Main>
           {/* Outlet을 사용하여 중첩된 라우트를 렌더링 */}
           <Outlet />
-        </main>
+        </Main>
 
         {/* 레이아웃의 하단 내용 */}
         <Footer>
@@ -39,10 +37,11 @@ function Layout() {
 export default Layout;
 
 const LayoutContainer = styled.div`
-  max-width: 765px;
+  max-width: 512px;
   min-width: 395px;
   height: 100%;
   padding-top: 48px;
+  padding-bottom: 50px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -53,7 +52,7 @@ const BackgroundContainer = styled.div`
   display: flex;
   justify-content: flex-end;
   padding-right: 100px;
-
+  overflow: hidden;
   height: 100vh;
   background-color: ${({ theme }) => theme.colors.grey[5]};
 `;
@@ -66,7 +65,9 @@ const Footer = styled.footer`
   margin: 0;
   padding: 0;
 `;
-
+const Main = styled.main`
+  overflow: auto;
+`;
 const Header = styled.header`
   display: flex;
   width: 100%;
@@ -78,7 +79,7 @@ const Header = styled.header`
   border-bottom: 1px solid ${({ theme }) => theme.colors.grey[6]};
   margin: 0;
   padding: 0;
-  padding-left: 7px;
+  padding-left: 24px;
 `;
 const NavStyled = styled.nav`
   display: flex;

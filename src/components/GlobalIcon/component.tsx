@@ -1,4 +1,4 @@
-import styled from 'styled-components/native';
+import styled from 'styled-components';
 import { ComponentProps } from './globalIconType';
 /**
  *
@@ -14,7 +14,7 @@ const Component = ({ children, style }: ComponentProps) => {
 };
 
 // Styling
-const IconWrapper = styled.View`
+const IconWrapper = styled.div`
   justify-content: center;
   align-items: center;
 `;

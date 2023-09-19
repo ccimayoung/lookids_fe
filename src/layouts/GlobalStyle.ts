@@ -21,6 +21,13 @@ ${normalize}
   body {    
     font-family: 'Pretendard-Regular', sans-serif; /* 기본 폰트 (보통) */
     font-size: 16px; /* 원하는 폰트 크기 설정 */
+    ::-webkit-scrollbar {
+      width: 0.5em;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: transparent;
+    }
   }
 `;
 

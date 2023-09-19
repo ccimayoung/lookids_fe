@@ -12,11 +12,11 @@ import { IIconProps } from '../globalIconType';
 const Component = ({ onClick }: IIconProps) => (
   <svg
     onClick={onClick}
-    width="82"
+    width="130"
     style={{
       cursor: 'pointer',
     }}
-    height="20"
+    height="30"
     viewBox="0 0 82 20"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
