@@ -20,7 +20,9 @@ const Component = () => {
           setIsLike(!isLike);
         }}
       >
-        <LikeHeart color={isLike ? themeApp.colors.pink[500] : themeApp.colors.grey[0]} />
+        <LikeHeart
+          color={isLike ? themeApp.colors.pink[300] : themeApp.colors.grey[0]}
+        />
       </LikeButton>
       <ImageBox>
         <DailyLookImage
@@ -170,8 +172,8 @@ const BottomContent = styled.div`
   justify-content: space-between;
   align-items: center;
   padding-top: 8px;
-  height: 13%;
-  background-color: #000000aa;
+  height: 15%;
+  background-color: #000000b3;
 `;
 const TagBox = styled.div`
   display: flex;

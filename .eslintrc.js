@@ -2,7 +2,11 @@ module.exports = {
   env: {
     node: true, // Enables Node.js environment
   },
-  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'plugin:@tanstack/eslint-plugin-query/recommended'],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:@tanstack/eslint-plugin-query/recommended',
+  ],
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint', '@tanstack/query'],
   root: true,
@@ -21,6 +25,7 @@ module.exports = {
       {
         code: 150,
         ignorePattern: '^\\s*//\\s*$',
+        ignoreStrings: true,
         ignoreComments: true, // 주석은 무시하지 않음
       },
     ],

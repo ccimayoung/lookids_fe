@@ -14,14 +14,10 @@ export const grey = {
   
 export const neutral = {
   0: '#FFFFFF',
-  30: '#f5f6f8',
-  50: '#eeeeee',
-  200: '#e1e4e7',
-  300: '#d4d8dd',
-  400: '#a9acae',
-  500: '#888888',
-  700: '#424242',
-  900: '#000000',
+  1: '#EEEEEE',
+  2: '#C0C0C0',
+  3: '#77777C',
+  4: '#1A1A1A',
 };
   
 // Blue
@@ -33,18 +29,25 @@ export const blue = {
 // Red
 export const red = {
   100: '#FFEAEA',
-  500: '#DD5257',
+  500: '#EA1A21',
+};
+export const orange = {
+  100: '#FFD1A3',
+  500: '#FF8100',
 };
   
 // Yellow
 export const yellow = {
-  100: '#FFF9E5',
-  500: '#FDC800',
+  1: '#FFF6C2',
+  2: '#FFF09D',
+  3: '#FFE55A',
+  4: '#FFD600',
 };
   
 // Green
 export const green = {
   100: '#F2FBF6',
+  300: '#C1FF3D',
   500: '#2AC769',
 };
   
@@ -56,7 +59,8 @@ export const purple = {
 };
 export const pink = {
   100: '#FFDEE0',
-  500: '#FFCBCB',
+  300: '#FFCBCB',
+  500: '#FF0FA0',
   600: '#000046',
 };
   
