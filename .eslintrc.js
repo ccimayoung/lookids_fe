@@ -25,11 +25,14 @@ module.exports = {
       {
         code: 150,
         ignorePattern: '^\\s*//\\s*$',
+        ignoreStrings: true,
         ignoreComments: true, // 주석은 무시하지 않음
       },
     ],
 
     // 변수 선언 규칙 (항상 const 사용)
+    '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/no-unused-vars': 'warn',
     'prefer-const': 'warn',
     '@tanstack/query/exhaustive-deps': 'error',
     '@tanstack/query/prefer-query-object-syntax': 'off',

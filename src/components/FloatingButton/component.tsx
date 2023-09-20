@@ -23,9 +23,13 @@ const Component = ({
 const IconWrapper = styled.button`
   border: none;
   position: absolute;
-  background-color: ${({ theme }) => theme.colors.blue[500]};
-  bottom: 30px;
-  border-radius: 300;
+  background-color: ${({ theme }) => theme.colors.yellow[4]};
+  bottom: 80px;
+  width: 45px;
+  height: 45px;
+  border-radius: 300px;
+  display: flex;
+  cursor: pointer;
   right: 30px;
   justify-content: center;
   align-items: center;

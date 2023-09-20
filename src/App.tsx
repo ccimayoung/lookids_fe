@@ -6,6 +6,7 @@ import ResellMarket from './pages/ResellMarket';
 import NewMarket from './pages/NewMarket';
 import Layout from './layouts/Layout';
 import Community from './pages/Community';
+import NoTabLayout from './layouts/NoTabLayout';
 
 const router = createBrowserRouter([
   {
@@ -35,8 +36,18 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: '/mypage',
-    element: <MyPage />,
+    path: '/',
+    element: <NoTabLayout />,
+    children: [
+      {
+        path: '/mypage',
+        element: <MyPage />,
+      },
+      {
+        path: '/dailylook-detail',
+        element: <MyPage />,
+      },
+    ],
   },
 ]);
 
