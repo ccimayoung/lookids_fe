@@ -7,6 +7,7 @@ import NewMarket from './pages/NewMarket';
 import Layout from './layouts/Layout';
 import Community from './pages/Community';
 import NoTabLayout from './layouts/NoTabLayout';
+import DailylookDetail from './pages/DailylookDetail';
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
         path: '/community',
         element: <Community />,
       },
+      {
+        path: '/dailylook-detail',
+        element: <DailylookDetail />,
+      },
     ],
   },
   {
@@ -41,10 +46,6 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/mypage',
-        element: <MyPage />,
-      },
-      {
-        path: '/dailylook-detail',
         element: <MyPage />,
       },
     ],

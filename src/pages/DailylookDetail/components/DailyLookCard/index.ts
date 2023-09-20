@@ -1,0 +1,1 @@
+export {default as DailyLookCard} from './component';
