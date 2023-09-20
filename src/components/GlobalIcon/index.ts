@@ -10,3 +10,8 @@ export { default as ResellMarketIcon } from './_components/ResellMarketIcon';
 export { default as NewMarketIcon } from './_components/NewMarketIcon';
 export { default as MyClosetIcon } from './_components/MyClosetIcon';
 export { default as CommunityIcon } from './_components/CommunityIcon';
+export { default as CameraIcon } from './_components/CameraIcon';
+export { default as Star } from './_components/Star';
+export { default as DeleteIcon } from './_components/DeleteIcon';
+export { default as PlusIcon } from './_components/PlusIcon';
+export { default as SearchIcon } from './_components/SearchIcon';

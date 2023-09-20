@@ -14,6 +14,7 @@ import {
 } from '../../recolil/atom';
 import { Option } from '../../components/Dropdown/component';
 import { Dropdown } from '../../components/Dropdown';
+import { useNavigate } from 'react-router';
 
 export interface IAppProps {}
 const genderOptions = [
@@ -54,31 +55,17 @@ export default function DailyLook() {
   const [isOpen, setIsOpen] = useState(false);
   const [, setIsModalOpen] = useRecoilState(modalStatus);
   const themeApp = useTheme();
-  const [isGenderDropdownOpen, setIsGenderDropdownOpen] =
-    useState<boolean>(false);
-  const [isHeightDropdownOpen, setIsHeightDropdownOpen] =
-    useState<boolean>(false);
-  const [isWeightDropdownOpen, setIsWeightDropdownOpen] =
-    useState<boolean>(false);
-  const [isSeasonsDropdownOpen, setIsSeasonsDropdownOpen] =
-    useState<boolean>(false);
-  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] =
-    useState<boolean>(false);
-  const [selectedGender, setSelectedGender] = useRecoilState<Option | null>(
-    selectedGenderAtom,
-  );
-  const [selectedHeight, setSelectedHeight] = useRecoilState<Option | null>(
-    selectedHeightAtom,
-  );
-  const [selectedWeight, setSelectedWeight] = useRecoilState<Option | null>(
-    selectedWeightAtom,
-  );
-  const [selectedSeasons, setSelectedSeasons] = useRecoilState<Option | null>(
-    selectedSeasonsAtom,
-  );
-  const [selectedCategory, setSelectedCategory] = useRecoilState<Option | null>(
-    selectedCategoryAtom,
-  );
+  const navigate = useNavigate();
+  const [isGenderDropdownOpen, setIsGenderDropdownOpen] = useState<boolean>(false);
+  const [isHeightDropdownOpen, setIsHeightDropdownOpen] = useState<boolean>(false);
+  const [isWeightDropdownOpen, setIsWeightDropdownOpen] = useState<boolean>(false);
+  const [isSeasonsDropdownOpen, setIsSeasonsDropdownOpen] = useState<boolean>(false);
+  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState<boolean>(false);
+  const [selectedGender, setSelectedGender] = useRecoilState<Option | null>(selectedGenderAtom);
+  const [selectedHeight, setSelectedHeight] = useRecoilState<Option | null>(selectedHeightAtom);
+  const [selectedWeight, setSelectedWeight] = useRecoilState<Option | null>(selectedWeightAtom);
+  const [selectedSeasons, setSelectedSeasons] = useRecoilState<Option | null>(selectedSeasonsAtom);
+  const [selectedCategory, setSelectedCategory] = useRecoilState<Option | null>(selectedCategoryAtom);
 
   const handleOptionSelectGender = (option: Option | null) => {
     setSelectedGender(option);
@@ -215,7 +202,7 @@ export default function DailyLook() {
           <DailyLookCard />
         </CardContainer>
       </Contents>
-      <FloatingButton onClick={() => console.log('test')}>
+      <FloatingButton onClick={() => navigate('dailylook-post')}>
         <AddIcon color={themeApp.colors.neutral[4]} />
       </FloatingButton>
     </Container>

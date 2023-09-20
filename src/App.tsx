@@ -8,6 +8,7 @@ import Layout from './layouts/Layout';
 import Community from './pages/Community';
 import NoTabLayout from './layouts/NoTabLayout';
 import DailylookDetail from './pages/DailylookDetail';
+import PostDailylook from './pages/PostDailylook';
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
       {
         path: '/dailylook-detail',
         element: <DailylookDetail />,
+      },
+      {
+        path: '/dailylook-post',
+        element: <PostDailylook />,
       },
     ],
   },
