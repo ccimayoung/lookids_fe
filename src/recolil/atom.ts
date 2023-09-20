@@ -1,6 +1,7 @@
 import { atom } from 'recoil';
 import { Option } from '../components/Dropdown/component';
 
+// 갱태
 export const modalStatus = atom({
   key: 'modalStatus',
   default: false,
@@ -26,6 +27,12 @@ export const selectedCategoryAtom = atom<Option | null>({
   default: null,
 });
 
-
-
-
+// 아영
+export const selectedClothAtom = atom<string>({
+  key: 'selectedClothAtom',
+  default: '',
+});
+export const hoveredClothAtom = atom<string>({
+  key: 'hoveredClothAtom',
+  default: '',
+});

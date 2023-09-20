@@ -1,13 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import styled, { useTheme } from 'styled-components';
-import {
-  CommunityIcon,
-  HeaderLogo,
-  MyClosetIcon,
-  NewMarketIcon,
-  ResellMarketIcon,
-  TrendIcon,
-} from '../components/GlobalIcon';
+import { CommunityIcon, HeaderLogo, MyClosetIcon, NewMarketIcon, ResellMarketIcon, TrendIcon } from '../components/GlobalIcon';
 import { modalStatus } from '../recolil/atom';
 import { useRecoilState } from 'recoil';
 import { useEffect, useState } from 'react';
@@ -38,9 +31,7 @@ function Layout() {
   }, []);
   return (
     <BackgroundContainer>
-      <LayoutContainer
-        mobile={isMobile !== null ? isMobile.toString() : 'false'}
-      >
+      <LayoutContainer mobile={isMobile !== null ? isMobile.toString() : 'false'}>
         {/* 레이아웃의 상단 내용 */}
         <Header>
           {/* 상단 내용 */}
@@ -75,7 +66,7 @@ function Layout() {
               </IconBox>
             </NavLinkStyled>
             <NavLinkStyled to="/community">
-              <IconBox>
+              <IconBox className="community">
                 <CommunityIcon color={themeApp.colors.neutral[4]} />
                 커뮤니티
               </IconBox>
@@ -120,8 +111,8 @@ const IconBox = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  gap: 8px;
-  justify-content: space-between;
+  gap: 5px;
+  /* justify-content: space-between; */
   height: 51px;
 `;
 
@@ -168,5 +159,8 @@ const NavLinkStyled = styled(NavLink)`
   justify-content: center;
   &.active {
     background-color: ${({ theme }) => theme.colors.yellow[1]};
+  }
+  .community {
+    padding-top: 2.5px;
   }
 `;

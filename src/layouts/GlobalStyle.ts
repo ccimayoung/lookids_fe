@@ -11,6 +11,15 @@ ${normalize}
     font-weight: normal; /* 보통 글꼴 */
   }
 
+  @font-face {
+    font-family: 'NSNB';
+    src: url('/font/NSNB.TTF') format('truetype');
+  }
+  @font-face {
+    font-family: 'NSNR';
+    src: url('/font/NSNR.TTF') format('truetype');
+  }
+
   /* Pretendard-SemiBold.ttf */
   @font-face {
     font-family: 'Pretendard-SemiBold';
@@ -20,7 +29,7 @@ ${normalize}
 
   body {    
     overflow: auto;
-    font-family: 'Pretendard-Regular', sans-serif; /* 기본 폰트 (보통) */
+    font-family: "NSNR"; /* 기본 폰트 (보통) */
     font-size: 16px; /* 원하는 폰트 크기 설정 */
     ::-webkit-scrollbar {
       width: 0px;
