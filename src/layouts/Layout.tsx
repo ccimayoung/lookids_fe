@@ -10,13 +10,37 @@ import {
 } from '../components/GlobalIcon';
 import { modalStatus } from '../recolil/atom';
 import { useRecoilState } from 'recoil';
+import { useEffect, useState } from 'react';
 
 function Layout() {
   const [isModalOpen, setIsModalOpen] = useRecoilState(modalStatus);
   const themeApp = useTheme();
+
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
+  useEffect(() => {
+    // 컴포넌트가 마운트된 후에 요소의 너비를 가져옵니다.
+    const handleResize = () => {
+      if (window.innerWidth < 595) {
+        setIsMobile(true);
+      } else {
+        setIsMobile(false);
+      }
+    };
+    if (isMobile === null) {
+      handleResize();
+    }
+    // 컴포넌트가 마운트될 때 이벤트 리스너를 추가하고,
+    // 컴포넌트가 언마운트될 때 이벤트 리스너를 제거합니다.
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
   return (
     <BackgroundContainer>
-      <LayoutContainer>
+      <LayoutContainer
+        mobile={isMobile !== null ? isMobile.toString() : 'false'}
+      >
         {/* 레이아웃의 상단 내용 */}
         <Header>
           {/* 상단 내용 */}
@@ -24,7 +48,7 @@ function Layout() {
         </Header>
 
         {/* 중첩된 라우트를 표시할 위치 */}
-        <Main isModalOpen={isModalOpen}>
+        <Main ismodal={isModalOpen.toString()}>
           {/* Outlet을 사용하여 중첩된 라우트를 렌더링 */}
           <Outlet />
         </Main>
@@ -71,12 +95,14 @@ function Layout() {
 
 export default Layout;
 
-const LayoutContainer = styled.div`
-  max-width: 575px;
-  min-width: 395px;
+const LayoutContainer = styled.div<{ mobile: string }>`
+  max-width: 595px;
+  min-width: 320px;
+  width: 100%;
   height: 100%;
   padding-top: 48px;
   padding-bottom: 70px;
+  margin-right: ${({ mobile }) => (mobile !== 'false' ? '0px' : '100px')};
   position: relative;
   display: flex;
   flex-direction: column;
@@ -86,7 +112,6 @@ const LayoutContainer = styled.div`
 const BackgroundContainer = styled.div`
   display: flex;
   justify-content: flex-end;
-  padding-right: 100px;
   overflow: hidden;
   height: 100vh;
   background-color: ${({ theme }) => theme.colors.grey[5]};
@@ -104,13 +129,12 @@ const Footer = styled.footer`
   flex: 1; /* 부모 컴포넌트의 남은 공간을 채우도록 설정 */
   width: 100%; /* 부모 컴포넌트의 100% 너비로 설정 */
   position: absolute;
-  background-color: gold;
   bottom: 0;
   margin: 0;
   padding: 0;
 `;
-const Main = styled.main<{ isModalOpen: boolean }>`
-  overflow: ${({ isModalOpen }) => (isModalOpen ? 'hidden' : 'auto')};
+const Main = styled.main<{ ismodal: string }>`
+  overflow: ${({ ismodal }) => (ismodal !== 'false' ? 'hidden' : 'auto')};
 `;
 const Header = styled.header`
   display: flex;
@@ -143,5 +167,6 @@ const NavLinkStyled = styled(NavLink)`
   flex-direction: column;
   justify-content: center;
   &.active {
+    background-color: ${({ theme }) => theme.colors.yellow[1]};
   }
 `;

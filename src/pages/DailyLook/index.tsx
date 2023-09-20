@@ -236,7 +236,6 @@ const CardContainer = styled.div`
   align-items: center;
   flex-direction: column;
   margin-top: 10px;
-  max-width: 400px;
   gap: 20px;
 `;
 

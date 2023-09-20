@@ -18,14 +18,14 @@ const Component = ({ color = '#FFCBCB' }: { color: string }) => (
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
-      fill-rule="evenodd"
-      clip-rule="evenodd"
+      fillRule="evenodd"
+      clipRule="evenodd"
       d="M0 11.5C0 10.6716 0.671573 10 1.5 10H21.5C22.3284 10 23 10.6716 23 11.5C23 12.3284 22.3284 13 21.5 13H1.5C0.671573 13 0 12.3284 0 11.5Z"
       fill={color}
     />
     <path
-      fill-rule="evenodd"
-      clip-rule="evenodd"
+      fillRule="evenodd"
+      clipRule="evenodd"
       d="M11.5 0C12.3284 3.62118e-08 13 0.671573 13 1.5L13 21.5C13 22.3284 12.3284 23 11.5 23C10.6716 23 10 22.3284 10 21.5L10 1.5C10 0.671573 10.6716 -3.62116e-08 11.5 0Z"
       fill={color}
     />

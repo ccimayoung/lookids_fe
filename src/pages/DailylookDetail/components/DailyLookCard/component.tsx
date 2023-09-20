@@ -30,13 +30,7 @@ const Component = () => {
     };
   }, []);
   return (
-    <Wrap
-      imageheight={imageHeight}
-      ref={elementRef}
-      onClick={() => {
-        navigate('dailylook-detail');
-      }}
-    >
+    <Wrap imageheight={imageHeight} ref={elementRef}>
       <LikeButton
         onClick={(event) => {
           event.stopPropagation();
@@ -169,11 +163,10 @@ const Wrap = styled.article<{ imageheight: number }>`
   border: ${({ theme }) => `1px solid ${theme.colors.grey[5]}`};
   border-radius: 10px;
   overflow: hidden;
-  cursor: pointer;
 `;
 
 const DailyLookImage = styled.img`
-  object-fit: cover;
+  object-fit: fill;
   width: 100%;
 `;
 const ImageBox = styled.div`
