@@ -8,19 +8,22 @@ import { useEffect, useState } from 'react';
 
 export interface photoBoxProps {
   $boxSize?: string;
+  $work?: string;
   $type?: string;
   $wear?: boolean;
   $img?: any;
   $clothId?: string;
   $codyId?: string;
+  $size?: string;
+  $color?: string;
 }
 
-export const PhotoBox = ({ $clothId, $boxSize, $type, $wear, $img }: photoBoxProps) => {
+export const PhotoBox = ({ $clothId, $boxSize, $type, $wear, $work, $img, $size, $color }: photoBoxProps) => {
   const [wearArray, setWearArray] = useRecoilState(wearArrayAtom);
   const [nowWear, setNowWear] = useState<boolean>(false);
 
   const getWearFunc = () => {
-    if ($clothId && $img) {
+    if ($clothId && $img && $color && $size && $type) {
       let array: wearArrayProps[] = [];
       array = [...wearArray];
       let newArray: wearArrayProps[] = [];
@@ -28,7 +31,7 @@ export const PhotoBox = ({ $clothId, $boxSize, $type, $wear, $img }: photoBoxPro
         newArray = array.filter((wear) => wear.clothId !== $clothId);
       } else {
         newArray = [...array];
-        newArray.push({ clothId: $clothId, position: [2, 2, 0], img: $img, scale: [2.5, 2] });
+        newArray.push({ clothId: $clothId, position: [2, 2, 0], img: $img, scale: [2.5, 2], type: $type, size: $size, color: $color });
       } //todo : 상의면 위쪽 아니면 아래쪽
       setWearArray(newArray);
     }
@@ -52,8 +55,8 @@ export const PhotoBox = ({ $clothId, $boxSize, $type, $wear, $img }: photoBoxPro
         <WearWrapper $boxSize={$boxSize} onClick={() => getWearFunc()}>
           <PhotoImg src={$img} />
           <GrayCircle>
-            {$type === 'cloth' && $wear && <WearOnSvg />}
-            {$type === 'cloth' && !$wear && <WearOffSvg />}
+            {$work === 'cloth' && $wear && <WearOnSvg />}
+            {$work === 'cloth' && !$wear && <WearOffSvg />}
           </GrayCircle>
           {nowWear && <WearingBox>착용중</WearingBox>}
         </WearWrapper>

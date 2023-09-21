@@ -8,8 +8,9 @@ import { ReactComponent as BodySvg } from '../../assets/svg/body.svg';
 import { ReactComponent as QuestionSvg } from '../../assets/svg/question.svg';
 import { ReactComponent as SaveSvg } from '../../assets/svg/save.svg';
 import { useRecoilState } from 'recoil';
-import { modalGatherAtom, simpleModalAtom, wearArrayAtom } from '../../recolil/atom';
+import { childrenInfoAtom, modalGatherAtom, simpleModalAtom, wearArrayAtom } from '../../recolil/atom';
 import { ChildrenInfoModal } from '../../components/Modal/ChildrenInfoModal';
+import { divProps } from '../../components/props';
 
 export interface IAppProps {}
 
@@ -17,6 +18,7 @@ export default function CoordinationRoom() {
   const [selectedMenu, setSelectedMenu] = React.useState<string>('상의');
   const [modalGather, setModalGather] = useRecoilState(modalGatherAtom);
   const [simpleModal, setSimpleModal] = useRecoilState(simpleModalAtom);
+  const [childrenInfo, setChildrenInfo] = useRecoilState(childrenInfoAtom);
 
   return (
     <Wrapper>
@@ -81,17 +83,17 @@ export default function CoordinationRoom() {
           <MenuBtn $size="s" $content="기타" $active={selectedMenu === '기타'} $setSelectedMenu={setSelectedMenu} />
         </RowDiv>
         <RowDiv>
-          <PhotoBox $clothId={'top1'} $boxSize="s" $type="cloth" $wear={true} $img={'img/top1.png'} />
-          <PhotoBox $clothId={'top2'} $boxSize="s" $type="cloth" $wear={true} $img={'img/top2.png'} />
-          <PhotoBox $clothId={'top3'} $boxSize="s" $type="cloth" $wear={true} $img={'img/top3.png'} />
+          <PhotoBox $clothId={'top1'} $boxSize="s" $work="cloth" $wear={true} $type={'상의'} $img={'img/top1.png'} $size="s" $color="줄무늬" />
+          <PhotoBox $clothId={'top2'} $boxSize="s" $work="cloth" $wear={true} $type={'상의'} $img={'img/top2.png'} $size="m" $color="블랙" />
+          <PhotoBox $clothId={'top3'} $boxSize="s" $work="cloth" $wear={true} $type={'상의'} $img={'img/top3.png'} $size="l" $color="퍼플" />
         </RowDiv>
         <RowDiv>
-          <PhotoBox $clothId={'top4'} $boxSize="s" $type="cloth" $wear={true} $img={'img/skirt1.png'} />
-          <PhotoBox $clothId={'top5'} $boxSize="s" $type="cloth" $wear={true} $img={'img/top2.png'} />
-          <PhotoBox $clothId={'top6'} $boxSize="s" $type="cloth" $wear={true} $img={'img/top3.png'} />
+          <PhotoBox $clothId={'skirt1'} $boxSize="s" $work="cloth" $wear={true} $type={'치마'} $img={'img/skirt1.png'} $size="s" $color="하늘" />
+          <PhotoBox $clothId={'top5'} $boxSize="s" $work="cloth" $wear={true} $type={'상의'} $img={'img/top2.png'} $size="s" $color="줄무늬" />
+          <PhotoBox $clothId={'top6'} $boxSize="s" $work="cloth" $wear={true} $type={'상의'} $img={'img/top3.png'} $size="s" $color="줄무늬" />
         </RowDiv>
       </ClothWrap>
-      {/* <ChildrenInfoModal /> */}
+      <ChildrenInfoModal />
     </Wrapper>
   );
 }
@@ -137,11 +139,12 @@ const ClothWrap = styled.div`
   padding: 5px;
 `;
 
-export const RowDiv = styled.div`
+export const RowDiv = styled.div<divProps>`
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  column-gap: ${(props) => props.$cGap};
   align-items: center;
 `;
 

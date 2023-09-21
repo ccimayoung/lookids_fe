@@ -6,7 +6,7 @@ interface personMeshProps {
 export const PersonMesh = ({ $texture, $scale }: personMeshProps) => {
   return (
     <>
-      <mesh raycast={() => null}>
+      <mesh position={[0, 0, -0.1]} raycast={() => null}>
         <planeGeometry args={$scale} />
         <meshBasicMaterial
           map={$texture} // 텍스처 할당

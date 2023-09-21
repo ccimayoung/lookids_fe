@@ -6,23 +6,30 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Canvas, useLoader } from '@react-three/fiber';
 import { ClothMesh } from './ClothMesh';
 import { PersonMesh } from './PersonMesh';
-import { selectedClothAtom, wearArrayAtom } from '../../../recolil/atom';
+import { childrenInfoAtom, selectedClothAtom, selectedCodyAtom, wearArrayAtom } from '../../../recolil/atom';
+import dumCodyJson from '../../../data/dum_cody.json';
 
 export const CanvasWrapper = () => {
   const themeApp = useTheme();
   const [selectedCloth, setSelectedCloth] = useRecoilState(selectedClothAtom);
+  const [childrenInfo, setChildrenInfo] = useRecoilState(childrenInfoAtom);
+  const [codyJsonList, setCodyJsonList] = useState<any>(dumCodyJson);
+  const [selectedCody, setSelectedCody] = useRecoilState(selectedCodyAtom);
 
   const getTexture = (img: any) => {
     const texture = useLoader(THREE.TextureLoader, img);
     return texture;
   };
 
-  const bodyTexture = useLoader(THREE.TextureLoader, 'img/여샘플.png');
+  const girlTexture = useLoader(THREE.TextureLoader, 'img/여샘플.png');
+  const boyTexture = useLoader(THREE.TextureLoader, 'img/남샘플.png');
   // const topTexture = useLoader(THREE.TextureLoader, 'img/top1.png');
   const top2Texture = useLoader(THREE.TextureLoader, 'img/top2.png');
   const skirtTexture = useLoader(THREE.TextureLoader, 'img/skirt1.png');
   const [target, setTarget] = useState<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
   const [wearArray, setWearArray] = useRecoilState(wearArrayAtom);
+  const [bodyTexture, setBodyTexture] = useState<any>(girlTexture);
+  const [bodyScale, setBodyScale] = useState<[number, number]>([2.1, 7]);
 
   const pointerMove = (e: any) => {
     if (e.camera && e.intersections[0]) {
@@ -34,6 +41,27 @@ export const CanvasWrapper = () => {
   const pointerMissed = () => {
     setSelectedCloth('');
   };
+
+  useEffect(() => {
+    if (childrenInfo.gender === '여') {
+      setBodyTexture(girlTexture);
+      setBodyScale([(childrenInfo.weight / 22) * 2.1, (childrenInfo.height / 130) * 7]);
+    } else {
+      setBodyTexture(boyTexture);
+      setBodyScale([(childrenInfo.weight / 22) * 2.1, (childrenInfo.height / 130) * 7]);
+    }
+  }, [childrenInfo]);
+
+  useEffect(() => {
+    if (selectedCody !== '' && codyJsonList) {
+      codyJsonList.list.forEach((val: any) => {
+        if (val.codyId === selectedCody) {
+          setWearArray(val.cody);
+          setChildrenInfo({ img: null, gender: val.gender, age: val.age, height: val.height, weight: val.weight });
+        }
+      });
+    }
+  }, [codyJsonList, selectedCody]);
 
   return (
     <Wrapper>
@@ -52,8 +80,7 @@ export const CanvasWrapper = () => {
 
         <Plane onPointerMove={pointerMove} onClick={() => setSelectedCloth('')}>
           <mesh onPointerMissed={pointerMissed}>
-            <PersonMesh $texture={bodyTexture} $scale={[2.1, 7]} />
-
+            <PersonMesh $texture={bodyTexture} $scale={bodyScale} />
             {wearArray.map((wear) => {
               return (
                 <ClothMesh
@@ -89,3 +116,5 @@ const Wrapper = styled.div`
   background-color: rgba(167, 134, 106, 1);
   border-radius: 10px;
 `;
+
+//todo : 스냅샷찍기, 얼굴저장, 장바구니, 설명만들기

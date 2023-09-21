@@ -2,32 +2,64 @@ import { useRecoilState } from 'recoil';
 import { styled } from 'styled-components';
 import QuitSvg from '../../assets/svg/quit.svg';
 import { ReactComponent as PhotoUploadSvg } from '../../assets/svg/photoUpload.svg';
-import { modalGatherAtom } from '../../recolil/atom';
+import { childrenInfoAtom, modalGatherAtom } from '../../recolil/atom';
 import { ModalBtn } from './SimplePopup';
 import { TitleAndContent } from '../TitleAndContent';
+import { TitleAndSelectBox } from '../TitleAndSelectBox';
+import { RowDiv } from '../../pages/CoordinationRoom';
+import { useRef } from 'react';
 
 export const ChildrenInfoModal = () => {
   const [modalGather, setModalGather] = useRecoilState(modalGatherAtom);
+  const firstRef = useRef<any>(null);
+  const secondRef = useRef<any>(null);
+  const [childrenInfo, setChildrenInfo] = useRecoilState(childrenInfoAtom);
+
+  const getInfoFunc = () => {
+    setChildrenInfo({
+      img: null,
+      gender: firstRef.current.children[0].children[1].innerText,
+      age: firstRef.current.children[1].children[1].defaultValue,
+      height: secondRef.current.children[0].children[1].defaultValue,
+      weight: secondRef.current.children[1].children[1].defaultValue,
+    });
+    setTimeout(() => {
+      setModalGather({
+        ...modalGather,
+        closetBody: false,
+      });
+    }, 100);
+  };
 
   return (
-    <Wrap>
-      <ModalBox>
-        <QuitImg
-          src={QuitSvg}
-          onClick={() => {
-            setModalGather({
-              ...modalGather,
-              closetBody: false,
-            });
-          }}
-        />
-        <PhotoBox>
-          <PhotoUploadSvg />
-        </PhotoBox>
-        <TitleAndContent $modify={true} $title="성별" $content="a" />
-        <ModalBtn>모델 생성</ModalBtn>
-      </ModalBox>
-    </Wrap>
+    modalGather.closetBody && (
+      <Wrap>
+        <ModalBox>
+          <QuitImg
+            src={QuitSvg}
+            onClick={() => {
+              setModalGather({
+                ...modalGather,
+                closetBody: false,
+              });
+            }}
+          />
+          <PhotoBox>
+            <PhotoUploadSvg />
+          </PhotoBox>
+          <RowDiv $cGap="10px" ref={firstRef}>
+            <TitleAndSelectBox $title="성별" $titleWidth="35px" $content={childrenInfo.gender} $list={['남', '여']} />
+            <TitleAndContent $writeAble={true} $title="나이" $content={childrenInfo.age} $contentSize="s" />
+          </RowDiv>
+          <RowDiv $cGap="10px" style={{ marginTop: '10px' }} ref={secondRef}>
+            <TitleAndContent $writeAble={true} $title="키" $titleWidth="35px" $content={childrenInfo.height} $contentSize="s" $unit="cm" />
+            <TitleAndContent $writeAble={true} $title="몸무게" $content={childrenInfo.weight} $contentSize="s" />
+          </RowDiv>
+
+          <ModalBtn onClick={getInfoFunc}>모델 생성</ModalBtn>
+        </ModalBox>
+      </Wrap>
+    )
   );
 };
 const Wrap = styled.div`
@@ -69,7 +101,7 @@ export const QuitImg = styled.img`
 `;
 
 const PhotoBox = styled.div`
-  margin-top: 15px;
+  margin: 15px auto 25px auto;
   width: 100px;
   height: 100px;
   border-radius: 10px;
