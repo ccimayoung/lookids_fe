@@ -1,16 +1,13 @@
 /* eslint-disable max-len */
 import React from 'react';
-/**
- *
- * @param {object} props
- * @param {'arrow-down'} props.name
- * @param {number} props.size
- * @param {string} props.color
- * @Reference https://oblador.github.io/react-native-vector-icons/
- * @returns
- */
-const Component = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+interface ICameraIconProps {
+  width?: string;
+  height?: string;
+}
+
+const Component = ({ width = '20', height = '20' }: ICameraIconProps) => (
+  <svg width={width} height={height} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
       fillRule="evenodd"
       clipRule="evenodd"

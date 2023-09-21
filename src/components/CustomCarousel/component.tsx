@@ -30,8 +30,12 @@ const ItemWrapper = styled.div<IItemWrapProps>`
   position: relative;
 `;
 const Items = styled.div<IItemProps>`
-  width: ${({ selecteditem, itemindex }) => (selecteditem === itemindex ? '100%' : '70%')}; /* 다음 아이템 및 이전 아이템 크기 조절 */
-  height: ${({ selecteditem, itemindex }) => (selecteditem === itemindex ? '100%' : '70%')};
+  width: ${({ selecteditem, itemindex }) =>
+    selecteditem === itemindex
+      ? '100%'
+      : '70%'}; /* 다음 아이템 및 이전 아이템 크기 조절 */
+  height: ${({ selecteditem, itemindex }) =>
+    selecteditem === itemindex ? '100%' : '70%'};
   transition: height 0.3s ease-in-out;
   background-color: #d9d9d9;
   border-radius: 10px;
@@ -56,12 +60,20 @@ const ItemsBottom = styled.div`
 const Component = () => {
   const [selectedItem, setSelectedItem] = useState(1);
   const [sreenWidth, setSreenWidth] = useState(window.innerWidth);
-  const [itemHeight, setItemHeight] = useState(window.innerWidth > 595 ? 595 * 0.4 : window.innerWidth * 0.4);
-  const [image, setImage] = useState(['/img/thirdMedal.png', '/img/firstMedal.png', '/img/secondMedal.png']);
+  const [itemHeight, setItemHeight] = useState(
+    window.innerWidth > 595 ? 595 * 0.4 : window.innerWidth * 0.4,
+  );
+  const [image, setImage] = useState([
+    '/img/thirdMedal.png',
+    '/img/firstMedal.png',
+    '/img/secondMedal.png',
+  ]);
   useEffect(() => {
     const handleResize = () => {
       setSreenWidth(window.innerWidth);
-      setItemHeight(window.innerWidth > 595 ? 595 * 0.4 : window.innerWidth * 0.4);
+      setItemHeight(
+        window.innerWidth > 595 ? 595 * 0.4 : window.innerWidth * 0.4,
+      );
     };
     // 컴포넌트가 마운트될 때 이벤트 리스너를 추가하고,
     // 컴포넌트가 언마운트될 때 이벤트 리스너를 제거합니다.
@@ -75,6 +87,7 @@ const Component = () => {
       <Carousel
         showThumbs={false}
         showArrows={false}
+        showStatus={false}
         showIndicators={false}
         centerMode
         centerSlidePercentage={40}
@@ -87,7 +100,11 @@ const Component = () => {
       >
         {[0, 1, 2].map((itemIndex) => (
           <ItemWrapper key={itemIndex} itemheight={itemHeight}>
-            <Items data-item-index={itemIndex} selecteditem={selectedItem} itemindex={itemIndex}>
+            <Items
+              data-item-index={itemIndex}
+              selecteditem={selectedItem}
+              itemindex={itemIndex}
+            >
               <MedalIconBox>
                 <MedalIcon src={image[itemIndex]} />
               </MedalIconBox>
@@ -104,6 +121,8 @@ export default Component;
 
 const MedalIconBox = styled.div`
   position: absolute;
+  width: 25%;
+  height: 25%;
   top: 7px;
   left: 7px;
 `;

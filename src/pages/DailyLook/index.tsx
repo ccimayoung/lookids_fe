@@ -105,8 +105,10 @@ export default function DailyLook() {
               setIsOpen(true);
             }}
           >
-            <FilterIcon />
-            필터
+            <>
+              <FilterIcon />
+              필터
+            </>
           </FilterButton>
           {isOpen && (
             <ThemeBlack

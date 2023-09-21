@@ -1,0 +1,299 @@
+import { useState } from 'react';
+import { styled, useTheme } from 'styled-components';
+import { ImagePicker } from '../../components/ImagePicker';
+import { Label } from '../../components/Label';
+import { Star } from '../../components/GlobalIcon';
+
+export interface IPurchaseInfo {
+  id: number;
+  tag: string;
+  brand: string;
+  link: string;
+  [key: string]: string | number;
+}
+
+export default function PostResell() {
+  const themeApp = useTheme();
+  const [category, setCategory] = useState<number[]>([]);
+  const [seasons, setSeasons] = useState<number[]>([]);
+
+  const [images, setImages] = useState<File[]>([]);
+  const [tag, setTag] = useState<string | undefined>();
+
+  return (
+    <Container>
+      <ImagePicker maxImages={5} images={images} setImages={setImages} />
+      <ImagePickerBox />
+      <ContentsBox>
+        <ContentsTitle>
+          <Tag>
+            <StarBox>
+              <Star />
+            </StarBox>
+            <ChildInfoLabel>상품명(제목)</ChildInfoLabel>
+          </Tag>
+        </ContentsTitle>
+        <CategoryContents>
+          <Label
+            color={themeApp.colors.neutral[0]}
+            height={'26'}
+            width={'100%'}
+            placeholder={'추가하고싶은 정보를 입력해주세요.'}
+            center={false}
+            value={tag}
+            onChange={(e) => setTag(e.target.value)}
+          />
+        </CategoryContents>
+      </ContentsBox>
+      <ContentsBox>
+        <ContentsTitle>
+          <Tag>
+            <StarBox>
+              <Star />
+            </StarBox>
+            <ChildInfoLabel>브랜드</ChildInfoLabel>
+          </Tag>
+        </ContentsTitle>
+        <CategoryContents>
+          <Label
+            color={themeApp.colors.neutral[0]}
+            height={'26'}
+            width={'100%'}
+            placeholder={'추가하고싶은 정보를 입력해주세요.'}
+            center={false}
+            value={tag}
+            onChange={(e) => setTag(e.target.value)}
+          />
+        </CategoryContents>
+      </ContentsBox>
+      <ContentsBox>
+        <ContentsTitle>
+          <Tag>
+            <StarBox>
+              <Star />
+            </StarBox>
+            <ChildInfoLabel>가격</ChildInfoLabel>
+          </Tag>
+        </ContentsTitle>
+        <CategoryContents>
+          <Label
+            color={themeApp.colors.neutral[0]}
+            height={'26'}
+            width={'100%'}
+            placeholder={'추가하고싶은 정보를 입력해주세요.'}
+            center={false}
+            value={tag}
+            onChange={(e) => setTag(e.target.value)}
+          />
+        </CategoryContents>
+      </ContentsBox>
+      <ContentsBox>
+        <ContentsTitle>
+          <Tag>
+            <StarBox>
+              <Star />
+            </StarBox>
+            <ChildInfoLabel>카테고리</ChildInfoLabel>
+          </Tag>
+        </ContentsTitle>
+        <CategoryContents>
+          <Label
+            color={category.includes(0) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            height={'20'}
+            text="상의"
+            width={'55'}
+            onClick={() => {
+              if (!category.includes(0)) setCategory([...category, 0]);
+              if (category.includes(0)) setCategory(category.filter((v) => v !== 0));
+            }}
+            center={true}
+          />
+          <Label
+            color={category.includes(1) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            height={'20'}
+            text="하의"
+            width={'55'}
+            onClick={() => {
+              if (!category.includes(1)) setCategory([...category, 1]);
+              if (category.includes(1)) setCategory(category.filter((v) => v !== 1));
+            }}
+            center={true}
+          />
+          <Label
+            color={category.includes(2) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            height={'20'}
+            text="아우터"
+            width={'55'}
+            onClick={() => {
+              if (!category.includes(2)) setCategory([...category, 2]);
+              if (category.includes(2)) setCategory(category.filter((v) => v !== 2));
+            }}
+            center={true}
+          />
+          <Label
+            color={category.includes(3) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            height={'20'}
+            text="악세사리"
+            width={'55'}
+            onClick={() => {
+              if (!category.includes(3)) setCategory([...category, 3]);
+              if (category.includes(3)) setCategory(category.filter((v) => v !== 3));
+            }}
+            center={true}
+          />
+          <Label
+            color={category.includes(4) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            height={'20'}
+            text="신발"
+            width={'55'}
+            onClick={() => {
+              if (!category.includes(4)) setCategory([...category, 4]);
+              if (category.includes(4)) setCategory(category.filter((v) => v !== 4));
+            }}
+            center={true}
+          />
+          <Label
+            color={category.includes(5) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            height={'20'}
+            text="기타"
+            width={'55'}
+            onClick={() => {
+              if (!category.includes(5)) setCategory([...category, 5]);
+              if (category.includes(5)) setCategory(category.filter((v) => v !== 5));
+            }}
+            center={true}
+          />
+        </CategoryContents>
+      </ContentsBox>
+      <ContentsBox>
+        <ContentsTitle>
+          <Tag>
+            <StarBox>
+              <Star />
+            </StarBox>
+            <ChildInfoLabel>계절</ChildInfoLabel>
+          </Tag>
+        </ContentsTitle>
+        <CategoryContents>
+          <Label
+            color={seasons.includes(0) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            height={'20'}
+            text="봄"
+            width={'55'}
+            onClick={() => {
+              if (!seasons.includes(0)) setSeasons([...seasons, 0]);
+              if (seasons.includes(0)) setSeasons(seasons.filter((v) => v !== 0));
+            }}
+            center={true}
+          />
+          <Label
+            color={seasons.includes(1) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            height={'20'}
+            text="여름"
+            width={'55'}
+            onClick={() => {
+              if (!seasons.includes(1)) setSeasons([...seasons, 1]);
+              if (seasons.includes(1)) setSeasons(seasons.filter((v) => v !== 1));
+            }}
+            center={true}
+          />
+          <Label
+            color={seasons.includes(2) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            height={'20'}
+            text="가을"
+            width={'55'}
+            onClick={() => {
+              if (!seasons.includes(2)) setSeasons([...seasons, 2]);
+              if (seasons.includes(2)) setSeasons(seasons.filter((v) => v !== 2));
+            }}
+            center={true}
+          />
+          <Label
+            color={seasons.includes(3) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            height={'20'}
+            text="겨울"
+            width={'55'}
+            onClick={() => {
+              if (!seasons.includes(3)) setSeasons([...seasons, 3]);
+              if (seasons.includes(3)) setSeasons(seasons.filter((v) => v !== 3));
+            }}
+            center={true}
+          />
+        </CategoryContents>
+      </ContentsBox>
+      <ContentsBox>
+        <ContentsTitle>
+          <Tag>
+            <StarBox>
+              <Star />
+            </StarBox>
+            <ChildInfoLabel>설명</ChildInfoLabel>
+          </Tag>
+        </ContentsTitle>
+        <DescriptionBox placeholder="코디 설명, 구매 꿀팁 ex) 어떤 사이즈를 구매하셨나요?" />
+      </ContentsBox>
+
+      <Complate>
+        <Label color={themeApp.colors.green[300]} height={'30'} text="등록" width={'60'} onClick={() => {}} center={true} bold={true} />
+      </Complate>
+    </Container>
+  );
+}
+
+const Container = styled.div`
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+`;
+
+const ImagePickerBox = styled.div`
+  margin-bottom: 20px;
+`;
+
+const ChildInfoLabel = styled.div`
+  font-weight: 600;
+  font-size: 12px;
+`;
+
+const Tag = styled.div`
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+`;
+const ContentsTitle = styled.div`
+  display: flex;
+  margin-bottom: 5px;
+`;
+const ContentsBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+`;
+const StarBox = styled.div`
+  position: absolute;
+  top: -15px;
+  right: -8px;
+`;
+const CategoryContents = styled.div`
+  display: flex;
+  gap: 7px;
+`;
+
+const DescriptionBox = styled.textarea`
+  width: 100%;
+  height: 20vh;
+  resize: none;
+  border: ${({ theme }) => `1px solid ${theme.colors.yellow[3]}`};
+  padding: 7px;
+  font-size: 12px;
+  border-radius: 5px;
+  outline-color: ${({ theme }) => theme.colors.yellow[3]};
+`;
+
+const Complate = styled.div`
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;

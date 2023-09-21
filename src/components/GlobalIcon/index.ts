@@ -15,3 +15,5 @@ export { default as Star } from './_components/Star';
 export { default as DeleteIcon } from './_components/DeleteIcon';
 export { default as PlusIcon } from './_components/PlusIcon';
 export { default as SearchIcon } from './_components/SearchIcon';
+export { default as TrustIcon } from './_components/TrustIcon';
+export { default as ExcellenceIcon } from './_components/ExcellenceIcon';

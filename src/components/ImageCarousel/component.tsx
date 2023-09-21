@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { ReactChild, ReactNode, useState } from 'react';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import { DailyLookCard } from '../../pages/DailylookDetail/components/DailyLookCard';
 import styled from 'styled-components';
 interface CustomThumbnailProps {
   index: number;
@@ -9,19 +8,10 @@ interface CustomThumbnailProps {
   onClick: (index: number) => void;
 }
 
-function Component() {
+function Component({ children }: { children: ReactChild[] }) {
   const [selentItem, setSelectItem] = useState(0);
-  function CustomThumbnail({
-    index,
-    isSelected,
-    onClick,
-  }: CustomThumbnailProps) {
-    return (
-      <IndicatorPoint
-        onClick={() => onClick(index)}
-        isSelected={isSelected}
-      ></IndicatorPoint>
-    );
+  function CustomThumbnail({ index, isSelected, onClick }: CustomThumbnailProps) {
+    return <IndicatorPoint onClick={() => onClick(index)} isSelected={isSelected}></IndicatorPoint>;
   }
   return (
     <Carousel
@@ -45,24 +35,12 @@ function Component() {
         );
       }}
     >
-      <CardBox>
-        <DailyLookCard />
-      </CardBox>
-      <CardBox>
-        <DailyLookCard />
-      </CardBox>
-      <CardBox>
-        <DailyLookCard />
-      </CardBox>
+      {children}
     </Carousel>
   );
 }
 
 export default Component;
-
-const CardBox = styled.div`
-  padding-bottom: 35px;
-`;
 
 const IndicatorPoint = styled.div<{ isSelected: boolean }>`
   display: inline-block;

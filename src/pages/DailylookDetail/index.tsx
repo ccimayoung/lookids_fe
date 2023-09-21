@@ -22,7 +22,17 @@ export default function DailylookDetail() {
   }, []);
   return (
     <Container ref={elementRef}>
-      <ImageCarousel />
+      <ImageCarousel>
+        <CardBox>
+          <DailyLookCard />
+        </CardBox>
+        <CardBox>
+          <DailyLookCard />
+        </CardBox>
+        <CardBox>
+          <DailyLookCard />
+        </CardBox>
+      </ImageCarousel>
       <ContentBox>
         <ContentHeader>
           <UserNameBox>
@@ -237,4 +247,7 @@ const RecommendTitle = styled.div`
   font-size: 17px;
   color: 'black';
   margin-bottom: 10px;
+`;
+const CardBox = styled.div`
+  padding-bottom: 35px;
 `;
