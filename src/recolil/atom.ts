@@ -26,6 +26,10 @@ export const selectedCategoryAtom = atom<Option | null>({
   key: 'selectedCategoryAtom',
   default: null,
 });
+export const selectedTargetAtom = atom<Option | null>({
+  key: 'selectedTargetAtom',
+  default: null,
+});
 
 // 아영
 export const selectedClothAtom = atom<string>({
@@ -71,5 +75,5 @@ export interface wearArrayProps {
 }
 export const wearArrayAtom = atom<wearArrayProps[]>({
   key: 'wearArrayAtom',
-  default: [],
-});
+  default: []})
+
