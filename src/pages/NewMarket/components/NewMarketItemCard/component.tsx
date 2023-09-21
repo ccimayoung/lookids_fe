@@ -9,8 +9,9 @@ interface IResellItemProps {
   productName: string;
   price: number;
   imgUrl: string;
+  isActive?: boolean;
 }
-const Component = ({ brandName, productName, price, imgUrl }: IResellItemProps) => {
+const Component = ({ brandName, productName, price, imgUrl, isActive = false }: IResellItemProps) => {
   const [imageHeight, setImageHeight] = useState(0);
   const navigate = useNavigate();
   const elementRef = useRef<HTMLDivElement>(null);
@@ -35,7 +36,14 @@ const Component = ({ brandName, productName, price, imgUrl }: IResellItemProps) 
   }, []);
 
   return (
-    <ProductCard ref={elementRef} height={imageHeight.toString()} onClick={() => navigate('resell-detail')}>
+    <ProductCard ref={elementRef} height={imageHeight.toString()} onClick={() => navigate('new-detail')}>
+      <HangerImageBox
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+      >
+        <HangerImage src={isActive ? '/img/activehanger.png' : '/img/hanger.png'} />
+      </HangerImageBox>
       <ProductImage height={imageHeight.toString()} src={imgUrl} />
       <TextContainer>
         <BrandText>{brandName}</BrandText>
@@ -53,9 +61,16 @@ const ProductImage = styled.img<{ height: string }>`
   width: 100%;
   border-radius: 10px;
 `;
-
+const HangerImage = styled.img``;
+const HangerImageBox = styled.div`
+  display: flex;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+`;
 const ProductCard = styled.div<{ height: string }>`
   width: calc(100% / 3 - 12px);
+  position: relative;
   overflow: 'hidden';
   height: ${({ height }) => `${Number(height) * 1.4}px`};
   margin: 0;

@@ -16,14 +16,7 @@ interface DropdownProps {
   allClose: () => void;
 }
 
-const Component = ({
-  options,
-  select,
-  onSelect,
-  isOpen,
-  setIsOpen,
-  allClose,
-}: DropdownProps) => {
+const Component = ({ options, select, onSelect, isOpen, setIsOpen, allClose }: DropdownProps) => {
   const [selectedOption, setSelectedOption] = useState<Option | null>(select);
   const themeApp = useTheme();
 
@@ -40,20 +33,14 @@ const Component = ({
 
   return (
     <DropdownContainer>
-      <Label
-        className={`dropdown-toggle ${isOpen ? 'open' : ''}`}
-        onClick={toggleDropdown}
-      >
+      <Label className={`dropdown-toggle ${isOpen ? 'open' : ''}`} onClick={toggleDropdown}>
         {selectedOption ? selectedOption.label : '선택하세요'}
         <DropdownArrow color={themeApp.colors.yellow[3]} />
       </Label>
       {isOpen && (
         <DropdownList>
           {options.map((option) => (
-            <SelectListText
-              key={option.value}
-              onClick={() => handleOptionClick(option)}
-            >
+            <SelectListText key={option.value} onClick={() => handleOptionClick(option)}>
               {option.label}
             </SelectListText>
           ))}
@@ -72,6 +59,7 @@ const Label = styled.div`
   padding: 4px 7px;
   display: flex;
   align-items: center;
+  cursor: pointer;
   justify-content: space-between;
   border: ${({ theme }) => `1px solid ${theme.colors.yellow[3]}`};
   border-radius: 3px;
@@ -102,5 +90,7 @@ const SelectListText = styled.li`
   padding-top: 2px;
   padding-bottom: 2px;
   font-size: 11px;
+  display: flex;
+  justify-content: flex-start;
   cursor: pointer;
 `;

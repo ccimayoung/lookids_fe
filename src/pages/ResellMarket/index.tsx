@@ -17,29 +17,10 @@ import { Dropdown } from '../../components/Dropdown';
 import { FloatingButton } from '../../components/FloatingButton';
 import { useNavigate } from 'react-router';
 import { ResellItemCard } from './components/ResellItemCard';
+import { selectedSalesStatusAtom } from './atom/atom';
 
 export interface IAppProps {}
 
-const genderOptions = [
-  { label: '전체', value: 0 },
-  { label: '남', value: 1 },
-  { label: '여', value: 2 },
-];
-const heightOptions = [
-  { label: '전체', value: 0 },
-  { label: '70cm 이하', value: 1 },
-  { label: '71~90cm', value: 2 },
-  { label: '91~110cm', value: 3 },
-  { label: '110cm', value: 4 },
-];
-const weightOptions = [
-  { label: '전체', value: 0 },
-  { label: '10kg 이하', value: 1 },
-  { label: '11-15kg', value: 2 },
-  { label: '16-20kg', value: 3 },
-  { label: '21-30kg', value: 4 },
-  { label: '30kg 이상', value: 5 },
-];
 const seasonsOptions = [
   { label: '전체', value: 0 },
   { label: '봄', value: 1 },
@@ -47,11 +28,20 @@ const seasonsOptions = [
   { label: '가을', value: 3 },
   { label: '겨울', value: 4 },
 ];
-const categoryOptions = [
+const targetOptions = [
   { label: '전체', value: 0 },
   { label: '베이비', value: 1 },
   { label: '키즈(남)', value: 2 },
   { label: '키즈(여)', value: 3 },
+];
+const categoryOptions = [
+  { label: '전체', value: 0 },
+  { label: '상의', value: 1 },
+  { label: '하의', value: 2 },
+  { label: '아우터', value: 3 },
+  { label: '악세사리', value: 4 },
+  { label: '신발', value: 5 },
+  { label: '기타', value: 6 },
 ];
 
 export default function ResellMarket() {
@@ -62,37 +52,25 @@ export default function ResellMarket() {
   const [imageHeight, setImageHeight] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const [, setIsModalOpen] = useRecoilState(modalStatus);
-  const [isGenderDropdownOpen, setIsGenderDropdownOpen] = useState<boolean>(false);
-  const [isHeightDropdownOpen, setIsHeightDropdownOpen] = useState<boolean>(false);
-  const [isWeightDropdownOpen, setIsWeightDropdownOpen] = useState<boolean>(false);
-  const [isSeasonsDropdownOpen, setIsSeasonsDropdownOpen] = useState<boolean>(false);
+  const [isSalesStatusDropdownOpen, setIsSalesStatusDropdownOpen] = useState<boolean>(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState<boolean>(false);
-  const [selectedGender, setSelectedGender] = useRecoilState<Option | null>(selectedGenderAtom);
-  const [selectedHeight, setSelectedHeight] = useRecoilState<Option | null>(selectedHeightAtom);
-  const [selectedWeight, setSelectedWeight] = useRecoilState<Option | null>(selectedWeightAtom);
-  const [selectedSeasons, setSelectedSeasons] = useRecoilState<Option | null>(selectedSeasonsAtom);
+  const [isTargetDropdownOpen, setIsTargetDropdownOpen] = useState<boolean>(false);
+  const [selectedSalesStatus, setSelectedSalesStatus] = useRecoilState<Option | null>(selectedSalesStatusAtom);
   const [selectedCategory, setSelectedCategory] = useRecoilState<Option | null>(selectedCategoryAtom);
+  const [selectedTarget, setSelectedTarget] = useRecoilState<Option | null>(selectedSeasonsAtom);
 
-  const handleOptionSelectGender = (option: Option | null) => {
-    setSelectedGender(option);
-  };
-  const handleOptionSelectHeight = (option: Option | null) => {
-    setSelectedHeight(option);
-  };
-  const handleOptionSelectWeight = (option: Option | null) => {
-    setSelectedWeight(option);
-  };
-  const handleOptionSelectSeasons = (option: Option | null) => {
-    setSelectedSeasons(option);
+  const handleOptionSelectSalesStatus = (option: Option | null) => {
+    setSelectedSalesStatus(option);
   };
   const handleOptionSelectCategory = (option: Option | null) => {
     setSelectedCategory(option);
   };
+  const handleOptionSelectTarget = (option: Option | null) => {
+    setSelectedTarget(option);
+  };
   const handleDropdownAllClose = () => {
-    setIsGenderDropdownOpen(false);
-    setIsHeightDropdownOpen(false);
-    setIsWeightDropdownOpen(false);
-    setIsSeasonsDropdownOpen(false);
+    setIsTargetDropdownOpen(false);
+    setIsSalesStatusDropdownOpen(false);
     setIsCategoryDropdownOpen(false);
   };
 
@@ -169,46 +147,13 @@ export default function ResellMarket() {
                 </ArrowBox>
                 <CategorySelectMenu>
                   <CategoryItem>
-                    <CategoryBox>성별</CategoryBox>
-                    <Dropdown
-                      options={genderOptions}
-                      select={selectedGender}
-                      onSelect={handleOptionSelectGender}
-                      isOpen={isGenderDropdownOpen}
-                      setIsOpen={setIsGenderDropdownOpen}
-                      allClose={handleDropdownAllClose}
-                    />
-                  </CategoryItem>
-                  <CategoryItem>
-                    <CategoryBox>키</CategoryBox>
-                    <Dropdown
-                      options={heightOptions}
-                      select={selectedHeight}
-                      onSelect={handleOptionSelectHeight}
-                      isOpen={isHeightDropdownOpen}
-                      setIsOpen={setIsHeightDropdownOpen}
-                      allClose={handleDropdownAllClose}
-                    />
-                  </CategoryItem>
-                  <CategoryItem>
-                    <CategoryBox>몸무게</CategoryBox>
-                    <Dropdown
-                      options={weightOptions}
-                      select={selectedWeight}
-                      onSelect={handleOptionSelectWeight}
-                      isOpen={isWeightDropdownOpen}
-                      setIsOpen={setIsWeightDropdownOpen}
-                      allClose={handleDropdownAllClose}
-                    />
-                  </CategoryItem>
-                  <CategoryItem>
                     <CategoryBox>계절</CategoryBox>
                     <Dropdown
                       options={seasonsOptions}
-                      select={selectedSeasons}
-                      onSelect={handleOptionSelectSeasons}
-                      isOpen={isSeasonsDropdownOpen}
-                      setIsOpen={setIsSeasonsDropdownOpen}
+                      select={selectedSalesStatus}
+                      onSelect={handleOptionSelectSalesStatus}
+                      isOpen={isSalesStatusDropdownOpen}
+                      setIsOpen={setIsSalesStatusDropdownOpen}
                       allClose={handleDropdownAllClose}
                     />
                   </CategoryItem>
@@ -220,6 +165,17 @@ export default function ResellMarket() {
                       onSelect={handleOptionSelectCategory}
                       isOpen={isCategoryDropdownOpen}
                       setIsOpen={setIsCategoryDropdownOpen}
+                      allClose={handleDropdownAllClose}
+                    />
+                  </CategoryItem>
+                  <CategoryItem>
+                    <CategoryBox>대상</CategoryBox>
+                    <Dropdown
+                      options={targetOptions}
+                      select={selectedTarget}
+                      onSelect={handleOptionSelectTarget}
+                      isOpen={isTargetDropdownOpen}
+                      setIsOpen={setIsTargetDropdownOpen}
                       allClose={handleDropdownAllClose}
                     />
                   </CategoryItem>
@@ -342,17 +298,16 @@ const ThemeBlack = styled.div`
 const ThemeWhite = styled.div`
   position: absolute;
   z-index: 2;
-  top: 100px;
+  top: 90px;
   right: 0;
   width: 50%;
-  height: 25vh;
   display: flex;
   align-items: flex-end;
   background-color: transparent;
 `;
 const ArrowBox = styled.div`
   position: absolute;
-  top: 0;
+  top: -10px;
   right: 15px;
 `;
 
@@ -374,7 +329,6 @@ const CategoryContainer = styled.div`
   flex-direction: column;
   align-items: flex-end;
   background-color: white;
-
   position: sticky;
   justify-content: center;
   padding-bottom: 10px;
@@ -390,7 +344,6 @@ const CategorySelectMenu = styled.div`
   padding: 10px;
   padding-top: 10px;
   width: 100%;
-  height: calc(25vh - 10px);
   background-color: white;
   border-radius: 10px;
   gap: 4px;

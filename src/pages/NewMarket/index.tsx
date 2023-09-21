@@ -16,7 +16,7 @@ import { AddIcon, FilterIcon, MenuBoxArrow } from '../../components/GlobalIcon';
 import { Dropdown } from '../../components/Dropdown';
 import { FloatingButton } from '../../components/FloatingButton';
 import { useNavigate } from 'react-router';
-import { ResellItemCard } from './components/ResellItemCard';
+import { NewMarketItemCard } from './components/NewMarketItemCard';
 import { NewMarketCarousel } from '../../components/NewMarketCarousel';
 
 export interface IAppProps {}
@@ -41,18 +41,20 @@ const weightOptions = [
   { label: '21-30kg', value: 4 },
   { label: '30kg 이상', value: 5 },
 ];
-const seasonsOptions = [
-  { label: '전체', value: 0 },
-  { label: '봄', value: 1 },
-  { label: '여름', value: 2 },
-  { label: '가을', value: 3 },
-  { label: '겨울', value: 4 },
-];
-const categoryOptions = [
+const targetOptions = [
   { label: '전체', value: 0 },
   { label: '베이비', value: 1 },
   { label: '키즈(남)', value: 2 },
   { label: '키즈(여)', value: 3 },
+];
+const categoryOptions = [
+  { label: '전체', value: 0 },
+  { label: '상의', value: 1 },
+  { label: '하의', value: 2 },
+  { label: '아우터', value: 3 },
+  { label: '악세사리', value: 4 },
+  { label: '신발', value: 5 },
+  { label: '기타', value: 6 },
 ];
 
 export default function NewMarket() {
@@ -64,37 +66,19 @@ export default function NewMarket() {
   const [isOpen, setIsOpen] = useState(false);
   const [, setIsModalOpen] = useRecoilState(modalStatus);
   const [selectItem, setSelectItem] = useState(0);
-  const [isGenderDropdownOpen, setIsGenderDropdownOpen] = useState<boolean>(false);
-  const [isHeightDropdownOpen, setIsHeightDropdownOpen] = useState<boolean>(false);
-  const [isWeightDropdownOpen, setIsWeightDropdownOpen] = useState<boolean>(false);
-  const [isSeasonsDropdownOpen, setIsSeasonsDropdownOpen] = useState<boolean>(false);
+  const [isTargetDropdownOpen, setIsTargetDropdownOpen] = useState<boolean>(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState<boolean>(false);
-  const [selectedGender, setSelectedGender] = useRecoilState<Option | null>(selectedGenderAtom);
-  const [selectedHeight, setSelectedHeight] = useRecoilState<Option | null>(selectedHeightAtom);
-  const [selectedWeight, setSelectedWeight] = useRecoilState<Option | null>(selectedWeightAtom);
-  const [selectedSeasons, setSelectedSeasons] = useRecoilState<Option | null>(selectedSeasonsAtom);
+  const [selectedTarget, setSelectedTarget] = useRecoilState<Option | null>(selectedSeasonsAtom);
   const [selectedCategory, setSelectedCategory] = useRecoilState<Option | null>(selectedCategoryAtom);
 
-  const handleOptionSelectGender = (option: Option | null) => {
-    setSelectedGender(option);
-  };
-  const handleOptionSelectHeight = (option: Option | null) => {
-    setSelectedHeight(option);
-  };
-  const handleOptionSelectWeight = (option: Option | null) => {
-    setSelectedWeight(option);
-  };
-  const handleOptionSelectSeasons = (option: Option | null) => {
-    setSelectedSeasons(option);
+  const handleOptionSelectTarget = (option: Option | null) => {
+    setSelectedTarget(option);
   };
   const handleOptionSelectCategory = (option: Option | null) => {
     setSelectedCategory(option);
   };
   const handleDropdownAllClose = () => {
-    setIsGenderDropdownOpen(false);
-    setIsHeightDropdownOpen(false);
-    setIsWeightDropdownOpen(false);
-    setIsSeasonsDropdownOpen(false);
+    setIsTargetDropdownOpen(false);
     setIsCategoryDropdownOpen(false);
   };
 
@@ -127,7 +111,10 @@ export default function NewMarket() {
   return (
     <Container onScroll={handleScroll}>
       <TrendItemCarouselBox>
-        <TrendThim>요즘 핫한 신상</TrendThim>
+        <TrendThim>
+          요즘 핫한 신상
+          <IndigatorBox>{selectItem + 1} / 4</IndigatorBox>
+        </TrendThim>
         <NewMarketCarousel setSelectItem={setSelectItem}>
           <NewMarketImage src="https://m.cooingkids.com/web/product/big/20200313/38849db602ae21192a82938c26241542.jpg" />
           <NewMarketImage src="https://m.cooingkids.com/web/product/big/20200313/38849db602ae21192a82938c26241542.jpg" />
@@ -178,50 +165,6 @@ export default function NewMarket() {
                 </ArrowBox>
                 <CategorySelectMenu>
                   <CategoryItem>
-                    <CategoryBox>성별</CategoryBox>
-                    <Dropdown
-                      options={genderOptions}
-                      select={selectedGender}
-                      onSelect={handleOptionSelectGender}
-                      isOpen={isGenderDropdownOpen}
-                      setIsOpen={setIsGenderDropdownOpen}
-                      allClose={handleDropdownAllClose}
-                    />
-                  </CategoryItem>
-                  <CategoryItem>
-                    <CategoryBox>키</CategoryBox>
-                    <Dropdown
-                      options={heightOptions}
-                      select={selectedHeight}
-                      onSelect={handleOptionSelectHeight}
-                      isOpen={isHeightDropdownOpen}
-                      setIsOpen={setIsHeightDropdownOpen}
-                      allClose={handleDropdownAllClose}
-                    />
-                  </CategoryItem>
-                  <CategoryItem>
-                    <CategoryBox>몸무게</CategoryBox>
-                    <Dropdown
-                      options={weightOptions}
-                      select={selectedWeight}
-                      onSelect={handleOptionSelectWeight}
-                      isOpen={isWeightDropdownOpen}
-                      setIsOpen={setIsWeightDropdownOpen}
-                      allClose={handleDropdownAllClose}
-                    />
-                  </CategoryItem>
-                  <CategoryItem>
-                    <CategoryBox>계절</CategoryBox>
-                    <Dropdown
-                      options={seasonsOptions}
-                      select={selectedSeasons}
-                      onSelect={handleOptionSelectSeasons}
-                      isOpen={isSeasonsDropdownOpen}
-                      setIsOpen={setIsSeasonsDropdownOpen}
-                      allClose={handleDropdownAllClose}
-                    />
-                  </CategoryItem>
-                  <CategoryItem>
                     <CategoryBox>카테고리</CategoryBox>
                     <Dropdown
                       options={categoryOptions}
@@ -229,6 +172,17 @@ export default function NewMarket() {
                       onSelect={handleOptionSelectCategory}
                       isOpen={isCategoryDropdownOpen}
                       setIsOpen={setIsCategoryDropdownOpen}
+                      allClose={handleDropdownAllClose}
+                    />
+                  </CategoryItem>
+                  <CategoryItem>
+                    <CategoryBox>대상</CategoryBox>
+                    <Dropdown
+                      options={targetOptions}
+                      select={selectedTarget}
+                      onSelect={handleOptionSelectTarget}
+                      isOpen={isTargetDropdownOpen}
+                      setIsOpen={setIsTargetDropdownOpen}
                       allClose={handleDropdownAllClose}
                     />
                   </CategoryItem>
@@ -246,49 +200,51 @@ export default function NewMarket() {
           />
         )}
         <ProductContainer>
-          <ResellItemCard
+          <NewMarketItemCard
             brandName="맘맘님"
             productName="밀크웨이 맨투맨"
             price={8000}
+            isActive={true}
             imgUrl={'https://ae01.alicdn.com/kf/Sdd4c439b63744832b6115c365eca76a46/-.jpg_220x220.jpg_.webp'}
           />
-          <ResellItemCard
+          <NewMarketItemCard
             brandName="맘맘님"
             productName="밀크웨이 맨투맨"
             price={8000}
             imgUrl={'https://m.cooingkids.com/web/product/big/20200313/38849db602ae21192a82938c26241542.jpg'}
           />
-          <ResellItemCard
+          <NewMarketItemCard
             brandName="맘맘님"
             productName="밀크웨이 맨투맨"
             price={8000}
+            isActive={true}
             imgUrl={'https://cdn.011st.com/11dims/resize/600x600/quality/75/11src/product/4848639433/B.jpg?730000000'}
           />
-          <ResellItemCard
+          <NewMarketItemCard
             brandName="맘맘님"
             productName="밀크웨이 맨투맨"
             price={8000}
             imgUrl={'https://ae01.alicdn.com/kf/Sdd4c439b63744832b6115c365eca76a46/-.jpg_220x220.jpg_.webp'}
           />
-          <ResellItemCard
+          <NewMarketItemCard
             brandName="맘맘님"
             productName="밀크웨이 맨투맨"
             price={8000}
             imgUrl={'https://m.cooingkids.com/web/product/big/20200313/38849db602ae21192a82938c26241542.jpg'}
           />
-          <ResellItemCard
+          <NewMarketItemCard
             brandName="맘맘님"
             productName="밀크웨이 맨투맨"
             price={8000}
             imgUrl={'https://cdn.011st.com/11dims/resize/600x600/quality/75/11src/product/4848639433/B.jpg?730000000'}
           />
-          <ResellItemCard
+          <NewMarketItemCard
             brandName="맘맘님"
             productName="밀크웨이 맨투맨"
             price={8000}
             imgUrl={'https://cdn.011st.com/11dims/resize/600x600/quality/75/11src/product/4848639433/B.jpg?730000000'}
           />
-          <ResellItemCard
+          <NewMarketItemCard
             brandName="맘맘님"
             productName="밀크웨이 맨투맨"
             price={8000}
@@ -333,10 +289,24 @@ const TrendItemCarouselBox = styled.div`
   position: relative;
   display: flex;
   width: 100%;
+  height: 275px;
+  overflow: hidden;
   padding-left: 20px;
   padding-right: 20px;
 `;
-
+const IndigatorBox = styled.div`
+  min-width: 40px;
+  min-height: 20px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+  color: white;
+  margin-right: 10px;
+  margin-bottom: 3px;
+  font-size: 10px;
+`;
 const NewMarketImage = styled.img`
   width: 100%;
   height: 100%;
@@ -385,14 +355,13 @@ const ThemeWhite = styled.div`
   top: 100px;
   right: 0;
   width: 50%;
-  height: 25vh;
   display: flex;
   align-items: flex-end;
   background-color: transparent;
 `;
 const ArrowBox = styled.div`
   position: absolute;
-  top: 0;
+  top: -10px;
   right: 15px;
 `;
 
@@ -414,7 +383,6 @@ const CategoryContainer = styled.div`
   flex-direction: column;
   align-items: flex-end;
   background-color: white;
-
   position: sticky;
   justify-content: center;
   padding-bottom: 10px;
@@ -430,10 +398,9 @@ const CategorySelectMenu = styled.div`
   padding: 10px;
   padding-top: 10px;
   width: 100%;
-  height: calc(25vh - 10px);
   background-color: white;
   border-radius: 10px;
-  gap: 4px;
+  gap: 5px;
 `;
 const CategoryItem = styled.div`
   display: flex;

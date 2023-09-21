@@ -12,6 +12,7 @@ import PostDailylook from './pages/PostDailylook';
 import ResellDetail from './pages/ResellDetail';
 import PostResell from './pages/PostResell';
 import ResellMarketPhotoEngine from './pages/ResellMarketPhotoEngine';
+import NewMarketDetail from './pages/NewMarketDetail';
 
 const router = createBrowserRouter([
   {
@@ -20,11 +21,33 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <DailyLook />,
+        children: [
+          {
+            path: '/',
+            element: <DailyLook />,
+          },
+          {
+            path: 'dailylook-detail',
+            element: <DailylookDetail />,
+          },
+          {
+            path: 'dailylook-post',
+            element: <PostDailylook />,
+          },
+        ],
       },
       {
         path: '/new-market',
-        element: <NewMarket />,
+        children: [
+          {
+            path: '',
+            element: <NewMarket />,
+          },
+          {
+            path: 'new-detail',
+            element: <NewMarketDetail />,
+          },
+        ],
       },
       {
         path: '/resell-market',
@@ -55,14 +78,6 @@ const router = createBrowserRouter([
       {
         path: '/community',
         element: <Community />,
-      },
-      {
-        path: '/dailylook-detail',
-        element: <DailylookDetail />,
-      },
-      {
-        path: '/dailylook-post',
-        element: <PostDailylook />,
       },
     ],
   },
