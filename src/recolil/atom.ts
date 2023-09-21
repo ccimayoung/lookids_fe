@@ -75,5 +75,5 @@ export interface wearArrayProps {
 }
 export const wearArrayAtom = atom<wearArrayProps[]>({
   key: 'wearArrayAtom',
-  default: []})
-
+  default: [],
+});
