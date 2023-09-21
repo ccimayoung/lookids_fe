@@ -102,13 +102,11 @@ const ProductImageBox = styled.div`
   margin-right: 10px;
 `;
 const ProductTextBox = styled.div`
-  background-color: gold;
   gap: 3px;
 `;
 const ProductInfoBox = styled.div`
   flex: 1;
   position: relative;
-  background-color: red;
 `;
 const ProductImage = styled.img`
   border: 1px solid black;
