@@ -91,7 +91,7 @@ export default function CoordinationRoom() {
           <PhotoBox $clothId={'top6'} $boxSize="s" $type="cloth" $wear={true} $img={'img/top3.png'} />
         </RowDiv>
       </ClothWrap>
-      <ChildrenInfoModal />
+      {/* <ChildrenInfoModal /> */}
     </Wrapper>
   );
 }

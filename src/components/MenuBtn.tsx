@@ -16,7 +16,7 @@ export const MenuBtn = ({ $size, $content, $active, $setSelectedMenu }: MenuBtnP
 };
 
 const Wrapper = styled.div<MenuBtnProps>`
-  width: ${(props) => (props.$size === 's' ? '50px' : '60px')};
+  width: ${(props) => (props.$size === 's' ? '15%' : '18%')};
   height: ${(props) => (props.$size === 's' ? '26px' : '40px')};
   background-color: ${(props) => (props.$active ? props.theme.colors.yellow[4] : props.theme.colors.neutral[0])};
   border: ${(props) => (props.$active ? 'none' : `1px solid ${props.theme.colors.yellow[4]}`)};

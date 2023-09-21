@@ -4,6 +4,7 @@ import QuitSvg from '../../assets/svg/quit.svg';
 import { ReactComponent as PhotoUploadSvg } from '../../assets/svg/photoUpload.svg';
 import { modalGatherAtom } from '../../recolil/atom';
 import { ModalBtn } from './SimplePopup';
+import { TitleAndContent } from '../TitleAndContent';
 
 export const ChildrenInfoModal = () => {
   const [modalGather, setModalGather] = useRecoilState(modalGatherAtom);
@@ -23,6 +24,7 @@ export const ChildrenInfoModal = () => {
         <PhotoBox>
           <PhotoUploadSvg />
         </PhotoBox>
+        <TitleAndContent $modify={true} $title="성별" $content="a" />
         <ModalBtn>모델 생성</ModalBtn>
       </ModalBox>
     </Wrap>
