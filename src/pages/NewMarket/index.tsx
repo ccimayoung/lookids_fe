@@ -301,7 +301,7 @@ const IndigatorBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: black;
+  background-color: #000000b3;
   color: white;
   margin-right: 10px;
   margin-bottom: 3px;
