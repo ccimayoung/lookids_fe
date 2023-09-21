@@ -9,13 +9,7 @@ import styled from 'styled-components';
  * @returns
  */
 
-const Component = ({
-  onClick,
-  children,
-}: {
-  onClick: () => void;
-  children: ReactNode;
-}) => {
+const Component = ({ onClick, children }: { onClick: () => void; children: ReactNode }) => {
   return <IconWrapper onClick={onClick}>{children}</IconWrapper>;
 };
 
@@ -33,6 +27,7 @@ const IconWrapper = styled.button`
   right: 30px;
   justify-content: center;
   align-items: center;
+  z-index: 99;
 `;
 
 export default Component;

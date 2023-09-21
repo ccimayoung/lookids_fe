@@ -14,6 +14,7 @@ import {
 } from '../../recolil/atom';
 import { Option } from '../../components/Dropdown/component';
 import { Dropdown } from '../../components/Dropdown';
+import { useNavigate } from 'react-router';
 
 export interface IAppProps {}
 const genderOptions = [
@@ -45,40 +46,29 @@ const seasonsOptions = [
 ];
 const categoryOptions = [
   { label: '전체', value: 0 },
-  { label: '베이비', value: 1 },
-  { label: '키즈(남)', value: 2 },
-  { label: '키즈(여)', value: 3 },
+  { label: '상의', value: 1 },
+  { label: '하의', value: 2 },
+  { label: '아우터', value: 3 },
+  { label: '악세사리', value: 4 },
+  { label: '신발', value: 5 },
+  { label: '기타', value: 6 },
 ];
 
 export default function DailyLook() {
   const [isOpen, setIsOpen] = useState(false);
   const [, setIsModalOpen] = useRecoilState(modalStatus);
   const themeApp = useTheme();
-  const [isGenderDropdownOpen, setIsGenderDropdownOpen] =
-    useState<boolean>(false);
-  const [isHeightDropdownOpen, setIsHeightDropdownOpen] =
-    useState<boolean>(false);
-  const [isWeightDropdownOpen, setIsWeightDropdownOpen] =
-    useState<boolean>(false);
-  const [isSeasonsDropdownOpen, setIsSeasonsDropdownOpen] =
-    useState<boolean>(false);
-  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] =
-    useState<boolean>(false);
-  const [selectedGender, setSelectedGender] = useRecoilState<Option | null>(
-    selectedGenderAtom,
-  );
-  const [selectedHeight, setSelectedHeight] = useRecoilState<Option | null>(
-    selectedHeightAtom,
-  );
-  const [selectedWeight, setSelectedWeight] = useRecoilState<Option | null>(
-    selectedWeightAtom,
-  );
-  const [selectedSeasons, setSelectedSeasons] = useRecoilState<Option | null>(
-    selectedSeasonsAtom,
-  );
-  const [selectedCategory, setSelectedCategory] = useRecoilState<Option | null>(
-    selectedCategoryAtom,
-  );
+  const navigate = useNavigate();
+  const [isGenderDropdownOpen, setIsGenderDropdownOpen] = useState<boolean>(false);
+  const [isHeightDropdownOpen, setIsHeightDropdownOpen] = useState<boolean>(false);
+  const [isWeightDropdownOpen, setIsWeightDropdownOpen] = useState<boolean>(false);
+  const [isSeasonsDropdownOpen, setIsSeasonsDropdownOpen] = useState<boolean>(false);
+  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState<boolean>(false);
+  const [selectedGender, setSelectedGender] = useRecoilState<Option | null>(selectedGenderAtom);
+  const [selectedHeight, setSelectedHeight] = useRecoilState<Option | null>(selectedHeightAtom);
+  const [selectedWeight, setSelectedWeight] = useRecoilState<Option | null>(selectedWeightAtom);
+  const [selectedSeasons, setSelectedSeasons] = useRecoilState<Option | null>(selectedSeasonsAtom);
+  const [selectedCategory, setSelectedCategory] = useRecoilState<Option | null>(selectedCategoryAtom);
 
   const handleOptionSelectGender = (option: Option | null) => {
     setSelectedGender(option);
@@ -118,8 +108,10 @@ export default function DailyLook() {
               setIsOpen(true);
             }}
           >
-            <FilterIcon />
-            필터
+            <>
+              <FilterIcon />
+              필터
+            </>
           </FilterButton>
           {isOpen && (
             <ThemeBlack
@@ -215,7 +207,7 @@ export default function DailyLook() {
           <DailyLookCard />
         </CardContainer>
       </Contents>
-      <FloatingButton onClick={() => console.log('test')}>
+      <FloatingButton onClick={() => navigate('dailylook-post')}>
         <AddIcon color={themeApp.colors.neutral[4]} />
       </FloatingButton>
     </Container>
@@ -256,17 +248,16 @@ const ThemeBlack = styled.div`
 const ThemeWhite = styled.div`
   position: absolute;
   z-index: 2;
-  top: 30px;
+  top: 40px;
   right: 0;
   width: 50%;
-  height: 25vh;
   display: flex;
   align-items: flex-end;
   background-color: transparent;
 `;
 const ArrowBox = styled.div`
   position: absolute;
-  top: 0;
+  top: -10px;
   right: 15px;
 `;
 
@@ -312,7 +303,6 @@ const CategorySelectMenu = styled.div`
   padding: 10px;
   padding-top: 10px;
   width: 100%;
-  height: calc(25vh - 10px);
   background-color: white;
   border-radius: 10px;
   gap: 4px;

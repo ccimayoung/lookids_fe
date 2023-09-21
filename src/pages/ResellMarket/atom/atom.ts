@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { Option } from '../components/Dropdown/component';
+import { Option } from '../../../components/Dropdown/component';
 
 export const modalStatus = atom({
   key: 'modalStatus',
@@ -27,5 +27,9 @@ export const selectedCategoryAtom = atom<Option | null>({
 });
 export const selectedTargetAtom = atom<Option | null>({
   key: 'selectedTargetAtom',
+  default: null,
+});
+export const selectedSalesStatusAtom = atom<Option | null>({
+  key: 'selectedSalesStatusAtom',
   default: null,
 });
