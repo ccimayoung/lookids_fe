@@ -32,9 +32,11 @@ export const ClothMesh = ({ $clothId, $texture, $scale, $position, $target }: cl
   };
 
   const meshPointerUpHandler = (e: any) => {
-    if (e.button === 0 && selectedCloth === $clothId) {
+    if (e.button === 0) {
+      console.log('asdasd');
       e.stopPropagation();
       setDragActive(false);
+      setSelectedCloth('');
     }
   };
 
@@ -55,13 +57,11 @@ export const ClothMesh = ({ $clothId, $texture, $scale, $position, $target }: cl
   };
 
   const DragTldFunc = () => {
-    if ($target?.x && $target?.y) {
-      let moveX = $target.x - dragOriginPosition.x;
-      let moveY = $target.y - dragOriginPosition.y;
+    // let moveX = $target.x - dragOriginPosition.x;
+    // let moveY = $target.y - dragOriginPosition.y;
 
-      setMovePosition([movePosition[0] + moveX, movePosition[1] + moveY, 0]);
-      setDragOriginPosition({ x: $target.x, y: $target.y });
-    }
+    setMovePosition([$target.x, $target.y, 0]);
+    setDragOriginPosition({ x: $target.x, y: $target.y });
   };
 
   useEffect(() => {
@@ -73,29 +73,32 @@ export const ClothMesh = ({ $clothId, $texture, $scale, $position, $target }: cl
 
   useEffect(() => {
     if (dragActive && selectedCloth === $clothId) {
-      console.log(dragActive, $target, dragOriginPosition);
       DragTldFunc();
     }
   }, [dragActive, $target]);
 
   return (
     <>
-      <mesh
-        position={movePosition}
-        onPointerDown={meshPointerDownHandler}
-        onPointerUp={meshPointerUpHandler}
-        onClick={meshClickHandler}
-        onPointerEnter={meshPointerEnterHandler}
-        onPointerLeave={meshPointerLeaveHandler}
-      >
-        <planeGeometry args={$scale} />
-        <meshBasicMaterial
-          map={$texture} // 텍스처 할당
-          transparent={true} // 투명 속성 활성화
-          // opacity={selectedCloth === $clothId ? 0.8 : 1}
-          color={selectedCloth === $clothId ? 'pink' : 'white'}
-        />
-      </mesh>
+      {$texture && (
+        <mesh
+          position={movePosition}
+          onPointerDown={meshPointerDownHandler}
+          onPointerUp={meshPointerUpHandler}
+          onClick={meshClickHandler}
+          onPointerEnter={meshPointerEnterHandler}
+          onPointerLeave={meshPointerLeaveHandler}
+        >
+          <planeGeometry args={$scale} />
+          <meshBasicMaterial
+            map={$texture} // 텍스처 할당
+            transparent={true} // 투명 속성 활성화
+            // opacity={selectedCloth === $clothId ? 0.8 : 1}
+            color={selectedCloth === $clothId ? 'pink' : 'white'}
+            depthWrite={false}
+            depthTest={false}
+          />
+        </mesh>
+      )}
     </>
   );
 };

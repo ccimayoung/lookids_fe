@@ -32,7 +32,44 @@ export const selectedClothAtom = atom<string>({
   key: 'selectedClothAtom',
   default: '',
 });
+
 export const hoveredClothAtom = atom<string>({
   key: 'hoveredClothAtom',
   default: '',
+});
+
+export interface modalGatherProps {
+  closetQuestion: boolean;
+  closetBody: boolean;
+  closetCart: boolean;
+}
+export const modalGatherAtom = atom<modalGatherProps>({
+  key: 'modalGatherAtom',
+  default: {
+    closetQuestion: false,
+    closetBody: false,
+    closetCart: false,
+  },
+});
+
+export interface simpleModalProps {
+  simplePopup: boolean;
+  content: string[][];
+  onClick: () => void;
+  btnContent: string;
+}
+export const simpleModalAtom = atom<simpleModalProps>({
+  key: 'simpleModalAtom',
+  default: { simplePopup: false, content: [[]], onClick: () => '', btnContent: '' },
+});
+
+export interface wearArrayProps {
+  clothId: string;
+  position: [number, number, number];
+  img: any;
+  scale: [number, number];
+}
+export const wearArrayAtom = atom<wearArrayProps[]>({
+  key: 'wearArrayAtom',
+  default: [],
 });

@@ -4,6 +4,7 @@ import { CommunityIcon, HeaderLogo, MyClosetIcon, NewMarketIcon, ResellMarketIco
 import { modalStatus } from '../recolil/atom';
 import { useRecoilState } from 'recoil';
 import { useEffect, useState } from 'react';
+import { SimplePopup } from '../components/Modal/SimplePopup';
 
 function Layout() {
   const [isModalOpen, setIsModalOpen] = useRecoilState(modalStatus);
@@ -42,6 +43,7 @@ function Layout() {
         <Main ismodal={isModalOpen.toString()}>
           {/* Outlet을 사용하여 중첩된 라우트를 렌더링 */}
           <Outlet />
+          <SimplePopup />
         </Main>
 
         {/* 레이아웃의 하단 내용 */}
