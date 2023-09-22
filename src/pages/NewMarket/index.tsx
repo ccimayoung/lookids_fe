@@ -1,46 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { CustomCarousel } from '../../components/CustomCarousel';
-import { styled, useTheme } from 'styled-components';
+import { useEffect, useRef, useState } from 'react';
+import { styled } from 'styled-components';
 import { SearchBox } from '../../components/SearchBox';
 import { useRecoilState } from 'recoil';
-import {
-  modalStatus,
-  selectedCategoryAtom,
-  selectedGenderAtom,
-  selectedHeightAtom,
-  selectedSeasonsAtom,
-  selectedWeightAtom,
-} from '../../recolil/atom';
+import { modalStatus, selectedCategoryAtom, selectedSeasonsAtom } from '../../recolil/atom';
 import { Option } from '../../components/Dropdown/component';
-import { AddIcon, FilterIcon, MenuBoxArrow } from '../../components/GlobalIcon';
+import { FilterIcon, MenuBoxArrow } from '../../components/GlobalIcon';
 import { Dropdown } from '../../components/Dropdown';
-import { FloatingButton } from '../../components/FloatingButton';
-import { useNavigate } from 'react-router';
 import { NewMarketItemCard } from './components/NewMarketItemCard';
 import { NewMarketCarousel } from '../../components/NewMarketCarousel';
 
 export interface IAppProps {}
 
-const genderOptions = [
-  { label: '전체', value: 0 },
-  { label: '남', value: 1 },
-  { label: '여', value: 2 },
-];
-const heightOptions = [
-  { label: '전체', value: 0 },
-  { label: '70cm 이하', value: 1 },
-  { label: '71~90cm', value: 2 },
-  { label: '91~110cm', value: 3 },
-  { label: '110cm', value: 4 },
-];
-const weightOptions = [
-  { label: '전체', value: 0 },
-  { label: '10kg 이하', value: 1 },
-  { label: '11-15kg', value: 2 },
-  { label: '16-20kg', value: 3 },
-  { label: '21-30kg', value: 4 },
-  { label: '30kg 이상', value: 5 },
-];
 const targetOptions = [
   { label: '전체', value: 0 },
   { label: '베이비', value: 1 },
@@ -60,8 +30,6 @@ const categoryOptions = [
 export default function NewMarket() {
   const contentsRef = useRef<HTMLDivElement | null>(null);
   const elementRef = useRef<HTMLDivElement>(null);
-  const themeApp = useTheme();
-  const navigate = useNavigate();
   const [imageHeight, setImageHeight] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const [, setIsModalOpen] = useRecoilState(modalStatus);
@@ -252,9 +220,9 @@ export default function NewMarket() {
           />
         </ProductContainer>
       </ContentContainer>
-      <FloatingButton onClick={() => navigate('resell-post')}>
+      {/* <FloatingButton onClick={() => navigate('resell-post')}>
         <AddIcon color={themeApp.colors.neutral[4]} />
-      </FloatingButton>
+      </FloatingButton> */}
     </Container>
   );
 }
@@ -279,10 +247,11 @@ const TrendThim = styled.div`
   color: white;
   padding-bottom: 7px;
   padding-left: 7px;
-  background: linear-gradient(to bottom, #ffffff11, #000000ee);
+  background: linear-gradient(195deg, rgba(255, 255, 255, 0) 60%, rgba(80.75, 48.45, 0, 0.5) 79%, rgba(57.37, 47.94, 0, 0.93) 100%);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   font-weight: 600;
   width: calc(100% - 40px);
-  height: 15%;
+  height: 100%;
   z-index: 1;
 `;
 const TrendItemCarouselBox = styled.div`
@@ -312,12 +281,6 @@ const NewMarketImage = styled.img`
   height: 100%;
   border-radius: 10px;
   object-fit: cover;
-`;
-const BestSellerText = styled.div`
-  font-size: 18px;
-  font-weight: 600;
-  color: black;
-  margin-bottom: 20px;
 `;
 const Content = styled.div`
   width: 100%;

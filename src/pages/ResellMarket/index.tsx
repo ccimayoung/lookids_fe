@@ -3,21 +3,14 @@ import { CustomCarousel } from '../../components/CustomCarousel';
 import { styled, useTheme } from 'styled-components';
 import { SearchBox } from '../../components/SearchBox';
 import { useRecoilState } from 'recoil';
-import {
-  modalStatus,
-  selectedCategoryAtom,
-  selectedGenderAtom,
-  selectedHeightAtom,
-  selectedSeasonsAtom,
-  selectedWeightAtom,
-} from '../../recolil/atom';
+
 import { Option } from '../../components/Dropdown/component';
 import { AddIcon, FilterIcon, MenuBoxArrow } from '../../components/GlobalIcon';
 import { Dropdown } from '../../components/Dropdown';
 import { FloatingButton } from '../../components/FloatingButton';
 import { useNavigate } from 'react-router';
 import { ResellItemCard } from './components/ResellItemCard';
-import { selectedSalesStatusAtom } from './atom/atom';
+import { modalResllStatus, selectedResllCategoryAtom, selectedResllSalesStatusAtom, selectedResllSeasonsAtom } from './atom/atom';
 
 export interface IAppProps {}
 
@@ -51,13 +44,13 @@ export default function ResellMarket() {
   const navigate = useNavigate();
   const [imageHeight, setImageHeight] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
-  const [, setIsModalOpen] = useRecoilState(modalStatus);
+  const [, setIsModalOpen] = useRecoilState(modalResllStatus);
   const [isSalesStatusDropdownOpen, setIsSalesStatusDropdownOpen] = useState<boolean>(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState<boolean>(false);
   const [isTargetDropdownOpen, setIsTargetDropdownOpen] = useState<boolean>(false);
-  const [selectedSalesStatus, setSelectedSalesStatus] = useRecoilState<Option | null>(selectedSalesStatusAtom);
-  const [selectedCategory, setSelectedCategory] = useRecoilState<Option | null>(selectedCategoryAtom);
-  const [selectedTarget, setSelectedTarget] = useRecoilState<Option | null>(selectedSeasonsAtom);
+  const [selectedSalesStatus, setSelectedSalesStatus] = useRecoilState<Option | null>(selectedResllSalesStatusAtom);
+  const [selectedCategory, setSelectedCategory] = useRecoilState<Option | null>(selectedResllCategoryAtom);
+  const [selectedTarget, setSelectedTarget] = useRecoilState<Option | null>(selectedResllSeasonsAtom);
 
   const handleOptionSelectSalesStatus = (option: Option | null) => {
     setSelectedSalesStatus(option);

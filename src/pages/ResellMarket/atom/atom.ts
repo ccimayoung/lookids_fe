@@ -1,35 +1,35 @@
 import { atom } from 'recoil';
 import { Option } from '../../../components/Dropdown/component';
 
-export const modalStatus = atom({
-  key: 'modalStatus',
+export const modalResllStatus = atom({
+  key: 'modalResllStatus',
   default: false,
 });
-export const selectedGenderAtom = atom<Option | null>({
-  key: 'selectedGenderAtom',
+export const selectedResllGenderAtom = atom<Option | null>({
+  key: 'selectedResllGenderAtom',
   default: null,
 });
-export const selectedHeightAtom = atom<Option | null>({
-  key: 'selectedHeightAtom',
+export const selectedResllHeightAtom = atom<Option | null>({
+  key: 'selectedResllHeightAtom',
   default: null,
 });
-export const selectedWeightAtom = atom<Option | null>({
-  key: 'selectedWeightAtom',
+export const selectedResllWeightAtom = atom<Option | null>({
+  key: 'selectedResllWeightAtom',
   default: null,
 });
-export const selectedSeasonsAtom = atom<Option | null>({
-  key: 'selectedSeasonsAtom',
+export const selectedResllSeasonsAtom = atom<Option | null>({
+  key: 'selectedResllSeasonsAtom',
   default: null,
 });
-export const selectedCategoryAtom = atom<Option | null>({
-  key: 'selectedCategoryAtom',
+export const selectedResllCategoryAtom = atom<Option | null>({
+  key: 'selectedResllCategoryAtom',
   default: null,
 });
-export const selectedTargetAtom = atom<Option | null>({
-  key: 'selectedTargetAtom',
+export const selectedResllTargetAtom = atom<Option | null>({
+  key: 'selectedResllTargetAtom',
   default: null,
 });
-export const selectedSalesStatusAtom = atom<Option | null>({
-  key: 'selectedSalesStatusAtom',
+export const selectedResllSalesStatusAtom = atom<Option | null>({
+  key: 'selectedResllSalesStatusAtom',
   default: null,
 });
