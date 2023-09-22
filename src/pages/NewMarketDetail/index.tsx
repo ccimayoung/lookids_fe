@@ -65,7 +65,7 @@ export default function NewMarketDetail() {
               />
             </ColorItem>
             <ColorItem>
-              <ColorBox>색상</ColorBox>
+              <ColorBox>사이즈</ColorBox>
               <Dropdown
                 options={sizeOptions}
                 select={selectedSize}

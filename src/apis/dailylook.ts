@@ -1,5 +1,41 @@
 import baseUrl from '../utils/axios/baseUrl';
+import mSleep from '../utils/mSleep';
 
 export const dailyLookApis ={
-  getDailyLookList:async(pageParam:number)=> await baseUrl.get(`/${pageParam}`)
+  getDailyLookList:async()=> {
+    await mSleep(500);
+    return {data:[
+      {
+        'hashTag': '#강쥐 #댕댕이 #귀엽다',
+        'imageUrls': [
+          'http://image.dongascience.com/Photo/2020/03/5bddba7b6574b95d37b6079c199d7101.jpg'
+        ],
+        'user': {
+          'name': 'F2B2',
+          'userId': 'F2B2'
+        }
+      },
+      {
+        'hashTag': '#강쥐 #댕댕이 #귀엽다',
+        'imageUrls': [
+          'http://image.dongascience.com/Photo/2020/03/5bddba7b6574b95d37b6079c199d7101.jpg'
+        ],
+        'user': {
+          'name': 'F2B2',
+          'userId': 'F2B2'
+        }
+      },
+      {
+        'hashTag': '#강쥐 #댕댕이 #귀엽다',
+        'imageUrls': [
+          'http://image.dongascience.com/Photo/2020/03/5bddba7b6574b95d37b6079c199d7101.jpg'
+        ],
+        'user': {
+          'name': 'F2B2',
+          'userId': 'F2B2'
+        }
+      }
+    ]};
+    return await baseUrl.get('/daily/clothes');
+  }
 };
