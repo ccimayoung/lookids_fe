@@ -33,7 +33,6 @@ export const ClothMesh = ({ $clothId, $texture, $scale, $position, $target }: cl
 
   const meshPointerUpHandler = (e: any) => {
     if (e.button === 0) {
-      console.log('asdasd');
       e.stopPropagation();
       setDragActive(false);
       setSelectedCloth('');

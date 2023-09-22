@@ -15,8 +15,17 @@ import {
 import { Option } from '../../components/Dropdown/component';
 import { Dropdown } from '../../components/Dropdown';
 import { useNavigate } from 'react-router';
+import { useGetDailyfoodList } from '../../hooks/useDailyLook';
 
 export interface IAppProps {}
+export interface IDailylookList {
+  hashTag: string;
+  user: {
+    name: string;
+    userId: string;
+  };
+  imageUrls: Array<string>;
+}
 const genderOptions = [
   { label: '전체', value: 0 },
   { label: '남', value: 1 },
@@ -92,6 +101,9 @@ export default function DailyLook() {
     setIsSeasonsDropdownOpen(false);
     setIsCategoryDropdownOpen(false);
   };
+
+  const { data: dailylookList } = useGetDailyfoodList();
+
   useEffect(() => {
     if (!isOpen) handleDropdownAllClose();
   }, [isOpen]);
@@ -199,12 +211,10 @@ export default function DailyLook() {
           />
         )}
         <CardContainer>
-          <DailyLookCard />
-          <DailyLookCard />
-          <DailyLookCard />
-          <DailyLookCard />
-          <DailyLookCard />
-          <DailyLookCard />
+          {dailylookList?.data?.length &&
+            dailylookList?.data?.map((v: any, index: number) => {
+              return <DailyLookCard key={v.user.name + v.user.userId + index} hashTag={v.hashTag} user={v.user} imageUrls={v.imageUrls} />;
+            })}
         </CardContainer>
       </Contents>
       <FloatingButton onClick={() => navigate('dailylook-post')}>

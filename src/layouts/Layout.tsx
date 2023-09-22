@@ -1,16 +1,29 @@
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import styled, { useTheme } from 'styled-components';
-import { CommunityIcon, HeaderLogo, MyClosetIcon, NewMarketIcon, ResellMarketIcon, TrendIcon } from '../components/GlobalIcon';
+import {
+  BasketIcon,
+  CommunityIcon,
+  HeaderLogo,
+  MyClosetIcon,
+  NewMarketIcon,
+  ProfileIcon,
+  ResellMarketIcon,
+  TrendIcon,
+} from '../components/GlobalIcon';
 import { modalStatus } from '../recolil/atom';
 import { useRecoilState } from 'recoil';
 
 import { SimplePopup } from '../components/Modal/SimplePopup';
 import { useEffect, useRef, useState } from 'react';
+import { LoginModal } from '../components/LoginModal';
 
 function Layout() {
   const [isModalOpen, setIsModalOpen] = useRecoilState(modalStatus);
   const themeApp = useTheme();
   const location = useLocation();
+  const token = localStorage.getItem('token');
+  const [isOpen, setIsOpen] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [activePage, setActivePage] = useState(0);
   const mainRef = useRef<HTMLElement>(null);
   // Detect routing changes and perform actions
@@ -20,6 +33,10 @@ function Layout() {
     if (location.pathname.includes('coordinaton-room')) return setActivePage(4);
     if (location.pathname.includes('community')) return setActivePage(3);
     return setActivePage(0);
+  };
+  const handleShowDropDown = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    setIsOpen(!isOpen);
   };
   useEffect(() => {
     mainRef.current?.scrollTo(0, 0);
@@ -47,23 +64,46 @@ function Layout() {
   }, []);
 
   return (
-    <BackgroundContainer>
-      <LayoutContainer mobile={isMobile !== null ? isMobile.toString() : 'false'}>
+    <BackgroundContainer onClick={() => setIsOpen(false)}>
+      <LayoutContainer $mobile={isMobile !== null ? isMobile.toString() : 'false'}>
         {/* 레이아웃의 상단 내용 */}
         <Header>
           {/* 상단 내용 */}
           <HeaderLogo />
           <HeaderRight>
-            <BasketIconBox></BasketIconBox>
-            <ProfileIconBox></ProfileIconBox>
+            <BasketIconBox>
+              <BasketIcon color={themeApp.colors.neutral[3]} />
+            </BasketIconBox>
+            <ProfileIconBox onClick={handleShowDropDown}>
+              <ProfileIcon color={themeApp.colors.neutral[2]} backColor={themeApp.colors.neutral[1]} />
+            </ProfileIconBox>
           </HeaderRight>
+          {isOpen && (
+            <LoginBox
+              onClick={(e) => {
+                e.stopPropagation();
+                if (token) {
+                  console.log(token);
+                  localStorage.clear();
+                  setIsOpen(false);
+                  return console.log('로그아웃');
+                }
+                setIsOpen(false);
+                setShowLoginModal(true);
+                return console.log('로그인');
+              }}
+            >
+              {token ? '로그아웃' : '로그인'}
+            </LoginBox>
+          )}
         </Header>
 
         {/* 중첩된 라우트를 표시할 위치 */}
-        <Main ismodal={isModalOpen.toString()} ref={mainRef}>
+        <Main $ismodal={isModalOpen || showLoginModal ? 'true' : 'false'} ref={mainRef}>
           {/* Outlet을 사용하여 중첩된 라우트를 렌더링 */}
           <Outlet />
           <SimplePopup />
+          <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
         </Main>
 
         {/* 레이아웃의 하단 내용 */}
@@ -108,14 +148,13 @@ function Layout() {
 
 export default Layout;
 
-const LayoutContainer = styled.div<{ mobile: string }>`
+const LayoutContainer = styled.div<{ $mobile: string }>`
   max-width: 595px;
   min-width: 320px;
   width: 100%;
   height: 100%;
-  padding-top: 48px;
   padding-bottom: 70px;
-  margin-right: ${({ mobile }) => (mobile !== 'false' ? '0px' : '100px')};
+  margin-right: ${({ $mobile }) => ($mobile !== 'false' ? '0px' : '100px')};
   position: relative;
   display: flex;
   flex-direction: column;
@@ -147,13 +186,13 @@ const Footer = styled.footer`
   margin: 0;
   padding: 0;
 `;
-const Main = styled.main<{ ismodal: string }>`
-  overflow: ${({ ismodal }) => (ismodal !== 'false' ? 'hidden' : 'auto')};
+const Main = styled.main<{ $ismodal: string }>`
+  overflow: ${({ $ismodal }) => ($ismodal !== 'false' ? 'hidden' : 'auto')};
 `;
 const Header = styled.header`
   display: flex;
   width: 100%;
-  position: absolute;
+  position: relative;
   top: 0;
   height: 48px;
   justify-content: space-between;
@@ -161,14 +200,28 @@ const Header = styled.header`
   border-bottom: 1px solid ${({ theme }) => theme.colors.grey[6]};
   margin: 0;
   padding: 0;
+  padding-top: 7px;
+  padding-bottom: 7px;
   padding-left: 24px;
 `;
 const NavStyled = styled.nav`
   display: flex;
-  background-color: red;
   border-top: ${({ theme }) => `1px solid ${theme.colors.neutral[2]}`};
 `;
-
+const LoginBox = styled.button`
+  background-color: ${({ theme }) => theme.colors.yellow[2]};
+  border: none;
+  position: absolute;
+  display: flex;
+  justify-content: flex-start;
+  top: 45px;
+  z-index: 99;
+  right: 20px;
+  font-size: 12px;
+  width: 100px;
+  padding: 7px;
+  border-radius: 5px;
+`;
 const NavLinkStyled = styled(NavLink)`
   color: ${({ theme }) => theme.colors.grey[2]};
   background-color: ${({ theme }) => theme.colors.neutral[0]};
@@ -186,7 +239,15 @@ const NavLinkStyled = styled(NavLink)`
 `;
 const HeaderRight = styled.div`
   display: flex;
+  gap: 5px;
+  margin-right: 20px;
 `;
 
-const BasketIconBox = styled.div``;
-const ProfileIconBox = styled.div``;
+const BasketIconBox = styled.button`
+  border: none;
+  background-color: white;
+`;
+const ProfileIconBox = styled.button`
+  border: none;
+  background-color: white;
+`;

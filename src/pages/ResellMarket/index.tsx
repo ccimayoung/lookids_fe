@@ -88,13 +88,8 @@ export default function ResellMarket() {
     if (!isOpen) handleDropdownAllClose();
   }, [isOpen]);
 
-  const handleScroll = (e: any) => {
-    const scrollTop = e.target.scrollTop;
-    console.log('현재 스크롤 위치:', scrollTop);
-    // 원하는 작업을 수행하거나 스크롤 위치를 설정하세요.
-  };
   return (
-    <Container onScroll={handleScroll}>
+    <Container>
       <BestSellerText>이 달의 베스트 셀러</BestSellerText>
       <CustomCarousel />
       <ContentContainer>

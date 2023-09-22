@@ -11,7 +11,7 @@ interface CustomThumbnailProps {
 function Component({ children }: { children: ReactChild[] }) {
   const [selentItem, setSelectItem] = useState(0);
   function CustomThumbnail({ index, isSelected, onClick }: CustomThumbnailProps) {
-    return <IndicatorPoint onClick={() => onClick(index)} isSelected={isSelected}></IndicatorPoint>;
+    return <IndicatorPoint onClick={() => onClick(index)} $isselected={isSelected}></IndicatorPoint>;
   }
   return (
     <Carousel
@@ -22,7 +22,6 @@ function Component({ children }: { children: ReactChild[] }) {
       selectedItem={selentItem}
       onChange={(index, item) => setSelectItem(index)}
       renderIndicator={(e, isSelected, index, label) => {
-        console.log(label);
         return (
           <CustomThumbnail
             key={index}
@@ -42,9 +41,9 @@ function Component({ children }: { children: ReactChild[] }) {
 
 export default Component;
 
-const IndicatorPoint = styled.div<{ isSelected: boolean }>`
+const IndicatorPoint = styled.div<{ $isselected: boolean }>`
   display: inline-block;
-  background-color: ${({ isSelected }) => (isSelected ? '#FFD600' : '#D9D9D9')};
+  background-color: ${({ $isselected }) => ($isselected ? '#FFD600' : '#D9D9D9')};
   width: 10px;
   height: 10px;
   border: none;

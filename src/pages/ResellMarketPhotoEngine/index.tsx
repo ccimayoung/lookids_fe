@@ -49,13 +49,8 @@ export default function ResellMarketPhotoEngine() {
     };
   }, []);
 
-  const handleScroll = (e: any) => {
-    const scrollTop = e.target.scrollTop;
-    console.log('현재 스크롤 위치:', scrollTop);
-    // 원하는 작업을 수행하거나 스크롤 위치를 설정하세요.
-  };
   return (
-    <Container onScroll={handleScroll}>
+    <Container>
       <ContentContainer>
         <CategoryContainer>
           <Content ref={contentsRef}>
