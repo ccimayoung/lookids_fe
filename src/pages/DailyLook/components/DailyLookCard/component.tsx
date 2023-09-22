@@ -35,7 +35,7 @@ const Component = ({ hashTag, user, imageUrls }: IDailylookList) => {
       imageheight={imageHeight}
       ref={elementRef}
       onClick={() => {
-        navigate('dailylook-detail');
+        navigate('dailylook/1');
       }}
     >
       <LikeButton

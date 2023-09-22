@@ -15,7 +15,7 @@ import {
 import { Option } from '../../components/Dropdown/component';
 import { Dropdown } from '../../components/Dropdown';
 import { useNavigate } from 'react-router';
-import { useGetDailyfoodList } from '../../hooks/useDailyLook';
+import { useGetDailylookList } from '../../hooks/useDailyLook';
 
 export interface IAppProps {}
 export interface IDailylookList {
@@ -102,8 +102,10 @@ export default function DailyLook() {
     setIsCategoryDropdownOpen(false);
   };
 
-  const { data: dailylookList } = useGetDailyfoodList();
-
+  const { data: dailylookList } = useGetDailylookList();
+  useEffect(()=>{
+    console.log(dailylookList);
+  },[dailylookList]);
   useEffect(() => {
     if (!isOpen) handleDropdownAllClose();
   }, [isOpen]);
@@ -211,8 +213,8 @@ export default function DailyLook() {
           />
         )}
         <CardContainer>
-          {dailylookList?.data?.length &&
-            dailylookList?.data?.map((v: any, index: number) => {
+          {dailylookList?.data?.dailyLooks?.length &&
+            dailylookList?.data?.dailyLooks?.map((v: any, index: number) => {
               return <DailyLookCard key={v.user.name + v.user.userId + index} hashTag={v.hashTag} user={v.user} imageUrls={v.imageUrls} />;
             })}
         </CardContainer>
@@ -232,6 +234,7 @@ const Container = styled.div`
 const Contents = styled.div`
   padding: 20px;
 `;
+
 const CardContainer = styled.div`
   display: flex;
   justify-content: center;

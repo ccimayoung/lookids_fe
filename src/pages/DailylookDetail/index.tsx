@@ -2,13 +2,17 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { DailyLookCard } from './components/DailyLookCard';
 import { ImageCarousel } from '../../components/ImageCarousel';
+import { useGetDailylookDetail } from '../../hooks/useDailyLook';
+import { useParams } from 'react-router-dom';
 
 export interface IAppProps {}
 
 export default function DailylookDetail() {
+  const {dailylookId} = useParams();
+  console.log(dailylookId);
   const [imageHeight, setImageHeight] = useState(0);
   const elementRef = useRef<HTMLDivElement>(null);
-
+  const {data : dailylookDetail} =useGetDailylookDetail(Number(dailylookId));
   useEffect(() => {
     const handleResize = () => {
       const element = elementRef.current;
@@ -20,6 +24,9 @@ export default function DailylookDetail() {
     handleResize();
     if (imageHeight === 0) handleResize();
   }, []);
+  useEffect(()=>{
+    console.log(dailylookDetail?.data);
+  },[dailylookDetail]);
   return (
     <Container ref={elementRef}>
       <ImageCarousel>

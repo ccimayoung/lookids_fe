@@ -27,7 +27,7 @@ const router = createBrowserRouter([
             element: <DailyLook />,
           },
           {
-            path: 'dailylook-detail',
+            path: 'dailylook/:dailylookId',
             element: <DailylookDetail />,
           },
           {

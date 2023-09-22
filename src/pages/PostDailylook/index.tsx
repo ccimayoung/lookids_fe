@@ -4,34 +4,58 @@ import { ImagePicker } from '../../components/ImagePicker';
 import { Label } from '../../components/Label';
 import { ToggleButton } from '../../components/ToggleButton';
 import { DeleteIcon, PlusIcon, Star } from '../../components/GlobalIcon';
+import { usePostDailylook } from '../../hooks/useDailyLook';
+import { Category, Season } from '../../utils/statusFormat/dailylookStatus';
 
 export interface IPurchaseInfo {
-  id: number;
-  tag: string;
+  description: string;
   brand: string;
   link: string;
-  [key: string]: string | number;
+  [key: string]: string ;
 }
+
 
 export default function PostDailylook() {
   const themeApp = useTheme();
-  const [category, setCategory] = useState<number[]>([]);
-  const [seasons, setSeasons] = useState<number[]>([]);
+  const [category, setCategory] = useState<string[]>([]);
+  const [seasons, setSeasons] = useState<string[]>([]);
 
   const [images, setImages] = useState<File[]>([]);
   const [isActive, setIsActive] = useState(false);
   const [gender, setGender] = useState<string>('남');
-  const [years, setYears] = useState<string>('9세');
-  const [height, setHeight] = useState<string>('120cm');
-  const [weight, setWeight] = useState<string>('31kg');
-  const [tag, setTag] = useState<string | undefined>();
-  const [purchaseInfoList, setPurchaseInfoList] = useState<IPurchaseInfo[]>([{ id: 1, brand: '', tag: '', link: '' }]);
-
+  const [years, setYears] = useState<number>(9);
+  const [height, setHeight] = useState<number>(120);
+  const [weight, setWeight] = useState<number>(31);
+  const [tag, setTag] = useState<string>();
+  const [purchaseInfoList, setPurchaseInfoList] = useState<IPurchaseInfo[]>([{  brand: '', description: '', link: '' }]);
+  const {mutateAsync :postDailylook} = usePostDailylook();
   const addInputField = () => {
     // 새로운 입력 필드를 추가하려면 이전 상태를 복사한 후, 새 요소를 추가합니다.
-    setPurchaseInfoList([...purchaseInfoList, { id: Date.now(), brand: '', tag: '', link: '' }]);
+    setPurchaseInfoList([...purchaseInfoList, { brand: '', description: '', link: '' }]);
   };
-
+  const handlePostDailylook = async()=>{
+    const req = {
+      'age': years,
+      'category': category,
+      'description': '테스트입니다.',
+      'hashTag': tag?.split('#').slice(1).map(v=>'#'+v),
+      'height': height,
+      'imageUrls': images,
+      'purchaseInfos': [
+        ...purchaseInfoList.map((p)=>{
+          return{ 
+            brand: p.brand,
+            description: p.description, 
+            link: p.link 
+          };
+        })
+      ],
+      'season': seasons,
+      'sex': gender,
+      'weight': 60,
+    };
+    await postDailylook(req);
+  };
   const handleInputChange = (index: number, name: string, value: string) => {
     const updatedList = [...purchaseInfoList];
     updatedList[index][name] = value;
@@ -81,13 +105,13 @@ export default function PostDailylook() {
             <Label
               color={isActive ? themeApp.colors.neutral[1] : themeApp.colors.neutral[0]}
               disabled={isActive}
-              value={years}
+              value={years.toString()}
               height={'26'}
               text="9세"
               width={'55'}
               onClick={() => {}}
               center={false}
-              onChange={(e) => setYears(e.target.value)}
+              onChange={(e) => setYears(Number(e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')))}
             />
           </ChildInfo>
         </ChildInfoBox>
@@ -107,8 +131,8 @@ export default function PostDailylook() {
               width={'55'}
               onClick={() => {}}
               center={false}
-              value={height}
-              onChange={(e) => setHeight(e.target.value)}
+              value={height.toString()}
+              onChange={(e) => setHeight(Number(e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')))}
             />
           </ChildInfo>
           <ChildInfo>
@@ -127,8 +151,8 @@ export default function PostDailylook() {
               width={'55'}
               onClick={() => {}}
               center={false}
-              value={weight}
-              onChange={(e) => setWeight(e.target.value)}
+              value={weight.toString()}
+              onChange={(e) => setWeight(Number(e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')))}
             />
           </ChildInfo>
         </ChildInfoBox>
@@ -144,68 +168,68 @@ export default function PostDailylook() {
         </ContentsTitle>
         <CategoryContents>
           <Label
-            color={category.includes(0) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            color={category.includes(Category.TOP) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
             height={'20'}
             text="상의"
             width={'55'}
             onClick={() => {
-              if (!category.includes(0)) setCategory([...category, 0]);
-              if (category.includes(0)) setCategory(category.filter((v) => v !== 0));
+              if (!category.includes(Category.TOP)) setCategory([...category, Category.TOP]);
+              if (category.includes(Category.TOP)) setCategory(category.filter((v) => v !== Category.TOP));
             }}
             center={true}
           />
           <Label
-            color={category.includes(1) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            color={category.includes(Category.BOTTOM) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
             height={'20'}
             text="하의"
             width={'55'}
             onClick={() => {
-              if (!category.includes(1)) setCategory([...category, 1]);
-              if (category.includes(1)) setCategory(category.filter((v) => v !== 1));
+              if (!category.includes(Category.BOTTOM)) setCategory([...category, Category.BOTTOM]);
+              if (category.includes(Category.BOTTOM)) setCategory(category.filter((v) => v !== Category.BOTTOM));
             }}
             center={true}
           />
           <Label
-            color={category.includes(2) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            color={category.includes(Category.OUTER) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
             height={'20'}
             text="아우터"
             width={'55'}
             onClick={() => {
-              if (!category.includes(2)) setCategory([...category, 2]);
-              if (category.includes(2)) setCategory(category.filter((v) => v !== 2));
+              if (!category.includes(Category.OUTER)) setCategory([...category, Category.OUTER]);
+              if (category.includes(Category.OUTER)) setCategory(category.filter((v) => v !== Category.OUTER));
             }}
             center={true}
           />
           <Label
-            color={category.includes(3) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            color={category.includes(Category.ACCESSORY) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
             height={'20'}
             text="악세사리"
             width={'55'}
             onClick={() => {
-              if (!category.includes(3)) setCategory([...category, 3]);
-              if (category.includes(3)) setCategory(category.filter((v) => v !== 3));
+              if (!category.includes(Category.ACCESSORY)) setCategory([...category, Category.ACCESSORY]);
+              if (category.includes(Category.ACCESSORY)) setCategory(category.filter((v) => v !== Category.ACCESSORY));
             }}
             center={true}
           />
           <Label
-            color={category.includes(4) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            color={category.includes(Category.SHOES) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
             height={'20'}
             text="신발"
             width={'55'}
             onClick={() => {
-              if (!category.includes(4)) setCategory([...category, 4]);
-              if (category.includes(4)) setCategory(category.filter((v) => v !== 4));
+              if (!category.includes(Category.SHOES)) setCategory([...category, Category.SHOES]);
+              if (category.includes(Category.SHOES)) setCategory(category.filter((v) => v !== Category.SHOES));
             }}
             center={true}
           />
           <Label
-            color={category.includes(5) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            color={category.includes(Category.ETC) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
             height={'20'}
             text="기타"
             width={'55'}
             onClick={() => {
-              if (!category.includes(5)) setCategory([...category, 5]);
-              if (category.includes(5)) setCategory(category.filter((v) => v !== 5));
+              if (!category.includes(Category.ETC)) setCategory([...category, Category.ETC]);
+              if (category.includes(Category.ETC)) setCategory(category.filter((v) => v !== Category.ETC));
             }}
             center={true}
           />
@@ -222,46 +246,46 @@ export default function PostDailylook() {
         </ContentsTitle>
         <CategoryContents>
           <Label
-            color={seasons.includes(0) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            color={seasons.includes(Season.SPRING) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
             height={'20'}
             text="봄"
             width={'55'}
             onClick={() => {
-              if (!seasons.includes(0)) setSeasons([...seasons, 0]);
-              if (seasons.includes(0)) setSeasons(seasons.filter((v) => v !== 0));
+              if (!seasons.includes(Season.SPRING)) setSeasons([...seasons, Season.SPRING]);
+              if (seasons.includes(Season.SPRING)) setSeasons(seasons.filter((v) => v !== Season.SPRING));
             }}
             center={true}
           />
           <Label
-            color={seasons.includes(1) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            color={seasons.includes(Season.SUMMER) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
             height={'20'}
             text="여름"
             width={'55'}
             onClick={() => {
-              if (!seasons.includes(1)) setSeasons([...seasons, 1]);
-              if (seasons.includes(1)) setSeasons(seasons.filter((v) => v !== 1));
+              if (!seasons.includes(Season.SUMMER)) setSeasons([...seasons, Season.SUMMER]);
+              if (seasons.includes(Season.SUMMER)) setSeasons(seasons.filter((v) => v !== Season.SUMMER));
             }}
             center={true}
           />
           <Label
-            color={seasons.includes(2) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            color={seasons.includes(Season.AUTUMN) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
             height={'20'}
             text="가을"
             width={'55'}
             onClick={() => {
-              if (!seasons.includes(2)) setSeasons([...seasons, 2]);
-              if (seasons.includes(2)) setSeasons(seasons.filter((v) => v !== 2));
+              if (!seasons.includes(Season.AUTUMN)) setSeasons([...seasons, Season.AUTUMN]);
+              if (seasons.includes(Season.AUTUMN)) setSeasons(seasons.filter((v) => v !== Season.AUTUMN));
             }}
             center={true}
           />
           <Label
-            color={seasons.includes(3) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            color={seasons.includes(Season.WINTER) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
             height={'20'}
             text="겨울"
             width={'55'}
             onClick={() => {
-              if (!seasons.includes(3)) setSeasons([...seasons, 3]);
-              if (seasons.includes(3)) setSeasons(seasons.filter((v) => v !== 3));
+              if (!seasons.includes(Season.WINTER)) setSeasons([...seasons, Season.WINTER]);
+              if (seasons.includes(Season.WINTER)) setSeasons(seasons.filter((v) => v !== Season.WINTER));
             }}
             center={true}
           />
@@ -347,7 +371,7 @@ export default function PostDailylook() {
         </CategoryContents>
       </ContentsBox>
       <Complate>
-        <Label color={themeApp.colors.green[300]} height={'30'} text="글 등록" width={'60'} onClick={() => {}} center={true} bold={true} />
+        <Label  color={themeApp.colors.green[300]} height={'30'} text="글 등록" width={'60'} onClick={handlePostDailylook} center={true} bold={true} />
       </Complate>
     </Container>
   );
