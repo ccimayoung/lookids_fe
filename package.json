@@ -19,6 +19,7 @@
     "html2canvas": "^1.4.1",
     "infinite-react-carousel": "^1.2.11",
     "react": "^18.2.0",
+    "react-cropper": "^2.3.3",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
     "react-responsive-carousel": "^3.2.23",
