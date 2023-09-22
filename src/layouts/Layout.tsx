@@ -3,6 +3,8 @@ import styled, { useTheme } from 'styled-components';
 import { CommunityIcon, HeaderLogo, MyClosetIcon, NewMarketIcon, ResellMarketIcon, TrendIcon } from '../components/GlobalIcon';
 import { modalStatus } from '../recolil/atom';
 import { useRecoilState } from 'recoil';
+
+import { SimplePopup } from '../components/Modal/SimplePopup';
 import { useEffect, useRef, useState } from 'react';
 
 function Layout() {
@@ -61,6 +63,7 @@ function Layout() {
         <Main ismodal={isModalOpen.toString()} ref={mainRef}>
           {/* Outlet을 사용하여 중첩된 라우트를 렌더링 */}
           <Outlet />
+          <SimplePopup />
         </Main>
 
         {/* 레이아웃의 하단 내용 */}
@@ -131,8 +134,8 @@ const IconBox = styled.div<{ $activepage: boolean }>`
   color: ${({ $activepage, theme }) => ($activepage ? theme.colors.yellow[3] : theme.colors.neutral[4])};
   align-items: center;
   flex-direction: column;
-  gap: 8px;
-  justify-content: space-between;
+  gap: 5px;
+  /* justify-content: space-between; */
   height: 51px;
 `;
 
@@ -177,9 +180,9 @@ const NavLinkStyled = styled(NavLink)`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* &.active {
-    background-color: ${({ theme }) => theme.colors.yellow[1]};
-  } */
+  .community {
+    padding-top: 2.5px;
+  }
 `;
 const HeaderRight = styled.div`
   display: flex;

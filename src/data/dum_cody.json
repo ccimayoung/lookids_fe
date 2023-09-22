@@ -1,0 +1,64 @@
+{
+  "list": [
+    {
+      "codyId": "11",
+      "img": null,
+      "gender": "여",
+      "age": 10,
+      "height": 130,
+      "weight": 22,
+      "cody": [
+        {
+          "clothId": "top2",
+          "img": "img/top2.png",
+          "position": [1, 1, 0],
+          "scale": [2.5, 2],
+          "type": "상의",
+          "size": "110호",
+          "color": "검정"
+        },
+        {
+          "clothId": "skirt1",
+          "img": "img/skirt1.png",
+          "position": [0, 3, 0],
+          "scale": [2.2, 2],
+          "width": 2.5,
+          "height": 2,
+          "type": "하의",
+          "size": "100호",
+          "color": "하늘"
+        }
+      ]
+    },
+    {
+      "codyId": "12",
+      "img": null,
+      "gender": "남",
+      "age": 10,
+      "height": 110,
+      "weight": 24,
+      "cody": [
+        {
+          "clothId": "top2",
+          "img": "img/top3.png",
+          "position": [1, 1, 0],
+          "scale": [2.5, 2],
+          "type": "상의",
+          "size": "110호",
+          "color": "검정"
+        },
+        {
+          "clothId": "skirt1",
+          "img": "img/skirt1.png",
+          "position": [0, -2, 0],
+          "scale": [2.2, 2],
+          "width": 2.5,
+          "height": 2,
+          "type": "하의",
+          "size": "100호",
+          "color": "하늘"
+        }
+      ]
+    }
+  ]
+}
