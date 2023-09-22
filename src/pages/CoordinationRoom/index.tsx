@@ -14,8 +14,6 @@ import { divProps } from '../../components/props';
 import { ClothPropertyModal } from '../../components/Modal/ClothPropertyModal';
 import html2canvas from 'html2canvas';
 
-export interface IAppProps {}
-
 export default function CoordinationRoom() {
   const [selectedMenu, setSelectedMenu] = React.useState<string>('상의');
   const [modalGather, setModalGather] = useRecoilState(modalGatherAtom);
@@ -24,36 +22,8 @@ export default function CoordinationRoom() {
   const [getCapture, setGetCapture] = useRecoilState(getCaptureAtom);
   const [showPhoto, setShowPhoto] = useRecoilState(showPhotoAtom);
 
-  // const handleCapture = () => {
-  //   console.log(canvasRef);
-  //   if (canvasRef.current) {
-  //     const canvasToCapture = canvasRef.current;
-  //     html2canvas(canvasToCapture, {
-  //       useCORS: true, // CORS 이슈가 있는 경우 true로 설정
-  //     }).then((canvas) => {
-  //       // 캡처된 이미지 데이터를 Blob 형식으로 가져옵니다.
-  //       canvas.toBlob((blob) => {
-  //         // Blob을 URL로 변환합니다.
-  //         if (blob) {
-  //           const imageUrl = URL.createObjectURL(blob);
-
-  //           // 다운로드 링크를 생성하고 클릭합니다.
-  //           const a = document.createElement('a');
-  //           a.href = imageUrl;
-  //           a.download = 'captured.png';
-  //           a.click();
-
-  //           // URL 객체를 해제합니다.
-  //           URL.revokeObjectURL(imageUrl);
-  //         }
-  //       }, 'image/png');
-  //     });
-  //   }
-  // };
-
   return (
     <Wrapper>
-      {/* {showPhoto && <img src={showPhoto} alt="Captured" width={'100px'} />} */}
       <TopWrap>
         <CanvasWrapper />
 
