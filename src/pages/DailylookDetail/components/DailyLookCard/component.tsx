@@ -1,12 +1,10 @@
 /* eslint-disable max-len */
 import styled, { useTheme } from 'styled-components';
 import { LikeHeart } from '../../../../components/GlobalIcon';
-import { MutableRefObject, useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
 
 const Component = () => {
   const themeApp = useTheme();
-  const navigate = useNavigate();
   const [isLike, setIsLike] = useState(false);
   const [imageHeight, setImageHeight] = useState(0);
   const elementRef = useRef<HTMLDivElement>(null);
@@ -37,9 +35,7 @@ const Component = () => {
           setIsLike(!isLike);
         }}
       >
-        <LikeHeart
-          color={isLike ? themeApp.colors.pink[300] : themeApp.colors.grey[0]}
-        />
+        <LikeHeart color={isLike ? themeApp.colors.pink[300] : themeApp.colors.grey[0]} />
       </LikeButton>
       <ImageBox>
         <DailyLookImage

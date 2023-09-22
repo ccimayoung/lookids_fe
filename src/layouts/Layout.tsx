@@ -1,15 +1,30 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import styled, { useTheme } from 'styled-components';
 import { CommunityIcon, HeaderLogo, MyClosetIcon, NewMarketIcon, ResellMarketIcon, TrendIcon } from '../components/GlobalIcon';
 import { modalStatus } from '../recolil/atom';
 import { useRecoilState } from 'recoil';
-import { useEffect, useState } from 'react';
+
 import { SimplePopup } from '../components/Modal/SimplePopup';
+import { useEffect, useRef, useState } from 'react';
 
 function Layout() {
   const [isModalOpen, setIsModalOpen] = useRecoilState(modalStatus);
   const themeApp = useTheme();
-
+  const location = useLocation();
+  const [activePage, setActivePage] = useState(0);
+  const mainRef = useRef<HTMLElement>(null);
+  // Detect routing changes and perform actions
+  const handlePageChange = () => {
+    if (location.pathname.includes('resell-market')) return setActivePage(1);
+    if (location.pathname.includes('new-market')) return setActivePage(2);
+    if (location.pathname.includes('coordinaton-room')) return setActivePage(4);
+    if (location.pathname.includes('community')) return setActivePage(3);
+    return setActivePage(0);
+  };
+  useEffect(() => {
+    mainRef.current?.scrollTo(0, 0);
+    handlePageChange();
+  }, [location]);
   const [isMobile, setIsMobile] = useState<boolean | null>(null);
   useEffect(() => {
     // 컴포넌트가 마운트된 후에 요소의 너비를 가져옵니다.
@@ -30,6 +45,7 @@ function Layout() {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
   return (
     <BackgroundContainer>
       <LayoutContainer mobile={isMobile !== null ? isMobile.toString() : 'false'}>
@@ -37,10 +53,14 @@ function Layout() {
         <Header>
           {/* 상단 내용 */}
           <HeaderLogo />
+          <HeaderRight>
+            <BasketIconBox></BasketIconBox>
+            <ProfileIconBox></ProfileIconBox>
+          </HeaderRight>
         </Header>
 
         {/* 중첩된 라우트를 표시할 위치 */}
-        <Main ismodal={isModalOpen.toString()}>
+        <Main ismodal={isModalOpen.toString()} ref={mainRef}>
           {/* Outlet을 사용하여 중첩된 라우트를 렌더링 */}
           <Outlet />
           <SimplePopup />
@@ -50,32 +70,32 @@ function Layout() {
         <Footer>
           <NavStyled>
             <NavLinkStyled to="/">
-              <IconBox>
-                <TrendIcon color={themeApp.colors.neutral[4]} />
+              <IconBox $activepage={activePage === 0}>
+                <TrendIcon color={activePage === 0 ? themeApp.colors.yellow[3] : themeApp.colors.neutral[4]} />
                 트렌드
               </IconBox>
             </NavLinkStyled>
             <NavLinkStyled to="/resell-market">
-              <IconBox>
-                <ResellMarketIcon color={themeApp.colors.neutral[4]} />
+              <IconBox $activepage={activePage === 1}>
+                <ResellMarketIcon color={activePage === 1 ? themeApp.colors.yellow[3] : themeApp.colors.neutral[4]} />
                 중고마켓
               </IconBox>
             </NavLinkStyled>
             <NavLinkStyled to="/new-market">
-              <IconBox>
-                <NewMarketIcon color={themeApp.colors.neutral[4]} />
+              <IconBox $activepage={activePage === 2}>
+                <NewMarketIcon color={activePage === 2 ? themeApp.colors.yellow[3] : themeApp.colors.neutral[4]} />
                 신상마켓
               </IconBox>
             </NavLinkStyled>
             <NavLinkStyled to="/community">
-              <IconBox className="community">
-                <CommunityIcon color={themeApp.colors.neutral[4]} />
+              <IconBox $activepage={activePage === 3}>
+                <CommunityIcon color={activePage === 3 ? themeApp.colors.yellow[3] : themeApp.colors.neutral[4]} />
                 커뮤니티
               </IconBox>
             </NavLinkStyled>
             <NavLinkStyled to="/coordinaton-room">
-              <IconBox>
-                <MyClosetIcon color={themeApp.colors.neutral[4]} />
+              <IconBox $activepage={activePage === 4}>
+                <MyClosetIcon color={activePage === 4 ? themeApp.colors.yellow[3] : themeApp.colors.neutral[4]} />
                 나의 옷장
               </IconBox>
             </NavLinkStyled>
@@ -109,8 +129,9 @@ const BackgroundContainer = styled.div`
   height: 100vh;
   background-color: ${({ theme }) => theme.colors.grey[5]};
 `;
-const IconBox = styled.div`
+const IconBox = styled.div<{ $activepage: boolean }>`
   display: flex;
+  color: ${({ $activepage, theme }) => ($activepage ? theme.colors.yellow[3] : theme.colors.neutral[4])};
   align-items: center;
   flex-direction: column;
   gap: 5px;
@@ -159,10 +180,13 @@ const NavLinkStyled = styled(NavLink)`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  &.active {
-    background-color: ${({ theme }) => theme.colors.yellow[1]};
-  }
   .community {
     padding-top: 2.5px;
   }
 `;
+const HeaderRight = styled.div`
+  display: flex;
+`;
+
+const BasketIconBox = styled.div``;
+const ProfileIconBox = styled.div``;
