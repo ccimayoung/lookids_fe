@@ -7,7 +7,7 @@ interface IButtonProps {
   color: string;
   center: string;
   bold?: string;
-  isclick: string;
+  $isclick: string;
   value?: string;
 }
 
@@ -28,7 +28,7 @@ interface ILabelProps {
 const Component = ({ onClick, onChange, text, value, disabled, width, height, color, placeholder, center, bold }: ILabelProps) => {
   return (
     <IconWrapper
-      isclick={onClick ? 'true' : 'false'}
+      $isclick={onClick ? 'true' : 'false'}
       value={value && value}
       onClick={onClick}
       width={width}
@@ -53,7 +53,7 @@ const IconWrapper = styled.button<IButtonProps>`
   height: ${({ height }) => `${height}px`};
   display: flex;
   font-weight: ${({ bold }) => (bold === 'true' ? 600 : 400)};
-  cursor: ${({ isclick, value }) => (isclick === 'true' && !value ? 'pointer' : 'auto')};
+  cursor: ${({ $isclick, value }) => ($isclick === 'true' && !value ? 'pointer' : 'auto')};
   justify-content: ${({ center }) => (center === 'true' ? 'center' : 'flex-start')};
   align-items: center;
 `;

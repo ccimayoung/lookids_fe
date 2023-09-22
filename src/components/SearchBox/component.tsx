@@ -11,13 +11,13 @@ interface ISearchBoxProps {
   disabled?: boolean;
 }
 interface IWarpProps {
-  isclick: string;
+  $isclick: string;
 }
 
 const Component = ({ onClick, placeholder, isSearch = true, isCamera = true, disabled = false }: ISearchBoxProps) => {
   const navigate = useNavigate();
   return (
-    <IconWrapper onClick={onClick} isclick={onClick ? 'true' : 'false'}>
+    <IconWrapper onClick={onClick} $isclick={onClick ? 'true' : 'false'}>
       {isSearch && (
         <LeftIconBox>
           <SearchIcon />

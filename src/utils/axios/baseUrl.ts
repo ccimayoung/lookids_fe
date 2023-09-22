@@ -5,7 +5,7 @@ import interceptors from './interceptors';
 
 const baseUrl = axios.create({
   // baseURL: process.env.REACT_APP_BASE_URL,
-  baseURL: 'https://huddledown.link/api',
+  baseURL: 'http://49.50.165.8:8080',
 });
 
 export default interceptors(baseUrl);

@@ -28,7 +28,7 @@ const Component = () => {
     };
   }, []);
   return (
-    <Wrap imageheight={imageHeight} ref={elementRef}>
+    <Wrap $imageheight={imageHeight} ref={elementRef}>
       <LikeButton
         onClick={(event) => {
           event.stopPropagation();
@@ -150,10 +150,10 @@ const Component = () => {
 };
 
 // Styling
-const Wrap = styled.article<{ imageheight: number }>`
+const Wrap = styled.article<{ $imageheight: number }>`
   display: flex;
   position: relative;
-  height: ${({ imageheight }) => (imageheight ? `${imageheight}px` : '335px')};
+  height: ${({ $imageheight }) => ($imageheight ? `${$imageheight}px` : '335px')};
   max-height: max-content;
   width: 100%;
   border: ${({ theme }) => `1px solid ${theme.colors.grey[5]}`};
