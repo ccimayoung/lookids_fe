@@ -48,7 +48,7 @@ export const ChildrenInfoModal = () => {
             <PhotoUploadSvg />
           </PhotoBox>
           <RowDiv $cGap="10px" ref={firstRef}>
-            <TitleAndSelectBox $title="성별" $titleWidth="35px" $content={childrenInfo.gender} $list={['남', '여']} />
+            <TitleAndSelectBox $title="성별" $titleWidth="35px" $content={childrenInfo.gender} $list={['남', '여']} $contentSize="s" />
             <TitleAndContent $writeAble={true} $title="나이" $content={childrenInfo.age} $contentSize="s" />
           </RowDiv>
           <RowDiv $cGap="10px" style={{ marginTop: '10px' }} ref={secondRef}>

@@ -46,6 +46,7 @@ export interface modalGatherProps {
   closetQuestion: boolean;
   closetBody: boolean;
   closetCart: boolean;
+  clothProperty: boolean;
 }
 export const modalGatherAtom = atom<modalGatherProps>({
   key: 'modalGatherAtom',
@@ -53,6 +54,7 @@ export const modalGatherAtom = atom<modalGatherProps>({
     closetQuestion: false,
     closetBody: false,
     closetCart: false,
+    clothProperty: false,
   },
 });
 
@@ -103,4 +105,14 @@ export const childrenInfoAtom = atom<childrenInfoProps>({
 export const selectedCodyAtom = atom<string>({
   key: 'selectedCodyAtom',
   default: '12',
+});
+
+export const getCaptureAtom = atom<boolean>({
+  key: 'getCaptureAtom',
+  default: false,
+});
+
+export const showPhotoAtom = atom<any>({
+  key: 'showPhotoAtom',
+  default: null,
 });

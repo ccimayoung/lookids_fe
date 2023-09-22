@@ -1,13 +1,14 @@
 import React, { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import styled, { useTheme } from 'styled-components';
-import { OrbitControls, Plane } from '@react-three/drei';
+import { OrbitControls, PerspectiveCamera, Plane } from '@react-three/drei';
 import * as THREE from 'three';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Canvas, useLoader } from '@react-three/fiber';
 import { ClothMesh } from './ClothMesh';
 import { PersonMesh } from './PersonMesh';
-import { childrenInfoAtom, selectedClothAtom, selectedCodyAtom, wearArrayAtom } from '../../../recolil/atom';
+import { childrenInfoAtom, getCaptureAtom, selectedClothAtom, selectedCodyAtom, showPhotoAtom, wearArrayAtom } from '../../../recolil/atom';
 import dumCodyJson from '../../../data/dum_cody.json';
+import html2canvas from 'html2canvas';
 
 export const CanvasWrapper = () => {
   const themeApp = useTheme();
@@ -15,6 +16,7 @@ export const CanvasWrapper = () => {
   const [childrenInfo, setChildrenInfo] = useRecoilState(childrenInfoAtom);
   const [codyJsonList, setCodyJsonList] = useState<any>(dumCodyJson);
   const [selectedCody, setSelectedCody] = useRecoilState(selectedCodyAtom);
+  const [getCapture, setGetCapture] = useRecoilState(getCaptureAtom);
 
   const getTexture = (img: any) => {
     const texture = useLoader(THREE.TextureLoader, img);
@@ -30,6 +32,8 @@ export const CanvasWrapper = () => {
   const [wearArray, setWearArray] = useRecoilState(wearArrayAtom);
   const [bodyTexture, setBodyTexture] = useState<any>(girlTexture);
   const [bodyScale, setBodyScale] = useState<[number, number]>([2.1, 7]);
+  const canvasRef = React.useRef<any>(null);
+  const [showPhoto, setShowPhoto] = useRecoilState(showPhotoAtom);
 
   const pointerMove = (e: any) => {
     if (e.camera && e.intersections[0]) {
@@ -63,6 +67,62 @@ export const CanvasWrapper = () => {
     }
   }, [codyJsonList, selectedCody]);
 
+  const handleCapture = () => {
+    if (canvasRef.current) {
+      // Canvas 컴포넌트의 렌더링이 완료된 후에 스크린샷을 찍도록 비동기로 처리
+      setTimeout(() => {
+        const canvasToCapture = canvasRef.current;
+
+        // Canvas 컴포넌트를 html2canvas를 사용하여 스크린샷으로 변환
+        html2canvas(canvasToCapture, {
+          useCORS: true, // CORS 이슈가 있는 경우 true로 설정
+        }).then((canvas) => {
+          // 스크린샷을 이미지로 변환
+          const imageDataURL = canvas.toDataURL('image/png');
+          setShowPhoto(imageDataURL);
+          setGetCapture(false);
+        });
+      }, 1000);
+    }
+  };
+
+  // const handleCapture = () => {
+  //   if (canvasRef.current) {
+  //     // Canvas 컴포넌트의 렌더링이 완료된 후에 스크린샷을 찍도록 비동기로 처리
+  //     setTimeout(() => {
+  //       const canvasToCapture = canvasRef.current;
+
+  //       html2canvas(canvasToCapture, {
+  //         useCORS: true, // CORS 이슈가 있는 경우 true로 설정
+  //       }).then((canvas) => {
+  //         // 캡처된 이미지 데이터를 Blob 형식으로 가져옵니다.
+  //         canvas.toBlob((blob) => {
+  //           // Blob을 URL로 변환합니다.
+  //           if (blob) {
+  //             const imageUrl = URL.createObjectURL(blob);
+
+  //             // 다운로드 링크를 생성하고 클릭합니다.
+  //             const a = document.createElement('a');
+  //             a.href = imageUrl;
+  //             a.download = 'captured.png';
+  //             a.click();
+
+  //             // URL 객체를 해제합니다.
+  //             URL.revokeObjectURL(imageUrl);
+  //           }
+  //         }, 'image/png');
+  //       });
+  //     }, 1000);
+  //   }
+  // };
+
+  useEffect(() => {
+    if (getCapture) {
+      // 캡처 버튼을 클릭할 때 실행되는 함수
+      handleCapture();
+    }
+  }, [getCapture]);
+
   return (
     <Wrapper>
       <Canvas
@@ -70,15 +130,16 @@ export const CanvasWrapper = () => {
         style={{
           width: '100%',
           height: '100%',
-          // backgroundColor: '#cccccc',
         }}
         shadows
+        ref={canvasRef}
+        gl={{ preserveDrawingBuffer: true }}
       >
         <ambientLight color={themeApp.colors.neutral[0]} intensity={0} />
-
         <OrbitControls enableRotate={false} enableDamping={false} minDistance={1} maxDistance={10} zoomSpeed={2} maxPolarAngle={Math.PI} />
-
-        <Plane onPointerMove={pointerMove} onClick={() => setSelectedCloth('')}>
+        <mesh onPointerMove={pointerMove} onClick={() => setSelectedCloth('')}>
+          <planeGeometry args={[10, 10]} />
+          <meshBasicMaterial color={'#a7866a'} depthWrite={false} depthTest={false} />
           <mesh onPointerMissed={pointerMissed}>
             <PersonMesh $texture={bodyTexture} $scale={bodyScale} />
             {wearArray.map((wear) => {
@@ -93,12 +154,26 @@ export const CanvasWrapper = () => {
                 />
               );
             })}
-            {/* <ClothMesh $clothId={'top2'} $texture={top2Texture} $scale={[3, 2.5]} $target={target} $position={[0.05, 1, 0.1]} /> */}
-            {/* <ClothMesh $clothId={'top1'} $texture={topTexture} $scale={[3.5, 2]} $target={target} $position={[0, 0, 0]} /> */}
-            {/* <ClothMesh $clothId={'top3'} $texture={topTexture} $scale={[2.9, 2.2]} $target={target} $position={[0, 0, 0]} /> */}
-            {/* <ClothMesh $clothId={'sk2'} $texture={skirtTexture} $scale={[2.6, 2]} $target={target} $position={[0, 0, 0]} /> */}
           </mesh>
-        </Plane>
+        </mesh>
+
+        {/* <Plane onPointerMove={pointerMove} onClick={() => setSelectedCloth('')}>
+          <mesh onPointerMissed={pointerMissed}>
+            <PersonMesh $texture={bodyTexture} $scale={bodyScale} />
+            {wearArray.map((wear) => {
+              return (
+                <ClothMesh
+                  key={wear.clothId}
+                  $clothId={wear.clothId}
+                  $texture={getTexture(wear.img)}
+                  $scale={wear.scale}
+                  $target={target}
+                  $position={wear.position}
+                />
+              );
+            })}
+          </mesh>
+        </Plane> */}
       </Canvas>
     </Wrapper>
   );
@@ -113,7 +188,7 @@ const Wrapper = styled.div`
   align-items: center;
   /* top: 60px; */
   /* left: 240px; */
-  background-color: rgba(167, 134, 106, 1);
+  background-color: #4d321b;
   border-radius: 10px;
 `;
 

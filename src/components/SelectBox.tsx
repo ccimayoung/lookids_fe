@@ -21,6 +21,7 @@ export const SelectBox = ({ $content, $list, $contentSize }: titleAndSelectBoxPr
   return (
     <SelectWrap
       ref={insideRef}
+      $contentSize={$contentSize}
       onClick={() => {
         setDropdown(!dropdown);
       }}
@@ -55,7 +56,7 @@ export const SelectBox = ({ $content, $list, $contentSize }: titleAndSelectBoxPr
 };
 
 export const SelectWrap = styled.div<divProps>`
-  width: ${(props) => (props.$titleWidth ? props.$titleWidth : '60px')};
+  width: ${(props) => (props.$contentSize === 's' ? '60px' : props.$contentSize === 'm' ? '80px' : '110px')};
   padding: 0 20px 0 7px;
   border: 1px solid ${({ theme }) => theme.colors.yellow[3]};
   cursor: pointer;

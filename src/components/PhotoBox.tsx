@@ -3,7 +3,7 @@ import { ReactComponent as TrashSvg } from '../assets/svg/trash.svg';
 import { ReactComponent as WearOnSvg } from '../assets/svg/wearOn.svg';
 import { ReactComponent as WearOffSvg } from '../assets/svg/wearOff.svg';
 import { useRecoilState } from 'recoil';
-import { wearArrayAtom, wearArrayProps } from '../recolil/atom';
+import { modalGatherAtom, wearArrayAtom, wearArrayProps } from '../recolil/atom';
 import { useEffect, useState } from 'react';
 
 export interface photoBoxProps {
@@ -21,6 +21,7 @@ export interface photoBoxProps {
 export const PhotoBox = ({ $clothId, $boxSize, $type, $wear, $work, $img, $size, $color }: photoBoxProps) => {
   const [wearArray, setWearArray] = useRecoilState(wearArrayAtom);
   const [nowWear, setNowWear] = useState<boolean>(false);
+  const [modalGather, setModalGather] = useRecoilState(modalGatherAtom);
 
   const getWearFunc = () => {
     if ($clothId && $img && $color && $size && $type) {
@@ -29,11 +30,13 @@ export const PhotoBox = ({ $clothId, $boxSize, $type, $wear, $work, $img, $size,
       let newArray: wearArrayProps[] = [];
       if (array.length > 0 && array.some((wear) => wear.clothId === $clothId)) {
         newArray = array.filter((wear) => wear.clothId !== $clothId);
+        setWearArray(newArray);
       } else {
-        newArray = [...array];
-        newArray.push({ clothId: $clothId, position: [2, 2, 0], img: $img, scale: [2.5, 2], type: $type, size: $size, color: $color });
-      } //todo : 상의면 위쪽 아니면 아래쪽
-      setWearArray(newArray);
+        setModalGather({
+          ...modalGather,
+          clothProperty: true,
+        });
+      }
     }
   };
 
@@ -47,6 +50,7 @@ export const PhotoBox = ({ $clothId, $boxSize, $type, $wear, $work, $img, $size,
 
   useEffect(() => {
     checkWearFunc();
+    console.log(wearArray);
   }, [wearArray]);
 
   return (
@@ -94,6 +98,7 @@ const NotWearWrapper = styled.div<photoBoxProps>`
   border-radius: 10px;
   justify-content: center;
   position: relative;
+  background-color: ${({ theme }) => theme.colors.brown[2]};
 `;
 
 const PhotoImg = styled.img`

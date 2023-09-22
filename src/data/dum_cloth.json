@@ -1,0 +1,13 @@
+{
+  "clothId": "op1",
+  "type": "원피스",
+  "scaleList": [
+    { "size": "s", "scale": [2.5, 2] },
+    { "size": "m", "scale": [3, 2.3] },
+    { "size": "l", "scale": [3.5, 2.6] }
+  ],
+  "colorList": [
+    { "color": "아이보리", "img": "img/op1-아이보리.png" },
+    { "color": "핑크", "img": "img/op1-핑크.png" }
+  ]
+}

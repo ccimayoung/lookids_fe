@@ -8,9 +8,11 @@ import { ReactComponent as BodySvg } from '../../assets/svg/body.svg';
 import { ReactComponent as QuestionSvg } from '../../assets/svg/question.svg';
 import { ReactComponent as SaveSvg } from '../../assets/svg/save.svg';
 import { useRecoilState } from 'recoil';
-import { childrenInfoAtom, modalGatherAtom, simpleModalAtom, wearArrayAtom } from '../../recolil/atom';
+import { childrenInfoAtom, getCaptureAtom, modalGatherAtom, showPhotoAtom, simpleModalAtom, wearArrayAtom } from '../../recolil/atom';
 import { ChildrenInfoModal } from '../../components/Modal/ChildrenInfoModal';
 import { divProps } from '../../components/props';
+import { ClothPropertyModal } from '../../components/Modal/ClothPropertyModal';
+import html2canvas from 'html2canvas';
 
 export interface IAppProps {}
 
@@ -19,11 +21,42 @@ export default function CoordinationRoom() {
   const [modalGather, setModalGather] = useRecoilState(modalGatherAtom);
   const [simpleModal, setSimpleModal] = useRecoilState(simpleModalAtom);
   const [childrenInfo, setChildrenInfo] = useRecoilState(childrenInfoAtom);
+  const [getCapture, setGetCapture] = useRecoilState(getCaptureAtom);
+  const [showPhoto, setShowPhoto] = useRecoilState(showPhotoAtom);
+
+  // const handleCapture = () => {
+  //   console.log(canvasRef);
+  //   if (canvasRef.current) {
+  //     const canvasToCapture = canvasRef.current;
+  //     html2canvas(canvasToCapture, {
+  //       useCORS: true, // CORS 이슈가 있는 경우 true로 설정
+  //     }).then((canvas) => {
+  //       // 캡처된 이미지 데이터를 Blob 형식으로 가져옵니다.
+  //       canvas.toBlob((blob) => {
+  //         // Blob을 URL로 변환합니다.
+  //         if (blob) {
+  //           const imageUrl = URL.createObjectURL(blob);
+
+  //           // 다운로드 링크를 생성하고 클릭합니다.
+  //           const a = document.createElement('a');
+  //           a.href = imageUrl;
+  //           a.download = 'captured.png';
+  //           a.click();
+
+  //           // URL 객체를 해제합니다.
+  //           URL.revokeObjectURL(imageUrl);
+  //         }
+  //       }, 'image/png');
+  //     });
+  //   }
+  // };
 
   return (
     <Wrapper>
+      {/* {showPhoto && <img src={showPhoto} alt="Captured" width={'100px'} />} */}
       <TopWrap>
         <CanvasWrapper />
+
         <SettingBtnWrap>
           <Circle onClick={() => setModalGather({ ...modalGather, closetQuestion: true })}>
             <QuestionSvg />
@@ -32,7 +65,8 @@ export default function CoordinationRoom() {
             <BodySvg />
           </Circle>
           <Circle
-            onClick={() =>
+            onClick={() => {
+              setGetCapture(true);
               setSimpleModal({
                 simplePopup: true,
                 content: [['p', '저장완료']],
@@ -43,8 +77,8 @@ export default function CoordinationRoom() {
                     simplePopup: false,
                   });
                 },
-              })
-            }
+              });
+            }}
           >
             <SaveSvg />
           </Circle>
@@ -67,7 +101,7 @@ export default function CoordinationRoom() {
           </Circle>
         </SettingBtnWrap>
         <CodyWrap>
-          <PhotoBox $codyId={'샘플코디1'} $boxSize="s" $type="cody" $img={'img/샘플옷.png'} />
+          <PhotoBox $codyId={'샘플코디1'} $boxSize="s" $type="cody" $img={showPhoto} />
           <PhotoBox $codyId={'샘플코디2'} $boxSize="s" $type="cody" $img={'img/샘플옷2.png'} />
           <PhotoBox $codyId={'샘플코디3'} $boxSize="s" $type="cody" $img={'img/샘플옷.png'} />
           <PhotoBox $codyId={'샘플코디4'} $boxSize="s" $type="cody" $img={'img/샘플옷.png'} />
@@ -83,8 +117,17 @@ export default function CoordinationRoom() {
           <MenuBtn $size="s" $content="기타" $active={selectedMenu === '기타'} $setSelectedMenu={setSelectedMenu} />
         </RowDiv>
         <RowDiv>
+          <PhotoBox
+            $clothId={'op1'}
+            $boxSize="s"
+            $work="cloth"
+            $wear={true}
+            $type={'원피스'}
+            $img={'img/op1-아이보리.png'}
+            $size="s"
+            $color="아이보리"
+          />
           <PhotoBox $clothId={'top1'} $boxSize="s" $work="cloth" $wear={true} $type={'상의'} $img={'img/top1.png'} $size="s" $color="줄무늬" />
-          <PhotoBox $clothId={'top2'} $boxSize="s" $work="cloth" $wear={true} $type={'상의'} $img={'img/top2.png'} $size="m" $color="블랙" />
           <PhotoBox $clothId={'top3'} $boxSize="s" $work="cloth" $wear={true} $type={'상의'} $img={'img/top3.png'} $size="l" $color="퍼플" />
         </RowDiv>
         <RowDiv>
@@ -94,6 +137,7 @@ export default function CoordinationRoom() {
         </RowDiv>
       </ClothWrap>
       <ChildrenInfoModal />
+      <ClothPropertyModal />
     </Wrapper>
   );
 }

@@ -1,5 +1,6 @@
 export interface divProps {
   $titleWidth?: string;
+  $contentSize?: string;
   $cGap?: string;
 }
 

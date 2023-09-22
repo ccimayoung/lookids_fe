@@ -11,7 +11,7 @@ export const grey = {
   2: '#343337', // grey 2
   1: '#1D1C21', // grey 1
 };
-  
+
 export const neutral = {
   0: '#FFFFFF',
   1: '#EEEEEE',
@@ -19,13 +19,13 @@ export const neutral = {
   3: '#77777C',
   4: '#1A1A1A',
 };
-  
+
 // Blue
 export const blue = {
   100: '#EFF2FE',
   500: '#3478F6',
 };
-  
+
 // Red
 export const red = {
   100: '#FFEAEA',
@@ -35,7 +35,7 @@ export const orange = {
   100: '#FFD1A3',
   500: '#FF8100',
 };
-  
+
 // Yellow
 export const yellow = {
   1: '#FFF6C2',
@@ -43,14 +43,14 @@ export const yellow = {
   3: '#FFE55A',
   4: '#FFD600',
 };
-  
+
 // Green
 export const green = {
   100: '#F2FBF6',
   300: '#C1FF3D',
   500: '#2AC769',
 };
-  
+
 // Purple
 export const purple = {
   100: '#F5F2FF',
@@ -63,12 +63,17 @@ export const pink = {
   500: '#FF0FA0',
   600: '#000046',
 };
-  
+
+export const brown = {
+  1: '#EEDBC0',
+  2: '#a7866a',
+};
+
 export const etc = {
   kakao: '#FFE812',
   naver: '#4FA42B',
 };
-  
+
 const colors = {
   grey,
   blue,
@@ -78,9 +83,9 @@ const colors = {
   green,
   purple,
   pink,
+  brown,
   etc,
 };
-
 
 const Theme: DefaultTheme = {
   colors,
@@ -88,6 +93,3 @@ const Theme: DefaultTheme = {
 
 export default Theme;
 // Grey
-
-
-  

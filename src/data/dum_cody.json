@@ -14,7 +14,7 @@
           "position": [1, 1, 0],
           "scale": [2.5, 2],
           "type": "상의",
-          "size": "110호",
+          "size": "s",
           "color": "검정"
         },
         {
@@ -25,7 +25,7 @@
           "width": 2.5,
           "height": 2,
           "type": "하의",
-          "size": "100호",
+          "size": "s",
           "color": "하늘"
         }
       ]
@@ -39,12 +39,12 @@
       "weight": 24,
       "cody": [
         {
-          "clothId": "top2",
+          "clothId": "top3",
           "img": "img/top3.png",
           "position": [1, 1, 0],
           "scale": [2.5, 2],
           "type": "상의",
-          "size": "110호",
+          "size": "m",
           "color": "검정"
         },
         {
@@ -55,7 +55,7 @@
           "width": 2.5,
           "height": 2,
           "type": "하의",
-          "size": "100호",
+          "size": "l",
           "color": "하늘"
         }
       ]
