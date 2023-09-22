@@ -44,7 +44,7 @@ const router = createBrowserRouter([
             element: <NewMarket />,
           },
           {
-            path: 'new-detail',
+            path: 'new-detail/:marketProductId',
             element: <NewMarketDetail />,
           },
         ],

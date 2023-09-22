@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { styled, useTheme } from 'styled-components';
 import { SearchBox } from '../../components/SearchBox';
-import { AddIcon, CameraIcon } from '../../components/GlobalIcon';
-import { FloatingButton } from '../../components/FloatingButton';
+import { CameraIcon } from '../../components/GlobalIcon';
 import { useNavigate } from 'react-router';
 import { ResellItemCard } from './components/ResellItemCard';
 import { useDropzone } from 'react-dropzone';

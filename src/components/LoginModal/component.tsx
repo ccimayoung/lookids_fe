@@ -118,7 +118,7 @@ const FormSection = styled.form`
 const InputBox = styled.div``;
 const LoginInput = styled.input`
   width: 100%;
-  font-size: 0.9rem;
+  font-size: 0.9rem;;
   padding: 7px;
   padding-left: 10px;
   border: ${({ theme }) => `1px solid ${theme.colors.yellow[3]}`};

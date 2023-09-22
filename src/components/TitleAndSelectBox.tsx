@@ -23,6 +23,6 @@ const Title = styled.div<divProps>`
   display: flex;
   align-items: center;
   font-family: 'NSNB';
-  font-size: 12px;
+  font-size: 0.9rem;
   width: ${(props) => (props.$titleWidth ? props.$titleWidth : '45px')};
 `;

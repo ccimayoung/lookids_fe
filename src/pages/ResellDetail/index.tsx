@@ -6,7 +6,7 @@ import withCommas from '../../utils/withCommas';
 import { Label } from '../../components/Label';
 import { formattedDate } from '../../utils/dateFormatter';
 
-export interface IAppProps {}
+export interface IAppProps { }
 
 export default function ResellDetail() {
   const [imageHeight, setImageHeight] = useState(0);
@@ -54,8 +54,8 @@ export default function ResellDetail() {
             </ProductInfo>
           </SellerInfo>
           <ButtonContainer>
-            <Label color={themeApp.colors.yellow[3]} height={'26'} text="글 등록" width={'50'} onClick={() => {}} center={true} bold={true} />
-            <Label color={themeApp.colors.green[300]} height={'26'} text="판매중" width={'50'} onClick={() => {}} center={true} bold={true} />
+            <Label color={themeApp.colors.yellow[3]} height={'26'} text="글 등록" width={'50'} onClick={() => { }} center={true} bold={true} />
+            <Label color={themeApp.colors.green[300]} height={'26'} text="판매중" width={'50'} onClick={() => { }} center={true} bold={true} />
           </ButtonContainer>
         </ProfileContainer>
         <Line />
@@ -65,7 +65,7 @@ export default function ResellDetail() {
           깨끗하게 세탁해서 드려요~
         </PostDescription>
         <ChatingButtonBox>
-          <Label color={themeApp.colors.green[300]} height={'30'} text="채팅하기" width={'60'} onClick={() => {}} center={true} bold={true} />
+          <Label color={themeApp.colors.green[300]} height={'30'} text="채팅하기" width={'60'} onClick={() => { }} center={true} bold={true} />
         </ChatingButtonBox>
       </ContentBox>
     </Container>
@@ -104,7 +104,7 @@ const PostUpdateDate = styled.div`
   margin-top: 5px;
 `;
 const PostDescription = styled.div`
-  font-size: 12px;
+  font-size: 0.9rem;
   color: ${({ theme }) => theme.colors.neutral[3]};
   width: 100%;
   margin-top: 3px;

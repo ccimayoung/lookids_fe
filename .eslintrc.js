@@ -11,8 +11,8 @@ module.exports = {
   plugins: ['@typescript-eslint', '@tanstack/query'],
   root: true,
   rules: {
-    // 들여쓰기 규칙 (2개의 공백 사용)
-    indent: ['error', 2],
+  // 들여쓰기 규칙 (2개의 공백 사용)
+    indent: ['error', 2, { 'SwitchCase': 1 }],
 
     // 세미콜론 규칙 (세미콜론 항상 사용)
     semi: ['error', 'always'],

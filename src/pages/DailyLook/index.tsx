@@ -17,7 +17,7 @@ import { Dropdown } from '../../components/Dropdown';
 import { useNavigate } from 'react-router';
 import { useGetDailylookList } from '../../hooks/useDailyLook';
 
-export interface IAppProps {}
+export interface IAppProps { }
 export interface IDailylookList {
   hashTag: string;
   user: {
@@ -27,12 +27,12 @@ export interface IDailylookList {
   imageUrls: Array<string>;
 }
 const genderOptions = [
-  { label: '전체', value: 0 },
-  { label: '남', value: 1 },
-  { label: '여', value: 2 },
+  { label: '전체', value: '' },
+  { label: '남', value: 'BOY' },
+  { label: '여', value: 'GIRL' },
 ];
 const heightOptions = [
-  { label: '전체', value: 0 },
+  { label: '전체', value: '' },
   { label: '70cm 이하', value: 1 },
   { label: '71~90cm', value: 2 },
   { label: '91~110cm', value: 3 },
@@ -46,21 +46,22 @@ const weightOptions = [
   { label: '21-30kg', value: 4 },
   { label: '30kg 이상', value: 5 },
 ];
+
 const seasonsOptions = [
-  { label: '전체', value: 0 },
-  { label: '봄', value: 1 },
-  { label: '여름', value: 2 },
-  { label: '가을', value: 3 },
-  { label: '겨울', value: 4 },
+  { label: '전체', value: '' },
+  { label: '봄', value: 'SPRING' },
+  { label: '여름', value: 'SUMMER' },
+  { label: '가을', value: 'AUTUMN' },
+  { label: '겨울', value: 'WINTER' },
 ];
 const categoryOptions = [
-  { label: '전체', value: 0 },
-  { label: '상의', value: 1 },
-  { label: '하의', value: 2 },
-  { label: '아우터', value: 3 },
-  { label: '악세사리', value: 4 },
-  { label: '신발', value: 5 },
-  { label: '기타', value: 6 },
+  { label: '전체', value: '' },
+  { label: '상의', value: 'ACCESSORY' },
+  { label: '하의', value: 'BOTTOM' },
+  { label: '아우터', value: 'ETC' },
+  { label: '악세사리', value: 'OUTER' },
+  { label: '신발', value: 'SHOES' },
+  { label: '기타', value: 'TOP' },
 ];
 
 export default function DailyLook() {
@@ -100,12 +101,17 @@ export default function DailyLook() {
     setIsWeightDropdownOpen(false);
     setIsSeasonsDropdownOpen(false);
     setIsCategoryDropdownOpen(false);
+    dailylookListRefetch();
   };
 
-  const { data: dailylookList } = useGetDailylookList();
-  useEffect(()=>{
-    console.log(dailylookList);
-  },[dailylookList]);
+  const { data: dailylookList, refetch: dailylookListRefetch } = useGetDailylookList({
+    height: selectedGender?.value,
+    category: selectedHeight?.value,
+    season: selectedWeight?.value,
+    sex: selectedSeasons?.value,
+    weigh: selectedCategory?.value,
+  });
+
   useEffect(() => {
     if (!isOpen) handleDropdownAllClose();
   }, [isOpen]);
@@ -213,10 +219,10 @@ export default function DailyLook() {
           />
         )}
         <CardContainer>
-          {dailylookList?.data?.dailyLooks?.length &&
-            dailylookList?.data?.dailyLooks?.map((v: any, index: number) => {
+          {dailylookList?.data?.dailyLooks?.length && dailylookList?.data?.dailyLooks?.length > 0 ?
+            dailylookList?.data?.dailyLooks?.map((v: IDailylookList, index: number) => {
               return <DailyLookCard key={v.user.name + v.user.userId + index} hashTag={v.hashTag} user={v.user} imageUrls={v.imageUrls} />;
-            })}
+            }) : undefined}
         </CardContainer>
       </Contents>
       <FloatingButton onClick={() => navigate('dailylook-post')}>
@@ -318,7 +324,7 @@ const CategorySelectMenu = styled.div`
   width: 100%;
   background-color: white;
   border-radius: 10px;
-  gap: 4px;
+  gap: 10px;
 `;
 const CategoryItem = styled.div`
   display: flex;

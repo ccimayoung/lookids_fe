@@ -18,6 +18,8 @@ function Component({ children }: { children: ReactChild[] }) {
       showThumbs={false}
       showArrows={false}
       showIndicators={true}
+      swipeable={true}
+
       showStatus={false}
       selectedItem={selentItem}
       onChange={(index, item) => setSelectItem(index)}
@@ -44,8 +46,8 @@ export default Component;
 const IndicatorPoint = styled.div<{ $isselected: boolean }>`
   display: inline-block;
   background-color: ${({ $isselected }) => ($isselected ? '#FFD600' : '#D9D9D9')};
-  width: 10px;
-  height: 10px;
+  width: 1rem;
+  height: 1rem;
   border: none;
   margin: 0 5%;
   border-radius: 50%;

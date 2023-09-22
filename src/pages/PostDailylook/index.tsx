@@ -5,56 +5,72 @@ import { Label } from '../../components/Label';
 import { ToggleButton } from '../../components/ToggleButton';
 import { DeleteIcon, PlusIcon, Star } from '../../components/GlobalIcon';
 import { usePostDailylook } from '../../hooks/useDailyLook';
-import { Category, Season } from '../../utils/statusFormat/dailylookStatus';
+import { Category, Season } from '../../utils/statusFormatter/dailylookStatus';
+import { useNavigate } from 'react-router-dom';
+import { genderReverseFormatted } from '../../utils/statusFormatter/dailylookFormatter';
 
 export interface IPurchaseInfo {
   description: string;
   brand: string;
   link: string;
-  [key: string]: string ;
+  [key: string]: string;
 }
 
 
 export default function PostDailylook() {
   const themeApp = useTheme();
+
   const [category, setCategory] = useState<string[]>([]);
   const [seasons, setSeasons] = useState<string[]>([]);
 
   const [images, setImages] = useState<File[]>([]);
   const [isActive, setIsActive] = useState(false);
-  const [gender, setGender] = useState<string>('남');
-  const [years, setYears] = useState<number>(9);
-  const [height, setHeight] = useState<number>(120);
-  const [weight, setWeight] = useState<number>(31);
+  const [gender, setGender] = useState<string>();
+  const [years, setYears] = useState<number>();
+  const [height, setHeight] = useState<number>();
+  const [weight, setWeight] = useState<number>();
   const [tag, setTag] = useState<string>();
-  const [purchaseInfoList, setPurchaseInfoList] = useState<IPurchaseInfo[]>([{  brand: '', description: '', link: '' }]);
-  const {mutateAsync :postDailylook} = usePostDailylook();
+  const [purchaseInfoList, setPurchaseInfoList] = useState<IPurchaseInfo[]>([{ brand: '', description: '', link: '' }]);
+  const { mutateAsync: postDailylook } = usePostDailylook();
+
+  const navigate = useNavigate();
   const addInputField = () => {
     // 새로운 입력 필드를 추가하려면 이전 상태를 복사한 후, 새 요소를 추가합니다.
     setPurchaseInfoList([...purchaseInfoList, { brand: '', description: '', link: '' }]);
   };
-  const handlePostDailylook = async()=>{
+  const handlePostDailylook = async () => {
     const req = {
-      'age': years,
-      'category': category,
+      'age': years || 0,
+      'category': category[0],
       'description': '테스트입니다.',
-      'hashTag': tag?.split('#').slice(1).map(v=>'#'+v),
-      'height': height,
-      'imageUrls': images,
+      'hashTag': tag?.split('#').slice(1).map(v => '#' + v),
+      'height': height || 0,
+      'imageUrls': ['https://berrycloset.co.kr/web/product/big/202303/a5d5c4203bc553ea8049b80e444f9a89.jpg', 'https://berrycloset.co.kr/web/product/extra/big/202303/17c12b5746cb6c4d3aa80e67c8b24aa0.jpg', 'https://berrycloset.co.kr/web/product/extra/big/202303/181f2bf848ae248994130cb47afaaf5b.jpg'],
       'purchaseInfos': [
-        ...purchaseInfoList.map((p)=>{
-          return{ 
+        ...purchaseInfoList.map((p) => {
+          return {
             brand: p.brand,
-            description: p.description, 
-            link: p.link 
+            description: p.description,
+            link: p.link
           };
         })
       ],
-      'season': seasons,
-      'sex': gender,
-      'weight': 60,
+      'season': seasons[0],
+      'sex': genderReverseFormatted(gender) || '',
+      'userId': 0,
+      'weight': weight || 0,
     };
-    await postDailylook(req);
+
+    try {
+      await postDailylook(req);
+      navigate(-1);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(error.message);
+        alert(error.message.toString());
+      }
+    }
+
   };
   const handleInputChange = (index: number, name: string, value: string) => {
     const updatedList = [...purchaseInfoList];
@@ -89,9 +105,13 @@ export default function PostDailylook() {
               height={'26'}
               text="남"
               width={'55'}
-              onClick={() => {}}
+              placeholder='남'
+              onClick={() => { }}
               value={gender}
-              onChange={(e) => setGender(e.target.value)}
+              onChange={(e) => {
+                console.log(e.target.value);
+                setGender(e.target.value);
+              }}
               center={false}
             />
           </ChildInfo>
@@ -105,11 +125,12 @@ export default function PostDailylook() {
             <Label
               color={isActive ? themeApp.colors.neutral[1] : themeApp.colors.neutral[0]}
               disabled={isActive}
-              value={years.toString()}
+              value={years?.toString()}
               height={'26'}
               text="9세"
               width={'55'}
-              onClick={() => {}}
+              placeholder='9'
+              onClick={() => { }}
               center={false}
               onChange={(e) => setYears(Number(e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')))}
             />
@@ -129,9 +150,10 @@ export default function PostDailylook() {
               height={'26'}
               text="120cm"
               width={'55'}
-              onClick={() => {}}
+              placeholder='120'
+              onClick={() => { }}
               center={false}
-              value={height.toString()}
+              value={height?.toString()}
               onChange={(e) => setHeight(Number(e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')))}
             />
           </ChildInfo>
@@ -142,16 +164,16 @@ export default function PostDailylook() {
               </StarBox>
               <ChildInfoLabel>몸무게</ChildInfoLabel>
             </Tag>
-
             <Label
               color={isActive ? themeApp.colors.neutral[1] : themeApp.colors.neutral[0]}
               disabled={isActive}
               height={'26'}
               text="31kg"
               width={'55'}
-              onClick={() => {}}
+              placeholder='31'
+              onClick={() => { }}
               center={false}
-              value={weight.toString()}
+              value={weight?.toString()}
               onChange={(e) => setWeight(Number(e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')))}
             />
           </ChildInfo>
@@ -318,9 +340,9 @@ export default function PostDailylook() {
                   width={'25%'}
                   placeholder={'설명'}
                   center={false}
-                  value={v.tag}
+                  value={v.description}
                   onChange={(e) => {
-                    handleInputChange(i, 'tag', e.target.value);
+                    handleInputChange(i, 'description', e.target.value);
                   }}
                 />
                 <Label
@@ -371,7 +393,7 @@ export default function PostDailylook() {
         </CategoryContents>
       </ContentsBox>
       <Complate>
-        <Label  color={themeApp.colors.green[300]} height={'30'} text="글 등록" width={'60'} onClick={handlePostDailylook} center={true} bold={true} />
+        <Label color={themeApp.colors.green[300]} height={'30'} text="글 등록" width={'60'} onClick={handlePostDailylook} center={true} bold={true} />
       </Complate>
     </Container>
   );
@@ -385,15 +407,18 @@ const Container = styled.div`
 `;
 
 const ChildInfoContainer = styled.div`
+display: flex;
+flex-direction: column;
   padding: 10px;
   border: ${({ theme }) => `1px solid ${theme.colors.yellow[3]}`};
   border-radius: 10px;
   margin-top: 10px;
   margin-bottom: 20px;
+  gap:10px;
 `;
 
 const ChildInfoTitle = styled.div`
-  font-size: 15px;
+  font-size: 1rem;
   display: flex;
 `;
 const ChildInfoBox = styled.div`
@@ -417,7 +442,7 @@ const HeaderContainer = styled.div`
 
 const ChildInfoLabel = styled.div`
   font-weight: 600;
-  font-size: 12px;
+  font-size: 0.9rem;
 `;
 
 const Tag = styled.div`
@@ -461,7 +486,7 @@ const DescriptionBox = styled.textarea`
   resize: none;
   border: ${({ theme }) => `1px solid ${theme.colors.yellow[3]}`};
   padding: 7px;
-  font-size: 12px;
+  font-size: 0.9rem;
   border-radius: 5px;
   outline-color: ${({ theme }) => theme.colors.yellow[3]};
 `;

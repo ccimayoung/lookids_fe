@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { CameraIcon, SearchIcon } from '../GlobalIcon';
 import { useNavigate } from 'react-router-dom';
 import { DropzoneRootProps } from 'react-dropzone';
+import { ChangeEvent } from 'react';
 
 interface ISearchBoxProps {
   onClick?: () => void;
@@ -9,12 +10,13 @@ interface ISearchBoxProps {
   isSearch?: boolean;
   isCamera?: boolean;
   disabled?: boolean;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 interface IWarpProps {
   $isclick: string;
 }
 
-const Component = ({ onClick, placeholder, isSearch = true, isCamera = true, disabled = false }: ISearchBoxProps) => {
+const Component = ({ onClick, placeholder, isSearch = true, isCamera = true, disabled = false, onChange }: ISearchBoxProps) => {
   const navigate = useNavigate();
   return (
     <IconWrapper onClick={onClick} $isclick={onClick ? 'true' : 'false'}>
@@ -23,10 +25,9 @@ const Component = ({ onClick, placeholder, isSearch = true, isCamera = true, dis
           <SearchIcon />
         </LeftIconBox>
       )}
-      <SearchInput placeholder={placeholder} disabled={disabled} />
+      <SearchInput placeholder={placeholder} disabled={disabled} onChange={onChange} />
       {isCamera && (
         <RightIconBox
-          disabled={disabled}
           onClick={(e) => {
             if (!disabled) {
               e.stopPropagation();
@@ -49,7 +50,7 @@ const IconWrapper = styled.div<IWarpProps>`
   background-color: ${({ theme }) => theme.colors.neutral[0]};
   border-radius: 5px;
   width: 100%;
-  font-size: 12px;
+  font-size: 0.9rem;
   height: 30px;
   display: flex;
   align-items: center;
@@ -71,7 +72,7 @@ const SearchInput = styled.input`
 const LeftIconBox = styled.div`
   margin-right: 5px;
 `;
-const RightIconBox = styled.button`
+const RightIconBox = styled.div`
   border: none;
   background-color: white;
   margin: 0;

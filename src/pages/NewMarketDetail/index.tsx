@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 import withCommas from '../../utils/withCommas';
 import { Dropdown } from '../../components/Dropdown';
 import { useRecoilState } from 'recoil';
 import { Option } from '../../components/Dropdown/component';
 import { selectedColorAtom, selectedSizeAtom } from './atom/atom';
+import { useGetNewMarketDetail } from '../../hooks/useNewMarket';
+import { useParams } from 'react-router-dom';
 
-export interface IAppProps {}
+export interface IAppProps { }
 const ColorOptions = [
   { label: '전체', value: 0 },
   { label: '상의', value: 1 },
@@ -25,13 +27,18 @@ const sizeOptions = [
 ];
 
 export default function NewMarketDetail() {
+  const params = useParams();
   const [isColorDropdownOpen, setIsColorDropdownOpen] = useState<boolean>(false);
   const [selectedColor, setSelectedColor] = useRecoilState<Option | null>(selectedColorAtom);
+  const [isSizeDropdownOpen, setIsSizeDropdownOpen] = useState<boolean>(false);
+  const [selectedSize, setSelectedSize] = useRecoilState<Option | null>(selectedSizeAtom);
+
+  const { data: getNewMarketDetail } = useGetNewMarketDetail(Number(params.marketProductId));
+
   const handleOptionSelectColor = (option: Option | null) => {
     setSelectedColor(option);
   };
-  const [isSizeDropdownOpen, setIsSizeDropdownOpen] = useState<boolean>(false);
-  const [selectedSize, setSelectedSize] = useRecoilState<Option | null>(selectedSizeAtom);
+
   const handleOptionSelectSize = (option: Option | null) => {
     setSelectedSize(option);
   };
@@ -40,17 +47,19 @@ export default function NewMarketDetail() {
     setIsSizeDropdownOpen(false);
     setIsColorDropdownOpen(false);
   };
+  useEffect(() => {
+    console.log(getNewMarketDetail?.data);
+  }, [getNewMarketDetail]);
   return (
     <Container>
       <ProductContainer>
         <ProductImageBox>
-          <ProductImage src="https://static.luck-d.com/product/5011/main_carousel/IAB_STUDIO_10TH_ANNIVERSARY_TSHIRTS_PACK__65269.webp" />
+          <ProductImage src={getNewMarketDetail?.data?.mainImageUrls} />
         </ProductImageBox>
         <ProductInfoBox>
           <ProductTextBox>
-            <BrandName>케어베어</BrandName>
-            <ProductName>퀄팅 패딩 점퍼</ProductName>
-            <Price>{withCommas(123000)}원</Price>
+            <ProductName>{getNewMarketDetail?.data?.productName}</ProductName>
+            <Price>{withCommas(getNewMarketDetail?.data?.price)}원</Price>
           </ProductTextBox>
           <DropdownBox>
             <ColorItem>
@@ -83,7 +92,10 @@ export default function NewMarketDetail() {
         </ProductInfoBox>
       </ProductContainer>
       <Line />
-      <DetailDescription src="/img/detaildescription.png" />
+      {getNewMarketDetail?.data?.subImageUrls?.map((v, index) => {
+        return <DetailDescription key={v + index} src={v} />;
+      })}
+
     </Container>
   );
 }
@@ -102,7 +114,9 @@ const ProductImageBox = styled.div`
   margin-right: 10px;
 `;
 const ProductTextBox = styled.div`
-  gap: 3px;
+display: flex;
+flex-direction: column;
+  gap: 8px;
 `;
 const ProductInfoBox = styled.div`
   flex: 1;
@@ -143,7 +157,8 @@ const DropdownBox = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-bottom: 14px;
+  padding-top: 8px;
+  padding-bottom: 5px;
 `;
 
 const ButtonBox = styled.div`

@@ -65,7 +65,7 @@ export const SelectWrap = styled.div<divProps>`
   border-radius: 5px;
   display: flex;
   align-items: center;
-  font-size: 12px;
+  font-size: 0.9rem;
 
   .propertyDownToggle {
     position: absolute;
@@ -92,7 +92,7 @@ export const PropertySelectBox = styled.div`
 export const DropdownContent = styled.div`
   width: 100%;
   height: 16px;
-  font-size: 12px;
+  font-size: 0.9rem;
   display: flex;
   flex-direction: row;
   align-items: center;

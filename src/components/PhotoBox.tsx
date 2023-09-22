@@ -131,7 +131,7 @@ const WearingBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 12px;
+  font-size: 0.9rem;
   color: ${({ theme }) => theme.colors.neutral[0]};
   top: 0px;
   background-color: rgba(0, 0, 0, 0.6);

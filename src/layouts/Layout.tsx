@@ -217,7 +217,7 @@ const LoginBox = styled.button`
   top: 45px;
   z-index: 99;
   right: 20px;
-  font-size: 12px;
+  font-size: 0.9rem;
   width: 100px;
   padding: 7px;
   border-radius: 5px;
