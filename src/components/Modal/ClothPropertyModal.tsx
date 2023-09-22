@@ -51,27 +51,29 @@ export const ClothPropertyModal = () => {
   }, []);
 
   return (
-    modalGather.clothProperty && (
-      <Wrap>
-        <ModalBox>
-          <QuitImg
-            src={QuitSvg}
-            onClick={() => {
-              setModalGather({
-                ...modalGather,
-                clothProperty: false,
-              });
-            }}
-          />
-          <ContentWrap ref={contentRef}>
-            <TitleAndSelectBox $title="색상" $titleWidth="64px" $content={colorList[0]} $list={colorList} $contentSize="l" />
-            <TitleAndSelectBox $title="사이즈" $titleWidth="64px" $content={'s'} $list={['s', 'm', 'l']} $contentSize="l" />
-          </ContentWrap>
+    <>
+      {modalGather.clothProperty && (
+        <Wrap>
+          <ModalBox>
+            <QuitImg
+              src={QuitSvg}
+              onClick={() => {
+                setModalGather({
+                  ...modalGather,
+                  clothProperty: false,
+                });
+              }}
+            />
+            <ContentWrap ref={contentRef}>
+              <TitleAndSelectBox $title="색상" $titleWidth="64px" $content={colorList[0]} $list={colorList} $contentSize="l" />
+              <TitleAndSelectBox $title="사이즈" $titleWidth="64px" $content={'s'} $list={['s', 'm', 'l']} $contentSize="l" />
+            </ContentWrap>
 
-          <ModalBtn onClick={makeClothFunc}>선택</ModalBtn>
-        </ModalBox>
-      </Wrap>
-    )
+            <ModalBtn onClick={makeClothFunc}>선택</ModalBtn>
+          </ModalBox>
+        </Wrap>
+      )}
+    </>
   );
 };
 const Wrap = styled.div`

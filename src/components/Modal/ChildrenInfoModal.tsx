@@ -35,7 +35,7 @@ export const ChildrenInfoModal = () => {
 
   const [images, setImages] = useState<any[]>([]);
   const canvasRef = useRef<any>(null);
-  const [faceScale, setFaceScale] = useState<number>(1);
+  const [faceScale, setFaceScale] = useState<number>(0.5);
 
   const handleImageUpload = () => {
     const acceptedFiles = [croppedImage, 'img/남샘플.png'];
@@ -67,22 +67,34 @@ export const ChildrenInfoModal = () => {
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const src = childrenInfo.gender === '여' ? 'img/여샘플.png' : 'img/남샘플.png';
-    // Public 폴더에서 가져온 이미지 그리기
+    // Public 폴더에서 가져온 이미지 그리기 (원형으로 클리핑하지 않음)
     const publicImg = new Image();
-    publicImg.src = src;
+    publicImg.src = childrenInfo.gender === '여' ? 'img/여샘플.png' : 'img/남샘플.png';
 
     publicImg.onload = () => {
-      ctx.drawImage(publicImg, childrenInfo.gender === '여' ? -10 : -20, -20, publicImg.width / 2.5, publicImg.height / 2.5);
+      // Public 이미지를 그림 (원형 클리핑 밖에 그림)
+      ctx.drawImage(publicImg, 0, 0, canvas.width, canvas.height);
 
-      // Base64로 제공되는 이미지 그리기
+      // Base64로 제공되는 이미지 그리기 (원형으로 클리핑)
       const base64Img = new Image();
       setBaseImg(base64Img);
       base64Img.src = images[0];
 
       // Base64 이미지의 onload 이벤트 핸들러 설정
       base64Img.onload = () => {
-        move(base64Img);
+        // 원형 클리핑하기 위한 경로 생성
+        ctx.beginPath();
+        // ctx.arc(canvas.width / 2, canvas.height / 2, canvas.width / 2, 0, Math.PI * 2);
+
+        childrenInfo.gender === '여' ? ctx.ellipse(93, 45, 30, 26, 0, 0, Math.PI * 2) : ctx.ellipse(95, 45, 23, 26, 0, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.clip();
+
+        // Base64 이미지를 원형 클리핑된 상태로 그림
+        ctx.drawImage(base64Img, offset.x, offset.y, base64Img.width * faceScale, base64Img.height * faceScale);
+
+        // 클리핑 해제
+        ctx.restore();
       };
     };
   };
@@ -92,18 +104,25 @@ export const ChildrenInfoModal = () => {
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // const x = position.x + offset.x;
-    // const y = position.y + offset.y;
-
-    // console.log(x, y);
-
     // Public 폴더에서 가져온 이미지 그리기
     const publicImg = new Image();
     publicImg.src = childrenInfo.gender === '여' ? 'img/여샘플.png' : 'img/남샘플.png';
-    ctx.drawImage(publicImg, childrenInfo.gender === '여' ? 40 : 40, 3, publicImg.width / 2.5, publicImg.height / 2.5);
+    // ctx.drawImage(publicImg, childrenInfo.gender === '여' ? 40 : 40, 3, publicImg.width / 2.5, publicImg.height / 2.5);
 
-    // Base64 이미지 그리기
+    // 원형 클리핑하기 위한 경로 생성
+    ctx.beginPath();
+    // ctx.arc(canvas.width / 2, canvas.height / 2, canvas.width / 2, 0, Math.PI * 2);
+    childrenInfo.gender === '여' ? ctx.ellipse(93, 45, 30, 26, 0, 0, Math.PI * 2) : ctx.ellipse(95, 45, 23, 26, 0, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.clip();
+
+    // Base64 이미지를 원형 클리핑된 상태로 그림
     ctx.drawImage(base64Img, offset.x, offset.y, base64Img.width * faceScale, base64Img.height * faceScale);
+
+    // 클리핑 해제
+    ctx.restore();
+
+    // ctx.drawImage(base64Img, offset.x, offset.y, base64Img.width * faceScale, base64Img.height * faceScale);
   };
 
   const handleMouseDown = (e: any) => {
@@ -160,86 +179,88 @@ export const ChildrenInfoModal = () => {
   }, [faceScale]);
 
   return (
-    modalGather.closetBody && (
-      <Wrap>
-        <ModalBox>
-          <QuitImg
-            src={QuitSvg}
-            onClick={() => {
-              setModalGather({
-                ...modalGather,
-                closetBody: false,
-              });
-            }}
-          />
+    <>
+      {modalGather.closetBody && (
+        <Wrap>
+          <ModalBox>
+            <QuitImg
+              src={QuitSvg}
+              onClick={() => {
+                setModalGather({
+                  ...modalGather,
+                  closetBody: false,
+                });
+              }}
+            />
 
-          {page === 1 ? (
-            <>
-              <RowDiv $cGap="15px" style={{ marginTop: '10px' }}>
-                {inputImage ? (
+            {page === 1 ? (
+              <>
+                <RowDiv $cGap="15px" style={{ marginTop: '10px' }}>
+                  {inputImage ? (
+                    <PhotoBox>
+                      <Cropper src={inputImage} crop={onCrop} ref={cropperRef} width="100px" height={'100px'} />
+                    </PhotoBox>
+                  ) : (
+                    <PhotoBox>
+                      <PhotoUploadSvg />
+                      <input type="file" accept="image/*" onChange={(e: any) => setInputImage(URL.createObjectURL(e.target.files[0]))} />
+                    </PhotoBox>
+                  )}
+                  <YellowArrow />
                   <PhotoBox>
-                    <Cropper src={inputImage} crop={onCrop} ref={cropperRef} width="100px" height={'100px'} />
+                    <CropImage src={croppedImage} />
                   </PhotoBox>
-                ) : (
-                  <PhotoBox>
-                    <PhotoUploadSvg />
-                    <input type="file" accept="image/*" onChange={(e: any) => setInputImage(URL.createObjectURL(e.target.files[0]))} />
-                  </PhotoBox>
-                )}
-                <YellowArrow />
-                <PhotoBox>
-                  <CropImage src={croppedImage} />
-                </PhotoBox>
-              </RowDiv>
-              <RowDiv $cGap="10px" ref={firstRef}>
-                <TitleAndSelectBox $title="성별" $titleWidth="35px" $content={childrenInfo.gender} $list={['남', '여']} $contentSize="s" />
-                <TitleAndContent $writeAble={true} $title="나이" $content={childrenInfo.age} $contentSize="s" />
-              </RowDiv>
-              <RowDiv $cGap="10px" style={{ marginTop: '10px' }} ref={secondRef}>
-                <TitleAndContent $writeAble={true} $title="키" $titleWidth="35px" $content={childrenInfo.height} $contentSize="s" $unit="cm" />
-                <TitleAndContent $writeAble={true} $title="몸무게" $content={childrenInfo.weight} $contentSize="s" />
-              </RowDiv>
-              <ModalBtn onClick={getInfoFunc}>모델 생성</ModalBtn>
-            </>
-          ) : (
-            <>
-              <canvas
-                ref={canvasRef}
-                width={180} // 캔버스 크기를 조절하세요
-                height={400}
-                style={{ border: '1px solid black' }}
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUp}
-              />
-              <RowDiv $cGap="5px" style={{ width: '170px', marginTop: '15px' }}>
-                얼굴 크기 조절
-                <GrayCircle onClick={() => setFaceScale(faceScale * 1.1)}>
-                  <PlusSvg />
-                </GrayCircle>
-                <GrayCircle onClick={() => setFaceScale(faceScale * 0.9)}>
-                  <MinusSvg />
-                </GrayCircle>
-              </RowDiv>
-              <RowDiv $cGap="20px" style={{ width: '180px', marginTop: '-15px' }}>
-                <ModalBtn
-                  style={{ width: '80px' }}
-                  className="secondBtn"
-                  onClick={() => {
-                    setPage(1);
-                  }}
-                >
-                  이전
-                </ModalBtn>
-                <ModalBtn style={{ width: '80px' }} className="secondBtn" onClick={finishFunc}>
-                  저장
-                </ModalBtn>
-              </RowDiv>
-            </>
-          )}
-        </ModalBox>
-      </Wrap>
-    )
+                </RowDiv>
+                <RowDiv $cGap="10px" ref={firstRef}>
+                  <TitleAndSelectBox $title="성별" $titleWidth="35px" $content={childrenInfo.gender} $list={['남', '여']} $contentSize="s" />
+                  <TitleAndContent $writeAble={true} $title="나이" $content={childrenInfo.age} $contentSize="s" />
+                </RowDiv>
+                <RowDiv $cGap="10px" style={{ marginTop: '10px' }} ref={secondRef}>
+                  <TitleAndContent $writeAble={true} $title="키" $titleWidth="35px" $content={childrenInfo.height} $contentSize="s" $unit="cm" />
+                  <TitleAndContent $writeAble={true} $title="몸무게" $content={childrenInfo.weight} $contentSize="s" />
+                </RowDiv>
+                <ModalBtn onClick={getInfoFunc}>모델 생성</ModalBtn>
+              </>
+            ) : (
+              <>
+                <canvas
+                  ref={canvasRef}
+                  width={180} // 캔버스 크기를 조절하세요
+                  height={400}
+                  style={{ border: '1px solid black' }}
+                  onMouseDown={handleMouseDown}
+                  onMouseMove={handleMouseMove}
+                  onMouseUp={handleMouseUp}
+                />
+                <RowDiv $cGap="5px" style={{ width: '170px', marginTop: '15px' }}>
+                  얼굴 크기 조절
+                  <GrayCircle onClick={() => setFaceScale(faceScale * 1.1)}>
+                    <PlusSvg />
+                  </GrayCircle>
+                  <GrayCircle onClick={() => setFaceScale(faceScale * 0.9)}>
+                    <MinusSvg />
+                  </GrayCircle>
+                </RowDiv>
+                <RowDiv $cGap="20px" style={{ width: '180px', marginTop: '-15px' }}>
+                  <ModalBtn
+                    style={{ width: '80px' }}
+                    className="secondBtn"
+                    onClick={() => {
+                      setPage(1);
+                    }}
+                  >
+                    이전
+                  </ModalBtn>
+                  <ModalBtn style={{ width: '80px' }} className="secondBtn" onClick={finishFunc}>
+                    저장
+                  </ModalBtn>
+                </RowDiv>
+              </>
+            )}
+          </ModalBox>
+        </Wrap>
+      )}
+    </>
   );
 };
 const Wrap = styled.div`
