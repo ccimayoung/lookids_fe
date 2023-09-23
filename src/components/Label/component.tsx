@@ -45,7 +45,7 @@ const Component = ({ onClick, onChange, text, value, disabled, width, height, co
 // Styling
 const IconWrapper = styled.button<IButtonProps>`
   border: ${({ theme, color }) => (color === '#FFFFFF' ? `1px solid ${theme.colors.yellow[3]}` : 'none')};
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   white-space: nowrap;
   background-color: ${({ color }) => color};
   border-radius: 5px;

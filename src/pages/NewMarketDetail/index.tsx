@@ -8,7 +8,7 @@ import { selectedColorAtom, selectedSizeAtom } from './atom/atom';
 import { useGetNewMarketDetail } from '../../hooks/useNewMarket';
 import { useParams } from 'react-router-dom';
 
-export interface IAppProps { }
+export interface IAppProps {}
 const ColorOptions = [
   { label: '전체', value: 0 },
   { label: '상의', value: 1 },
@@ -84,8 +84,20 @@ export default function NewMarketDetail() {
             </ColorItem>
           </DropdownBox>
           <ButtonBox>
-            <ButtonStyle>장바구니</ButtonStyle>
-            <ButtonStyle>구매하기</ButtonStyle>
+            <ButtonStyle
+              onClick={() => {
+                alert('장바구니에 담겼습니다.(준비중)');
+              }}
+            >
+              장바구니
+            </ButtonStyle>
+            <ButtonStyle
+              onClick={() => {
+                alert('구매하셨습니다..(준비중)');
+              }}
+            >
+              구매하기
+            </ButtonStyle>
           </ButtonBox>
         </ProductInfoBox>
       </ProductContainer>
@@ -93,7 +105,6 @@ export default function NewMarketDetail() {
       {getNewMarketDetail?.data?.subImageUrls?.map((v, index) => {
         return <DetailDescription key={v + index} src={v} />;
       })}
-
     </Container>
   );
 }
@@ -112,8 +123,8 @@ const ProductImageBox = styled.div`
   margin-right: 10px;
 `;
 const ProductTextBox = styled.div`
-display: flex;
-flex-direction: column;
+  display: flex;
+  flex-direction: column;
   gap: 8px;
 `;
 const ProductInfoBox = styled.div`

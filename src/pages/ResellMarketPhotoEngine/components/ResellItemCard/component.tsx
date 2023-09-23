@@ -35,7 +35,7 @@ const Component = ({ brandName, productName, price, imgUrl }: IResellItemProps) 
   }, []);
 
   return (
-    <ProductCard ref={elementRef} height={imageHeight.toString()} onClick={() => navigate('resell-detail')}>
+    <ProductCard ref={elementRef} height={imageHeight.toString()} onClick={() => navigate('')}>
       <ProductImage height={imageHeight.toString()} src={imgUrl} />
       <TextContainer>
         <BrandText>{brandName}</BrandText>
