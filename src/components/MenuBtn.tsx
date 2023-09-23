@@ -24,7 +24,7 @@ const Wrapper = styled.div<MenuBtnProps>`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   cursor: pointer;
   border-radius: 5px;
 `;
