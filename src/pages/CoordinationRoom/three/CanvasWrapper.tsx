@@ -49,10 +49,10 @@ export const CanvasWrapper = () => {
   useEffect(() => {
     if (childrenInfo.gender === '여') {
       setBodyTexture(girlTexture);
-      setBodyScale([(childrenInfo.weight / 22) * 2.1, (childrenInfo.height / 130) * 7]);
+      setBodyScale([(childrenInfo.weight / 24) * 2.1, (childrenInfo.height / 130) * 7]);
     } else {
       setBodyTexture(boyTexture);
-      setBodyScale([(childrenInfo.weight / 22) * 2.1, (childrenInfo.height / 130) * 7]);
+      setBodyScale([(childrenInfo.weight / 24) * 2.1, (childrenInfo.height / 130) * 7]);
     }
   }, [childrenInfo]);
 
@@ -190,6 +190,7 @@ const Wrapper = styled.div`
   /* left: 240px; */
   background-color: #4d321b;
   border-radius: 10px;
+  overflow: hidden;
 `;
 
 //todo : 스냅샷찍기, 얼굴저장, 장바구니, 설명만들기
