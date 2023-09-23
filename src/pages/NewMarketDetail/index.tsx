@@ -86,14 +86,14 @@ export default function NewMarketDetail() {
           <ButtonBox>
             <ButtonStyle
               onClick={() => {
-                alert('장바구니에 담겼습니다.(준비중)');
+                alert('장바구니에 담겼습니다');
               }}
             >
               장바구니
             </ButtonStyle>
             <ButtonStyle
               onClick={() => {
-                alert('구매하셨습니다..(준비중)');
+                alert('구매하셨습니다');
               }}
             >
               구매하기
@@ -186,6 +186,7 @@ const ButtonStyle = styled.button`
   display: flex;
   justify-content: center;
   font-size: 12px;
+  white-space: nowrap;
   align-items: center;
   border-radius: 5px;
   background-color: ${({ theme }) => theme.colors.yellow[3]};
