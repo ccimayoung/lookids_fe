@@ -37,7 +37,14 @@ export const dailyLookApis = {
   getDailyLookDetail: async (dailyfoodId: number) => {
     return await baseUrl.get(`/daily/clothes/${dailyfoodId}`);
   },
-  postDailyLook: async (data: IPostDailylookProps) => {
-    return await baseUrl.post('/daily/clothes', data);
+  getEvent: async () => {
+    return await baseUrl.get('/events');
+  },
+  postDailyLook: async (data: FormData) => {
+    return await baseUrl.post('/daily/clothes', data,{
+      headers: {
+        'Content-Type': 'multipart/form-data', // JSON 데이터 전송
+      },
+    });
   },
 };

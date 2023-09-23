@@ -20,6 +20,17 @@ export const Gender: IGender = {
   BOY: 'BOY',
   GIRL: 'GIRL',
 };
+interface ITarget {
+  BOY: string;
+  GIRL: string;
+  BABY: string;
+}
+
+export const Target: ITarget = {
+  BOY: 'BOY',
+  GIRL: 'GIRL',
+  BABY: 'BABY',
+};
 
 interface ISaleStatus {
   DONE: string;

@@ -127,12 +127,12 @@ function Layout() {
                 신상마켓
               </IconBox>
             </NavLinkStyled>
-            <NavLinkStyled to="/community">
+            {/* <NavLinkStyled to="/community">
               <IconBox $activepage={activePage === 3} style={{ marginTop: '8px' }}>
                 <CommunityIcon color={activePage === 3 ? themeApp.colors.yellow[3] : themeApp.colors.neutral[4]} />
                 커뮤니티
               </IconBox>
-            </NavLinkStyled>
+            </NavLinkStyled> */}
             <NavLinkStyled to="/coordinaton-room">
               <IconBox $activepage={activePage === 4}>
                 <MyClosetIcon color={activePage === 4 ? themeApp.colors.yellow[3] : themeApp.colors.neutral[4]} />

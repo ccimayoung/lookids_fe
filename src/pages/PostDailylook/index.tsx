@@ -8,6 +8,7 @@ import { usePostDailylook } from '../../hooks/useDailyLook';
 import { Category, Season } from '../../utils/statusFormatter/dailylookStatus';
 import { useNavigate } from 'react-router-dom';
 import { genderReverseFormatted } from '../../utils/statusFormatter/dailylookFormatter';
+import fileToBlob from '../../utils/FiltetoBlob';
 
 export interface IPurchaseInfo {
   description: string;
@@ -15,7 +16,6 @@ export interface IPurchaseInfo {
   link: string;
   [key: string]: string;
 }
-
 
 export default function PostDailylook() {
   const themeApp = useTheme();
@@ -26,6 +26,7 @@ export default function PostDailylook() {
   const [images, setImages] = useState<File[]>([]);
   const [isActive, setIsActive] = useState(false);
   const [gender, setGender] = useState<string>();
+  const [description, setDescription] = useState<string>();
   const [years, setYears] = useState<number>();
   const [height, setHeight] = useState<number>();
   const [weight, setWeight] = useState<number>();
@@ -39,30 +40,47 @@ export default function PostDailylook() {
     setPurchaseInfoList([...purchaseInfoList, { brand: '', description: '', link: '' }]);
   };
   const handlePostDailylook = async () => {
+    const formData = new FormData();
+    for (const file of images) {
+      try {
+        const blob = await fileToBlob(file);
+        // 변환된 Blob을 사용할 수 있습니다.
+        formData.append('images', blob, file.name);
+
+        // 여기에서 Blob을 다른 곳에 업로드하거나 처리할 수 있습니다.
+      } catch (error) {
+        console.error('변환 중 오류 발생:', error);
+      }
+    }
+
     const req = {
-      'age': years || 0,
-      'category': category[0],
-      'description': '테스트입니다.',
-      'hashTag': tag?.split('#').slice(1).map(v => '#' + v),
-      'height': height || 0,
-      'imageUrls': ['https://berrycloset.co.kr/web/product/big/202303/a5d5c4203bc553ea8049b80e444f9a89.jpg', 'https://berrycloset.co.kr/web/product/extra/big/202303/17c12b5746cb6c4d3aa80e67c8b24aa0.jpg', 'https://berrycloset.co.kr/web/product/extra/big/202303/181f2bf848ae248994130cb47afaaf5b.jpg'],
-      'purchaseInfos': [
+      age: years || 0,
+      category: category[0],
+      description: description,
+      hashTag: tag
+        ?.split('#')
+        .slice(1)
+        .map((v) => '#' + v)||[],
+      height: height || 0,
+      purchaseInfos: [
         ...purchaseInfoList.map((p) => {
           return {
             brand: p.brand,
             description: p.description,
-            link: p.link
+            link: p.link,
           };
-        })
+        }),
       ],
-      'season': seasons[0],
-      'sex': genderReverseFormatted(gender) || '',
-      'userId': 0,
-      'weight': weight || 0,
+      season: seasons[0],
+      sex: genderReverseFormatted(gender) || '',
+      userId: 0,
+      weight: weight || 0,
     };
-
+    const json = JSON.stringify(req);
+    // const blob = new Blob([json], {type: 'application/json'});
+    formData.append('req', json);
     try {
-      await postDailylook(req);
+      await postDailylook(formData);
       navigate(-1);
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -70,7 +88,6 @@ export default function PostDailylook() {
         alert(error.message.toString());
       }
     }
-
   };
   const handleInputChange = (index: number, name: string, value: string) => {
     const updatedList = [...purchaseInfoList];
@@ -105,11 +122,10 @@ export default function PostDailylook() {
               height={'26'}
               text="남"
               width={'55'}
-              placeholder='남'
-              onClick={() => { }}
+              placeholder="남"
+              onClick={() => {}}
               value={gender}
               onChange={(e) => {
-                console.log(e.target.value);
                 setGender(e.target.value);
               }}
               center={false}
@@ -129,8 +145,8 @@ export default function PostDailylook() {
               height={'26'}
               text="9세"
               width={'55'}
-              placeholder='9'
-              onClick={() => { }}
+              placeholder="9"
+              onClick={() => {}}
               center={false}
               onChange={(e) => setYears(Number(e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')))}
             />
@@ -150,8 +166,8 @@ export default function PostDailylook() {
               height={'26'}
               text="120cm"
               width={'55'}
-              placeholder='120'
-              onClick={() => { }}
+              placeholder="120"
+              onClick={() => {}}
               center={false}
               value={height?.toString()}
               onChange={(e) => setHeight(Number(e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')))}
@@ -170,8 +186,8 @@ export default function PostDailylook() {
               height={'26'}
               text="31kg"
               width={'55'}
-              placeholder='31'
-              onClick={() => { }}
+              placeholder="31"
+              onClick={() => {}}
               center={false}
               value={weight?.toString()}
               onChange={(e) => setWeight(Number(e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')))}
@@ -322,7 +338,7 @@ export default function PostDailylook() {
             <ChildInfoLabel>설명</ChildInfoLabel>
           </Tag>
         </ContentsTitle>
-        <DescriptionBox placeholder="코디 설명, 구매 꿀팁 ex) 어떤 사이즈를 구매하셨나요?" />
+        <DescriptionBox placeholder="코디 설명, 구매 꿀팁 ex) 어떤 사이즈를 구매하셨나요?" onChange={(e)=>setDescription(e.target.value)} />
       </ContentsBox>
       <ContentsBox2>
         <ContentsTitle>
@@ -407,14 +423,14 @@ const Container = styled.div`
 `;
 
 const ChildInfoContainer = styled.div`
-display: flex;
-flex-direction: column;
+  display: flex;
+  flex-direction: column;
   padding: 10px;
   border: ${({ theme }) => `1px solid ${theme.colors.yellow[3]}`};
   border-radius: 10px;
   margin-top: 10px;
   margin-bottom: 20px;
-  gap:10px;
+  gap: 10px;
 `;
 
 const ChildInfoTitle = styled.div`

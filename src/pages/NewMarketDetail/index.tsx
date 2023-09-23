@@ -47,9 +47,7 @@ export default function NewMarketDetail() {
     setIsSizeDropdownOpen(false);
     setIsColorDropdownOpen(false);
   };
-  useEffect(() => {
-    console.log(getNewMarketDetail?.data);
-  }, [getNewMarketDetail]);
+
   return (
     <Container>
       <ProductContainer>
