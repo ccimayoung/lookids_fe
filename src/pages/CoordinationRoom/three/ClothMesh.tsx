@@ -76,6 +76,9 @@ export const ClothMesh = ({ $clothId, $texture, $scale, $position, $target }: cl
     }
   }, [dragActive, $target]);
 
+  const imgWidth = $texture.image.naturalWidth;
+  const imgHeight = $texture.image.naturalHeight;
+
   return (
     <>
       {$texture && (
@@ -87,7 +90,7 @@ export const ClothMesh = ({ $clothId, $texture, $scale, $position, $target }: cl
           onPointerEnter={meshPointerEnterHandler}
           onPointerLeave={meshPointerLeaveHandler}
         >
-          <planeGeometry args={$scale} />
+          <planeGeometry args={[($scale[0] / imgWidth) * 33, ($scale[1] / imgHeight) * 33]} />
           <meshBasicMaterial
             map={$texture} // 텍스처 할당
             transparent={true} // 투명 속성 활성화

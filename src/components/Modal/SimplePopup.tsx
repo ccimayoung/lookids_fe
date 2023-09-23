@@ -73,7 +73,7 @@ const ContentFont = styled.p`
   font-size: 14px;
   text-align: center;
   color: ${({ theme }) => theme.colors.neutral[4]};
-  background-color: pink;
+  /* background-color: pink; */
 
   & > span:nth-of-type(1) {
     font-family: 'SHSB';
@@ -83,7 +83,7 @@ const ContentFont = styled.p`
 `;
 
 export const ModalBtn = styled.div`
-  width: 86px;
+  width: 100px;
   height: 26px;
   background-color: ${(props) => props.theme.colors.yellow[4]};
   border: 1px solid ${({ theme }) => theme.colors.yellow[4]};

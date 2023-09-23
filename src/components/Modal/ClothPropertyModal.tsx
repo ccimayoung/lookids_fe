@@ -4,7 +4,6 @@ import QuitSvg from '../../assets/svg/quit.svg';
 import { childrenInfoAtom, modalGatherAtom, wantPropertyClothIdAtom, wearArrayAtom, wearArrayProps } from '../../recolil/atom';
 import { ModalBtn } from './SimplePopup';
 import { TitleAndSelectBox } from '../TitleAndSelectBox';
-import dumClothJson from '../../data/dum_cloth.json';
 import { useEffect, useRef, useState } from 'react';
 import { clothCategoryListProps, oneClothProps } from '../props';
 

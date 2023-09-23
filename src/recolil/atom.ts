@@ -112,9 +112,9 @@ export const getCaptureAtom = atom<boolean>({
   default: false,
 });
 
-export const showPhotoAtom = atom<any>({
+export const showPhotoAtom = atom<any[]>({
   key: 'showPhotoAtom',
-  default: null,
+  default: [],
 });
 
 export const wantPropertyClothIdAtom = atom<string>({

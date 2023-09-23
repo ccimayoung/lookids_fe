@@ -52,7 +52,6 @@ export const PhotoBox = ({ $clothId, $boxSize, $type, $wear, $work, $img, $cloth
 
   useEffect(() => {
     checkWearFunc();
-    console.log(wearArray);
   }, [wearArray]);
 
   return (

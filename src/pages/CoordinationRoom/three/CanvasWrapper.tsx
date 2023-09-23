@@ -19,15 +19,12 @@ export const CanvasWrapper = () => {
   const [getCapture, setGetCapture] = useRecoilState(getCaptureAtom);
 
   const getTexture = (img: any) => {
-    const texture = useLoader(THREE.TextureLoader, img);
+    const texture: any = useLoader(THREE.TextureLoader, img);
     return texture;
   };
 
   const girlTexture = useLoader(THREE.TextureLoader, 'img/여샘플.png');
   const boyTexture = useLoader(THREE.TextureLoader, 'img/남샘플.png');
-  // const topTexture = useLoader(THREE.TextureLoader, 'img/top1.png');
-  const top2Texture = useLoader(THREE.TextureLoader, 'img/top2.png');
-  const skirtTexture = useLoader(THREE.TextureLoader, 'img/skirt1.png');
   const [target, setTarget] = useState<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
   const [wearArray, setWearArray] = useRecoilState(wearArrayAtom);
   const [bodyTexture, setBodyTexture] = useState<any>(girlTexture);
@@ -48,24 +45,31 @@ export const CanvasWrapper = () => {
 
   useEffect(() => {
     if (childrenInfo.gender === '여') {
-      setBodyTexture(girlTexture);
       setBodyScale([(childrenInfo.weight / 24) * 2.1, (childrenInfo.height / 130) * 7]);
+      if (childrenInfo.img?.name !== '') {
+        console.log(childrenInfo.img);
+        // const fileTexture = useLoader(THREE.TextureLoader, childrenInfo.img);
+        // setBodyTexture(fileTexture);
+      } else setBodyTexture(girlTexture);
     } else {
-      setBodyTexture(boyTexture);
       setBodyScale([(childrenInfo.weight / 24) * 2.1, (childrenInfo.height / 130) * 7]);
+      if (childrenInfo.img?.name !== '') {
+        // const fileTexture = useLoader(THREE.TextureLoader, childrenInfo.img);
+        // setBodyTexture(fileTexture);
+      } else setBodyTexture(boyTexture);
     }
   }, [childrenInfo]);
 
-  useEffect(() => {
-    if (selectedCody !== '' && codyJsonList) {
-      codyJsonList.list.forEach((val: any) => {
-        if (val.codyId === selectedCody) {
-          setWearArray(val.cody);
-          setChildrenInfo({ img: null, gender: val.gender, age: val.age, height: val.height, weight: val.weight });
-        }
-      });
-    }
-  }, [codyJsonList, selectedCody]);
+  // useEffect(() => {
+  //   if (selectedCody !== '' && codyJsonList) {
+  //     codyJsonList.list.forEach((val: any) => {
+  //       if (val.codyId === selectedCody) {
+  //         setWearArray(val.cody);
+  //         setChildrenInfo({ img: null, gender: val.gender, age: val.age, height: val.height, weight: val.weight });
+  //       }
+  //     });
+  //   }
+  // }, [codyJsonList, selectedCody]);
 
   const handleCapture = () => {
     if (canvasRef.current) {
@@ -79,7 +83,9 @@ export const CanvasWrapper = () => {
         }).then((canvas) => {
           // 스크린샷을 이미지로 변환
           const imageDataURL = canvas.toDataURL('image/png');
-          setShowPhoto(imageDataURL);
+          const newArray = [...showPhoto];
+          newArray.push(imageDataURL);
+          setShowPhoto(newArray);
           setGetCapture(false);
         });
       }, 1000);
@@ -108,7 +114,7 @@ export const CanvasWrapper = () => {
         <ambientLight color={themeApp.colors.neutral[0]} intensity={0} />
         <OrbitControls enableRotate={false} enableDamping={false} minDistance={1} maxDistance={10} zoomSpeed={2} maxPolarAngle={Math.PI} />
         <mesh onPointerMove={pointerMove} onClick={() => setSelectedCloth('')}>
-          <planeGeometry args={[10, 10]} />
+          <planeGeometry args={[12, 10]} />
           <meshBasicMaterial color={'#a7866a'} depthWrite={false} depthTest={false} />
           <mesh onPointerMissed={pointerMissed}>
             <PersonMesh $texture={bodyTexture} $scale={bodyScale} />

@@ -14,6 +14,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Cropper } from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
+import { ImageUploadButton } from '../ImagePicker/component';
+import fileToBlob from '../../utils/FiltetoBlob';
+import { postKidInfoApi } from '../../apis/closet';
+import { useMutation } from '@tanstack/react-query';
 
 export const ChildrenInfoModal = () => {
   const [modalGather, setModalGather] = useRecoilState(modalGatherAtom);
@@ -38,29 +42,20 @@ export const ChildrenInfoModal = () => {
   const [faceScale, setFaceScale] = useState<number>(0.5);
 
   const handleImageUpload = () => {
-    const acceptedFiles = [croppedImage];
+    const acceptedFiles = [croppedImage, 'img/여샘플.png'];
     console.log(acceptedFiles);
     // 이미지를 업로드하고 images 상태에 추가
     setImages([...images, ...acceptedFiles]);
   };
 
-  useEffect(() => {
-    if (images.length > 1) {
-      mergeImages();
-    }
-  }, [images]);
-
-  useEffect(() => {
-    return () => {
-      setImages([]);
-      setCroppedImage(null);
-    };
-  }, []);
-
   const [baseImg, setBaseImg] = useState<any>(null);
   const [dragging, setDragging] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const imageInput = useRef<any>(null);
+  const onCickImageUpload = () => {
+    imageInput.current.click();
+  };
 
   const mergeImages = () => {
     const canvas = canvasRef.current;
@@ -158,14 +153,51 @@ export const ChildrenInfoModal = () => {
     }, 100);
   };
 
+  function b64toBlob(b64Data: any, contentType = '', sliceSize = 512) {
+    const image_data = atob(b64Data.split(',')[1]); // data:image/gif;base64 필요없으니 떼주고, base64 인코딩을 풀어준다
+
+    const arraybuffer = new ArrayBuffer(image_data.length);
+    const view = new Uint8Array(arraybuffer);
+
+    for (let i = 0; i < image_data.length; i++) {
+      view[i] = image_data.charCodeAt(i) & 0xff;
+      // charCodeAt() 메서드는 주어진 인덱스에 대한 UTF-16 코드를 나타내는 0부터 65535 사이의 정수를 반환
+      // 비트연산자 & 와 0xff(255) 값은 숫자를 양수로 표현하기 위한 설정
+    }
+
+    return new Blob([arraybuffer], { type: contentType });
+  }
+
   const finishFunc = () => {
     setTimeout(() => {
       const canvas = canvasRef.current;
       const dataURL = canvas.toDataURL('image/png');
-      const a = document.createElement('a');
-      a.href = dataURL;
-      a.download = 'merged_image.png';
-      a.click();
+      const contentType = 'image/png';
+
+      // const blob = b64toBlob(dataURL, contentType); // base64 -> blob
+      // const blobUrl = URL.createObjectURL(blob); // object url 생성
+
+      // const img = document.createElement('img');
+      // img.src = blobUrl;
+      // document.body.appendChild(img);
+
+      // 데이터 URL을 Blob으로 변환합니다
+      const byteString = atob(dataURL.split(',')[1]);
+      const mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
+      for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+      const blob = new Blob([ab], { type: mimeString });
+
+      // Blob을 파일로 저장합니다
+      const fileName = 'captured_image.png'; // 파일명을 지정합니다
+      const file2 = new File([blob], fileName, { type: contentType });
+
+      console.log(blob, file2);
+
+      setChildrenInfo({ ...childrenInfo, img: file2 });
       setModalGather({
         ...modalGather,
         closetBody: false,
@@ -173,11 +205,76 @@ export const ChildrenInfoModal = () => {
     }, 100);
   };
 
+  const CreateConsultationHistoryCumm = useMutation((params: FormData) => postKidInfoApi(params), {
+    onSuccess: (res: any) => {
+      console.log('등록');
+    },
+    onError: (err: any) => {
+      console.log(err);
+    },
+  });
+
+  const handlePostDailylook = async () => {
+    const formData = new FormData();
+
+    try {
+      const canvas = canvasRef.current;
+      const dataURL = canvas.toDataURL('image/png');
+      const contentType = 'image/png';
+
+      const blob = b64toBlob(dataURL, contentType); // base64 -> blob
+      // const blobUrl = URL.createObjectURL(blob); // object url 생성
+
+      formData.append('images', blob, 'bodyImg');
+
+      // 여기에서 Blob을 다른 곳에 업로드하거나 처리할 수 있습니다.
+    } catch (error) {
+      console.error('변환 중 오류 발생:', error);
+    }
+
+    const req = {
+      age: firstRef.current.children[1].children[1].defaultValue,
+      gender: firstRef.current.children[0].children[1].innerText,
+      height: secondRef.current.children[0].children[1].defaultValue,
+      weight: secondRef.current.children[1].children[1].defaultValue,
+    };
+    const json = JSON.stringify(req);
+    // const blob = new Blob([json], {type: 'application/json'});
+    formData.append('req', json);
+    try {
+      await CreateConsultationHistoryCumm.mutate(formData);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(error.message);
+        alert(error.message.toString());
+      }
+    }
+  };
+
   useEffect(() => {
     if (baseImg && faceScale) {
       move(baseImg);
     }
   }, [faceScale]);
+
+  useEffect(() => {
+    if (images.length > 1) {
+      mergeImages();
+    }
+  }, [images]);
+
+  useEffect(() => {
+    setInputImage(null);
+    setImages([]);
+    setCroppedImage(null);
+    setBaseImg(null);
+    return () => {
+      setInputImage(null);
+      setImages([]);
+      setCroppedImage(null);
+      setBaseImg(null);
+    };
+  }, [modalGather.closetBody]);
 
   return (
     <>
@@ -203,8 +300,16 @@ export const ChildrenInfoModal = () => {
                     </PhotoBox>
                   ) : (
                     <PhotoBox>
-                      <PhotoUploadSvg />
-                      <input type="file" accept="image/*" onChange={(e: any) => setInputImage(URL.createObjectURL(e.target.files[0]))} />
+                      <ImageUploadButton height="50px" onClick={onCickImageUpload}>
+                        <PhotoUploadSvg />
+                      </ImageUploadButton>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        ref={imageInput}
+                        style={{ display: 'none' }}
+                        onChange={(e: any) => setInputImage(URL.createObjectURL(e.target.files[0]))}
+                      />
                     </PhotoBox>
                   )}
                   <YellowArrow />

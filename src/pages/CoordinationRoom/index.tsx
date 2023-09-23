@@ -94,10 +94,20 @@ export default function CoordinationRoom() {
           </Circle>
         </SettingBtnWrap>
         <CodyWrap>
-          <PhotoBox $codyId={'샘플코디1'} $boxSize="s" $type="cody" $img={showPhoto} />
-          <PhotoBox $codyId={'샘플코디2'} $boxSize="s" $type="cody" $img={'img/샘플옷2.png'} />
-          <PhotoBox $codyId={'샘플코디3'} $boxSize="s" $type="cody" $img={'img/샘플옷.png'} />
-          <PhotoBox $codyId={'샘플코디4'} $boxSize="s" $type="cody" $img={'img/샘플옷.png'} />
+          {showPhoto.length > 0 ? (
+            <>
+              {showPhoto.map((val: any, index: number) => {
+                return <PhotoBox key={index} $codyId={'샘플코디1'} $boxSize="s" $type="cody" $img={val} />;
+              })}
+              <PhotoBox $codyId={'샘플코디2'} $boxSize="s" $type="cody" $img={'img/샘플옷2.png'} />
+              <PhotoBox $codyId={'샘플코디3'} $boxSize="s" $type="cody" $img={'img/샘플옷.png'} />
+            </>
+          ) : (
+            <>
+              <PhotoBox $codyId={'샘플코디2'} $boxSize="s" $type="cody" $img={'img/샘플옷2.png'} />
+              <PhotoBox $codyId={'샘플코디3'} $boxSize="s" $type="cody" $img={'img/샘플옷.png'} />
+            </>
+          )}
         </CodyWrap>
       </TopWrap>
       <ClothWrap>
@@ -127,9 +137,9 @@ export default function CoordinationRoom() {
             : null}
         </ListWrap>
       </ClothWrap>
+      <ChildrenInfoModal />
       {clothList && clothList[selectedMenu]?.length > 0 ? (
         <>
-          <ChildrenInfoModal />
           <ClothPropertyModal clothList={clothList[selectedMenu]} />
         </>
       ) : null}

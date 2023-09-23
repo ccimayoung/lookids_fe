@@ -57,10 +57,11 @@ export default function PostDailylook() {
       age: years || 0,
       category: category[0],
       description: description,
-      hashTag: tag
-        ?.split('#')
-        .slice(1)
-        .map((v) => '#' + v)||[],
+      hashTag:
+        tag
+          ?.split('#')
+          .slice(1)
+          .map((v) => '#' + v) || [],
       height: height || 0,
       purchaseInfos: [
         ...purchaseInfoList.map((p) => {
@@ -338,7 +339,7 @@ export default function PostDailylook() {
             <ChildInfoLabel>설명</ChildInfoLabel>
           </Tag>
         </ContentsTitle>
-        <DescriptionBox placeholder="코디 설명, 구매 꿀팁 ex) 어떤 사이즈를 구매하셨나요?" onChange={(e)=>setDescription(e.target.value)} />
+        <DescriptionBox placeholder="코디 설명, 구매 꿀팁 ex) 어떤 사이즈를 구매하셨나요?" onChange={(e) => setDescription(e.target.value)} />
       </ContentsBox>
       <ContentsBox2>
         <ContentsTitle>
