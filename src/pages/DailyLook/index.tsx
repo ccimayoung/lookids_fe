@@ -117,7 +117,7 @@ export default function DailyLook() {
     category: selectedCategory?.value,
     season: selectedSeasons?.value,
     sex: selectedGender?.value,
-    weight:selectedWeight?.value,
+    weight: selectedWeight?.value,
   });
   const { data: getGetEvent } = useGetEvent();
   useEffect(() => {
@@ -247,14 +247,16 @@ export default function DailyLook() {
                       allClose={handleDropdownAllClose}
                     />
                   </CategoryItem>
-                  <FilterComplateButton onClick={()=>{
-                    setIsOpen(false);
-                    setIsModalOpen(false);
-                  }}>확인</FilterComplateButton>
+                  <FilterComplateButton
+                    onClick={() => {
+                      setIsOpen(false);
+                      setIsModalOpen(false);
+                    }}
+                  >
+                    확인
+                  </FilterComplateButton>
                 </CategorySelectMenu>
-                
               </ThemeWhite>
-              
             </ThemeBlack>
           )}
         </CategoryContainer>
@@ -269,16 +271,16 @@ export default function DailyLook() {
         <CardContainer>
           {dailylookList?.data?.dailyLooks?.length && dailylookList?.data?.dailyLooks?.length > 0
             ? dailylookList?.data?.dailyLooks?.map((v: IDailylookList, index: number) => {
-              return (
-                <DailyLookCard
-                  key={v.user.name + v.user.userId + index}
-                  hashTag={v.hashTag}
-                  dailyLookId={v.dailyLookId}
-                  user={v.user}
-                  imageUrls={v.imageUrls}
-                />
-              );
-            })
+                return (
+                  <DailyLookCard
+                    key={v.user.name + v.user.userId + index}
+                    hashTag={v.hashTag}
+                    dailyLookId={v.dailyLookId}
+                    user={v.user}
+                    imageUrls={v.imageUrls}
+                  />
+                );
+              })
             : undefined}
         </CardContainer>
       </Contents>
@@ -398,12 +400,12 @@ const FilterComplateButton = styled.button`
   padding-right: 10px;
   cursor: pointer;
   white-space: nowrap;
-  background-color: ${({theme})=>theme.colors.yellow[3]};
-  color: ${({theme})=>theme.colors.neutral[5]};
+  background-color: ${({ theme }) => theme.colors.yellow[3]};
+  color: ${({ theme }) => theme.colors.neutral[5]};
   font-weight: 600;
-  border: ${({theme})=>`1px solid ${theme.colors.yellow[3]}`};
-  border-radius:5px;
-  font-size:0.7rem;
+  border: ${({ theme }) => `1px solid ${theme.colors.yellow[3]}`};
+  border-radius: 5px;
+  font-size: 0.7rem;
   display: flex;
   justify-content: center;
   align-items: center;
