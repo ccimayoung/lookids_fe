@@ -1,6 +1,5 @@
 {
-  "homepage": "https://ccimayoung.github.io/lookids_f-2b2/",
-  "name": "lookids_f-2b2",
+  "name": "lookids_fe",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
