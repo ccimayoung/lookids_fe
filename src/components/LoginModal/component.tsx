@@ -51,7 +51,7 @@ const Component: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
 export default Component;
 const ModalBackground = styled.div<{ $isopen: string }>`
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;

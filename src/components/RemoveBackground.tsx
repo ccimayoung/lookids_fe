@@ -8,11 +8,12 @@ import { RowDiv } from '../pages/CoordinationRoom';
 import { Cropper } from 'react-cropper';
 import { MenuBtn } from './MenuBtn';
 
-export const RemoveBackground = () => {
+export const RemoveBackground = ({isLoading ,setIsLoading} : {isLoading?:boolean|undefined; setIsLoading?:Dispatch<SetStateAction<boolean>>}) => {
   const themeApp = useTheme();
   const [inputImage, setInputImage] = useState<any>(null);
   const [croppedOutputImage, setCroppedOutputImage] = useState<any>(null);
   const [bgOutputImage, setBgOutputImage] = useState<any>(null);
+  // const [isLoading, setIsLoading] = useState(false);
   const [finishImage, setFinishImage] = useState<any>(null);
   const imageInput = useRef<any>(null);
   const cropperRef = useRef<any>(null);
@@ -33,6 +34,8 @@ export const RemoveBackground = () => {
 
   const handleRemoveImg = async (event: any) => {
     // URL 형태의 이미지를 처리하고 배경 제거
+    if(setIsLoading)
+      setIsLoading(true);
     try {
       const blob = await removeBackground(croppedOutputImage);
       const blobUrl = URL.createObjectURL(blob);
@@ -41,6 +44,9 @@ export const RemoveBackground = () => {
       setBgOutputImage(blobUrl);
     } catch (error) {
       console.error('Error removing background:', error);
+    }finally{
+      if(setIsLoading)
+        setIsLoading(false);
     }
   };
 
@@ -51,7 +57,7 @@ export const RemoveBackground = () => {
   const onCickImageUpload = () => {
     imageInput.current.click();
   };
-  // onChange={handleImageUpload}
+  
   return (
     <>
       <RowDiv $cGap="7px" style={{ justifyContent: 'left', alignItems: 'flex-start' }}>

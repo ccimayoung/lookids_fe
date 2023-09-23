@@ -27,7 +27,7 @@ const IconWrapper = styled.button`
   right: 30px;
   justify-content: center;
   align-items: center;
-  z-index: 99;
+  z-index: 2;
 `;
 
 export default Component;

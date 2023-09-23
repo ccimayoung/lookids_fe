@@ -13,15 +13,14 @@ import { ResellItemCard } from './components/ResellItemCard';
 import { selectedResllCategoryAtom, selectedResllSalesStatusAtom, selectedResllSeasonsAtom } from './atom/atom';
 import { useGetResellList } from '../../hooks/useResell';
 import { modalStatus } from '../../recolil/atom';
+import { saleStatus } from '../../utils/statusFormatter/dailylookStatus';
 
-export interface IAppProps { }
+export interface IAppProps {}
 
-const seasonsOptions = [
+const saleStatusOptions = [
   { label: '전체', value: '' },
-  { label: '봄', value: 'SPRING' },
-  { label: '여름', value: 'SUMMER' },
-  { label: '가을', value: 'AUTUMN' },
-  { label: '겨울', value: 'WINTER' },
+  { label: '판매중', value: saleStatus.SALE },
+  { label: '판매완료', value: saleStatus.DONE },
 ];
 const targetOptions = [
   { label: '전체', value: '' },
@@ -54,14 +53,12 @@ export default function ResellMarket() {
   const [selectedSalesStatus, setSelectedSalesStatus] = useRecoilState<Option | null>(selectedResllSalesStatusAtom);
   const [selectedCategory, setSelectedCategory] = useRecoilState<Option | null>(selectedResllCategoryAtom);
   const [selectedTarget, setSelectedTarget] = useRecoilState<Option | null>(selectedResllSeasonsAtom);
-  const { data: resellList, refetch: resellListRefetch } = useGetResellList(
-    {
-      saleStatus: selectedSalesStatus?.value,
-      category: selectedCategory?.value,
-      searchKeyword: serchText,
-      target: selectedTarget?.value,
-    }
-  );
+  const { data: resellList, refetch: resellListRefetch } = useGetResellList({
+    saleStatus: selectedSalesStatus?.value,
+    category: selectedCategory?.value,
+    searchKeyword: serchText,
+    target: selectedTarget?.value,
+  });
   const handleOptionSelectSalesStatus = (option: Option | null) => {
     setSelectedSalesStatus(option);
   };
@@ -101,16 +98,18 @@ export default function ResellMarket() {
   }, [isOpen]);
 
   return (
-    <Container >
+    <Container>
       <BestSellerText>이 달의 베스트 셀러</BestSellerText>
       <CustomCarousel />
       <ContentContainer>
         <CategoryContainer>
           <Content ref={contentsRef}>
-            <form onSubmit={(e) => {
-              e.preventDefault();
-              resellListRefetch();
-            }}>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                resellListRefetch();
+              }}
+            >
               <SearchBox
                 placeholder="오른쪽 이미지 검색도 이용해보세요!"
                 onChange={(e) => setSearchText(e.target.value)}
@@ -153,9 +152,9 @@ export default function ResellMarket() {
                 </ArrowBox>
                 <CategorySelectMenu>
                   <CategoryItem>
-                    <CategoryBox>계절</CategoryBox>
+                    <CategoryBox>판매상태</CategoryBox>
                     <Dropdown
-                      options={seasonsOptions}
+                      options={saleStatusOptions}
                       select={selectedSalesStatus}
                       onSelect={handleOptionSelectSalesStatus}
                       isOpen={isSalesStatusDropdownOpen}
@@ -185,6 +184,14 @@ export default function ResellMarket() {
                       allClose={handleDropdownAllClose}
                     />
                   </CategoryItem>
+                  <FilterComplateButton
+                    onClick={() => {
+                      setIsOpen(false);
+                      setIsModalOpen(false);
+                    }}
+                  >
+                    확인
+                  </FilterComplateButton>
                 </CategorySelectMenu>
               </ThemeWhite>
             </ThemeBlack>
@@ -198,22 +205,26 @@ export default function ResellMarket() {
             }}
           />
         )}
-        <ProductContainer $isscroll={resellList?.data?.resellProductResponse?.length
-          && resellList?.data?.resellProductResponse?.length > 0 || false}>
-          {resellList?.data?.resellProductResponse?.length
-            && resellList?.data?.resellProductResponse?.length > 0 ? resellList?.data?.resellProductResponse?.map((v) => {
-              return <ResellItemCard
-                key={v.productName + v.userId}
-                brandName={v.sellerNickname}
-                productName={v.productName}
-                price={v.productPrice}
-                imgUrl={v.productImage}
-              />;
-            }) :
-            <NonProduct >등록된 상품이 없습니다.</NonProduct>
-          }
-
-
+        <ProductContainer
+          $isscroll={(resellList?.data?.resellProductResponse?.length && resellList?.data?.resellProductResponse?.length > 0) || false}
+        >
+          {resellList?.data?.resellProductResponse?.length && resellList?.data?.resellProductResponse?.length > 0 ? (
+            resellList?.data?.resellProductResponse?.map((v, i) => {
+              console.log(v);
+              return (
+                <ResellItemCard
+                  resellProductId={v.resellProductId}
+                  key={v.productName + v.userId + i}
+                  brandName={v.sellerNickname}
+                  productName={v.productName}
+                  price={v.productPrice}
+                  imgUrl={v.productImage}
+                />
+              );
+            })
+          ) : (
+            <NonProduct>등록된 상품이 없습니다.</NonProduct>
+          )}
         </ProductContainer>
       </ContentContainer>
       <FloatingButton onClick={() => navigate('resell-post')}>
@@ -230,7 +241,7 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   text-align: center;
-  overflow:'auto';
+  overflow: 'auto';
 `;
 const NonProduct = styled.div`
   display: flex;
@@ -239,7 +250,7 @@ const NonProduct = styled.div`
   width: 100%;
   height: 100%;
   padding-top: 100px;
-  flex:1;
+  flex: 1;
 `;
 const BestSellerText = styled.div`
   font-size: 18px;
@@ -259,10 +270,9 @@ const ContentContainer = styled.div`
   width: 100%;
   padding: 20px;
   margin-top: 20px;
-  
 `;
 const ProductContainer = styled.div<{ $isscroll: boolean }>`
-  min-height: ${({ $isscroll }) => $isscroll ? '80vh' : '40vh'};
+  min-height: ${({ $isscroll }) => ($isscroll ? '80vh' : '40vh')};
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
@@ -347,4 +357,22 @@ const Total = styled.div`
   font-size: 0.9rem;
   font-weight: 600;
   display: flex;
+`;
+const FilterComplateButton = styled.button`
+  width: 25%;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  background-color: ${({ theme }) => theme.colors.yellow[3]};
+  color: ${({ theme }) => theme.colors.neutral[5]};
+  font-weight: 600;
+  border: ${({ theme }) => `1px solid ${theme.colors.yellow[3]}`};
+  border-radius: 5px;
+  font-size: 0.7rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: flex-end;
 `;
