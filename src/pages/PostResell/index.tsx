@@ -6,6 +6,7 @@ import { Star } from '../../components/GlobalIcon';
 import { usePostResell } from '../../hooks/useResell';
 import { Category, Season } from '../../utils/statusFormatter/dailylookStatus';
 import { useNavigate } from 'react-router-dom';
+import { RemoveBackground } from '../../components/RemoveBackground';
 
 export interface IPurchaseInfo {
   id: number;
@@ -28,11 +29,11 @@ export default function PostResell() {
   const { mutateAsync: postResell } = usePostResell();
   const handlePostResell = async () => {
     const req = {
-      'productImage': 'https://berrycloset.co.kr/web/product/big/202303/a5d5c4203bc553ea8049b80e444f9a89.jpg',
-      'productName': product || '',
-      'productPrice': Number(price),
-      'sellerNickname': brand || '',
-      'userId': 0
+      productImage: 'https://berrycloset.co.kr/web/product/big/202303/a5d5c4203bc553ea8049b80e444f9a89.jpg',
+      productName: product || '',
+      productPrice: Number(price),
+      sellerNickname: brand || '',
+      userId: 0,
     };
     try {
       await postResell(req);
@@ -49,6 +50,7 @@ export default function PostResell() {
     <Container>
       <ImagePicker maxImages={5} images={images} setImages={setImages} />
       <ImagePickerBox />
+      <RemoveBackground />
       <ContentsBox>
         <ContentsTitle>
           <Tag>
@@ -295,7 +297,7 @@ const ContentsTitle = styled.div`
 const ContentsBox = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px;
+  margin: 20px 0;
 `;
 const StarBox = styled.div`
   position: absolute;
