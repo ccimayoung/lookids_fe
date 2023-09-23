@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactChild, useEffect, useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 import { AddIcon, FilterIcon, MenuBoxArrow } from '../../components/GlobalIcon';
 import { DailyLookCard } from './components/DailyLookCard';
@@ -15,16 +15,18 @@ import {
 import { Option } from '../../components/Dropdown/component';
 import { Dropdown } from '../../components/Dropdown';
 import { useNavigate } from 'react-router';
-import { useGetDailylookList } from '../../hooks/useDailyLook';
+import { useGetDailylookList, useGetEvent } from '../../hooks/useDailyLook';
+import { NewMarketCarousel } from '../../components/NewMarketCarousel';
 
-export interface IAppProps { }
+export interface IAppProps {}
 export interface IDailylookList {
-  hashTag: string;
+  hashTag: Array<string>;
   user: {
     name: string;
     userId: string;
   };
   imageUrls: Array<string>;
+  dailyLookId: number;
 }
 const genderOptions = [
   { label: '전체', value: '' },
@@ -67,6 +69,7 @@ const categoryOptions = [
 export default function DailyLook() {
   const [isOpen, setIsOpen] = useState(false);
   const [, setIsModalOpen] = useRecoilState(modalStatus);
+  const [selectItem, setSelectItem] = useState(0);
   const themeApp = useTheme();
   const navigate = useNavigate();
   const [isGenderDropdownOpen, setIsGenderDropdownOpen] = useState<boolean>(false);
@@ -111,7 +114,7 @@ export default function DailyLook() {
     sex: selectedSeasons?.value,
     weigh: selectedCategory?.value,
   });
-
+  const { data: getGetEvent } = useGetEvent();
   useEffect(() => {
     if (!isOpen) handleDropdownAllClose();
   }, [isOpen]);
@@ -119,7 +122,19 @@ export default function DailyLook() {
     <Container>
       <Contents>
         <AdBannerBox>
-          <EventBannerImg src={'/img/eventbanner.png'} />
+          {getGetEvent?.data?.events?.length && getGetEvent?.data?.events?.length > 1 ? (
+            <NewMarketCarousel setSelectItem={setSelectItem}>
+              {getGetEvent?.data?.events.map((event) => {
+                return (<EventBannerImg key={event.id} src={event.imageUrl} />) as ReactChild;
+              })}
+
+              {/* <NewMarketImage src="https://m.cooingkids.com/web/product/big/20200313/38849db602ae21192a82938c26241542.jpg" />
+          <NewMarketImage src="https://m.cooingkids.com/web/product/big/20200313/38849db602ae21192a82938c26241542.jpg" />
+          <NewMarketImage src="https://m.cooingkids.com/web/product/big/20200313/38849db602ae21192a82938c26241542.jpg" /> */}
+            </NewMarketCarousel>
+          ) : (
+            <EventBannerImg src={getGetEvent?.data?.events[0].imageUrl} />
+          )}
         </AdBannerBox>
         <CategoryContainer>
           <FilterButton
@@ -219,10 +234,19 @@ export default function DailyLook() {
           />
         )}
         <CardContainer>
-          {dailylookList?.data?.dailyLooks?.length && dailylookList?.data?.dailyLooks?.length > 0 ?
-            dailylookList?.data?.dailyLooks?.map((v: IDailylookList, index: number) => {
-              return <DailyLookCard key={v.user.name + v.user.userId + index} hashTag={v.hashTag} user={v.user} imageUrls={v.imageUrls} />;
-            }) : undefined}
+          {dailylookList?.data?.dailyLooks?.length && dailylookList?.data?.dailyLooks?.length > 0
+            ? dailylookList?.data?.dailyLooks?.map((v: IDailylookList, index: number) => {
+              return (
+                <DailyLookCard
+                  key={v.user.name + v.user.userId + index}
+                  hashTag={v.hashTag}
+                  dailyLookId={v.dailyLookId}
+                  user={v.user}
+                  imageUrls={v.imageUrls}
+                />
+              );
+            })
+            : undefined}
         </CardContainer>
       </Contents>
       <FloatingButton onClick={() => navigate('dailylook-post')}>

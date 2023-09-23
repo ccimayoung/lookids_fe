@@ -33,4 +33,7 @@ export const resellApis = {
   postResell: async (data: IPostReslllookProps) => {
     return await baseUrl.post('/resell/products', data);
   },
+  searchPhoto: async (data: FormData) => {
+    return await baseUrl.post('/resell/products/image-search', data);
+  },
 };

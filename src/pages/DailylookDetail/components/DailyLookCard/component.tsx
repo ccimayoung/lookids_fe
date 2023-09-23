@@ -3,10 +3,10 @@ import styled, { useTheme } from 'styled-components';
 import { LikeHeart } from '../../../../components/GlobalIcon';
 import { useEffect, useRef, useState } from 'react';
 
-const Component = () => {
+const Component = ({imageUrl}:{imageUrl:string}) => {
   const themeApp = useTheme();
   const [isLike, setIsLike] = useState(false);
-  const [imageHeight, setImageHeight] = useState(0);
+  const [imageHeight, setImageHeight] = useState(500);
   const elementRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     // 컴포넌트가 마운트된 후에 요소의 너비를 가져옵니다.
@@ -42,30 +42,23 @@ const Component = () => {
         <LikeHeart color={isLike ? themeApp.colors.pink[300] : themeApp.colors.grey[0]} />
       </LikeButton>
       <ImageBox>
-        <DailyLookImage
-          alt="데일리룩 이미지"
-          loading='lazy'
-          src="https://storage.googleapis.com/lookids-image-search/05.jpg"
-        />
+        {imageUrl.includes('http') ? 
+          <DailyLookImage
+            alt="데일리룩 이미지"
+            src={imageUrl}
+          /> : <NoImage>
+          </NoImage>}
       </ImageBox>
-      {/* <BottomContent>
-        <TagBox>
-          <Tag>#강쥐</Tag>
-          <Tag>#댕댕이</Tag>
-          <Tag>#귀엽다</Tag>
-        </TagBox>
-        <Writer>장경태</Writer>
-      </BottomContent> */}
     </Wrap>
   );
 };
 
 // Styling
-const Wrap = styled.article<{ $imageheight: number }>`
+const Wrap = styled.div<{ $imageheight: number }>`
   display: flex;
-  position: relative;
-  height: ${({ $imageheight }) => ($imageheight ? `${$imageheight}px` : 'calc(100vw - 40px)')};
-  max-height: max-content;
+  height:100%;
+  max-height: ${({ $imageheight }) => ($imageheight ? `${$imageheight}px` : 'calc(100vw - 40px)')};
+  min-height: 300px;
   width: 100%;
   border: ${({ theme }) => `1px solid ${theme.colors.grey[5]}`};
   border-radius: 10px;
@@ -76,9 +69,14 @@ const DailyLookImage = styled.img`
   object-fit: fill;
   width: 100%;
 `;
+const NoImage = styled.div`
+  width: 100%;
+  height: 100%;
+`;
 const ImageBox = styled.div`
   display: flex;
   width: 100%;
+  height: 100%;
 `;
 const LikeButton = styled.button`
   margin: 0;

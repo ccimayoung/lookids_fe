@@ -18,7 +18,6 @@ const Component: React.FC<ImagePickerProps> = ({ maxImages, images, setImages })
     const handleResize = () => {
       if (element) {
         const width = element.offsetWidth;
-        console.log(width);
         setImageHeight(width);
       }
     };
