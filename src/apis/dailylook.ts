@@ -24,13 +24,13 @@ export interface IGetDailylookProps {
   category: number | string | undefined;
   season: number | string | undefined;
   sex: number | string | undefined;
-  weigh: number | string | undefined;
+  weight: number | string | undefined;
 }
 export const dailyLookApis = {
   getDailyLookList: async (props: IGetDailylookProps) => {
     return await baseUrl.get(
       `/daily/clothes?category=${props.category || ''}&height=${props.height || ''}&season=${props.season || ''}&sex=${props.sex || ''}&weigh=${
-        props.weigh || ''
+        props.weight || ''
       }&page=0&pageSize=200`,
     );
   },

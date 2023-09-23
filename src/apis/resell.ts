@@ -27,11 +27,17 @@ export const resellApis = {
       }&page=0&pageSize=200`,
     );
   },
-  getResellDetail: async (dailyfoodId: number) => {
-    return await baseUrl.get(`/daily/clothes/${dailyfoodId}`);
+  getResellDetail: async (dailylookId: number) => {
+    console.log(dailylookId);
+    return await baseUrl.get(`/daily/clothes/${dailylookId}`);
   },
-  postResell: async (data: IPostReslllookProps) => {
-    return await baseUrl.post('/resell/products', data);
+  postResell: async (data: FormData) => {
+   
+    return await baseUrl.post('/resell/products', data,{
+      headers:{
+        'Content-Type':'multipart/form-data',
+      }
+    });
   },
   searchPhoto: async (data: FormData) => {
     return await baseUrl.post('/resell/products/image-search', data);

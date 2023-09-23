@@ -13,6 +13,7 @@ import ResellDetail from './pages/ResellDetail';
 import PostResell from './pages/PostResell';
 import ResellMarketPhotoEngine from './pages/ResellMarketPhotoEngine';
 import NewMarketDetail from './pages/NewMarketDetail';
+import UpdateResell from './pages/UpdateResell';
 
 const router = createBrowserRouter([
   {
@@ -61,12 +62,16 @@ const router = createBrowserRouter([
             element: <ResellMarketPhotoEngine />,
           },
           {
-            path: 'resell-detail',
+            path: 'resell-detail/:resellId',
             element: <ResellDetail />,
           },
           {
             path: 'resell-post',
             element: <PostResell />,
+          },
+          {
+            path: 'resell-update/:resellId',
+            element: <UpdateResell />,
           },
         ],
       },

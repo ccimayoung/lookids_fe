@@ -5,12 +5,13 @@ import { useNavigate } from 'react-router-dom';
 import withCommas from '../../../../utils/withCommas';
 
 interface IResellItemProps {
+  resellProductId: number;
   brandName: string;
   productName: string;
   price: number;
   imgUrl: string;
 }
-const Component = ({ brandName, productName, price, imgUrl }: IResellItemProps) => {
+const Component = ({ resellProductId, brandName, productName, price, imgUrl }: IResellItemProps) => {
   const [imageHeight, setImageHeight] = useState(0);
   const navigate = useNavigate();
   const elementRef = useRef<HTMLDivElement>(null);
@@ -35,7 +36,7 @@ const Component = ({ brandName, productName, price, imgUrl }: IResellItemProps) 
   }, []);
 
   return (
-    <ProductCard ref={elementRef} height={imageHeight.toString()} onClick={() => navigate('resell-detail')}>
+    <ProductCard ref={elementRef} height={imageHeight.toString()} onClick={() => navigate(`resell-detail/${resellProductId}`)}>
       <ProductImage height={imageHeight.toString()} src={imgUrl} />
       <TextContainer>
         <BrandText>{brandName}</BrandText>

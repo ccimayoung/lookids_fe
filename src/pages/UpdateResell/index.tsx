@@ -18,7 +18,7 @@ export interface IPurchaseInfo {
   [key: string]: string | number;
 }
 
-export default function PostResell() {
+export default function UpdateResell() {
   const themeApp = useTheme();
   const [category, setCategory] = useState<string[]>([]);
   const [target, setTarget] = useState<string[]>([]);
