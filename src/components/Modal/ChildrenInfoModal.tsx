@@ -172,37 +172,50 @@ export const ChildrenInfoModal = () => {
     setTimeout(() => {
       const canvas = canvasRef.current;
       const dataURL = canvas.toDataURL('image/png');
-      const contentType = 'image/png';
-
-      // const blob = b64toBlob(dataURL, contentType); // base64 -> blob
-      // const blobUrl = URL.createObjectURL(blob); // object url 생성
-
-      // const img = document.createElement('img');
-      // img.src = blobUrl;
-      // document.body.appendChild(img);
-
-      // 데이터 URL을 Blob으로 변환합니다
-      const byteString = atob(dataURL.split(',')[1]);
-      const mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
-      const ab = new ArrayBuffer(byteString.length);
-      const ia = new Uint8Array(ab);
-      for (let i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
-      }
-      const blob = new Blob([ab], { type: mimeString });
-
-      // Blob을 파일로 저장합니다
-      const fileName = 'captured_image.png'; // 파일명을 지정합니다
-      const file2 = new File([blob], fileName, { type: contentType });
-
-      console.log(blob, file2);
-
-      setChildrenInfo({ ...childrenInfo, img: file2 });
+      const a = document.createElement('a');
+      a.href = dataURL;
+      a.download = 'merged_image.png';
+      a.click();
       setModalGather({
         ...modalGather,
         closetBody: false,
       });
     }, 100);
+
+    // setTimeout(() => {
+    //   const canvas = canvasRef.current;
+    //   const dataURL = canvas.toDataURL('image/png');
+    //   const contentType = 'image/png';
+
+    // const blob = b64toBlob(dataURL, contentType); // base64 -> blob
+    // const blobUrl = URL.createObjectURL(blob); // object url 생성
+
+    // const img = document.createElement('img');
+    // img.src = blobUrl;
+    // document.body.appendChild(img);
+
+    // // 데이터 URL을 Blob으로 변환합니다
+    // const byteString = atob(dataURL.split(',')[1]);
+    // const mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
+    // const ab = new ArrayBuffer(byteString.length);
+    // const ia = new Uint8Array(ab);
+    // for (let i = 0; i < byteString.length; i++) {
+    //   ia[i] = byteString.charCodeAt(i);
+    // }
+    // const blob = new Blob([ab], { type: mimeString });
+
+    // // Blob을 파일로 저장합니다
+    // const fileName = 'captured_image.png'; // 파일명을 지정합니다
+    // const file2 = new File([blob], fileName, { type: contentType });
+
+    // console.log(blob, file2);
+
+    // setChildrenInfo({ ...childrenInfo, img: file2 });
+    //   setModalGather({
+    //     ...modalGather,
+    //     closetBody: false,
+    //   });
+    // }, 100);
   };
 
   const CreateConsultationHistoryCumm = useMutation((params: FormData) => postKidInfoApi(params), {
@@ -268,11 +281,13 @@ export const ChildrenInfoModal = () => {
     setImages([]);
     setCroppedImage(null);
     setBaseImg(null);
+    setPage(1);
     return () => {
       setInputImage(null);
       setImages([]);
       setCroppedImage(null);
       setBaseImg(null);
+      setPage(1);
     };
   }, [modalGather.closetBody]);
 
