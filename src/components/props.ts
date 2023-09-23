@@ -12,3 +12,19 @@ export interface titleAndSelectBoxProps {
   $content: string;
   $contentSize?: string;
 }
+
+export interface clothCategoryListProps {
+  topList: oneClothProps[];
+  bottomList: oneClothProps[];
+  outerList: oneClothProps[];
+  shoesList: oneClothProps[];
+  accessoryList: oneClothProps[];
+  etcList: oneClothProps[];
+}
+
+export interface oneClothProps {
+  clothId: string;
+  colorList: { color: string; img: string }[];
+  scaleList: { scale: [number, number]; size: string }[];
+  type: string;
+}

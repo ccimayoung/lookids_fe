@@ -116,3 +116,8 @@ export const showPhotoAtom = atom<any>({
   key: 'showPhotoAtom',
   default: null,
 });
+
+export const wantPropertyClothIdAtom = atom<string>({
+  key: 'wantPropertyClothIdAtom',
+  default: '',
+});

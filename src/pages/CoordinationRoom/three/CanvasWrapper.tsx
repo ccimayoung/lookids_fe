@@ -86,36 +86,6 @@ export const CanvasWrapper = () => {
     }
   };
 
-  // const handleCapture = () => {
-  //   if (canvasRef.current) {
-  //     // Canvas 컴포넌트의 렌더링이 완료된 후에 스크린샷을 찍도록 비동기로 처리
-  //     setTimeout(() => {
-  //       const canvasToCapture = canvasRef.current;
-
-  //       html2canvas(canvasToCapture, {
-  //         useCORS: true, // CORS 이슈가 있는 경우 true로 설정
-  //       }).then((canvas) => {
-  //         // 캡처된 이미지 데이터를 Blob 형식으로 가져옵니다.
-  //         canvas.toBlob((blob) => {
-  //           // Blob을 URL로 변환합니다.
-  //           if (blob) {
-  //             const imageUrl = URL.createObjectURL(blob);
-
-  //             // 다운로드 링크를 생성하고 클릭합니다.
-  //             const a = document.createElement('a');
-  //             a.href = imageUrl;
-  //             a.download = 'captured.png';
-  //             a.click();
-
-  //             // URL 객체를 해제합니다.
-  //             URL.revokeObjectURL(imageUrl);
-  //           }
-  //         }, 'image/png');
-  //       });
-  //     }, 1000);
-  //   }
-  // };
-
   useEffect(() => {
     if (getCapture) {
       // 캡처 버튼을 클릭할 때 실행되는 함수

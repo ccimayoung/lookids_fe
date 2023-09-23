@@ -9,6 +9,12 @@ export const SelectBox = ({ $content, $list, $contentSize }: titleAndSelectBoxPr
   const insideRef = useRef<any>();
 
   useEffect(() => {
+    if ($content) {
+      setSelected($content);
+    }
+  }, [$content]);
+
+  useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       if (insideRef.current && !insideRef.current.contains(e.target as Node)) {
         setDropdown(false);

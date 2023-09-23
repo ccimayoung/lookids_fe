@@ -5,11 +5,12 @@ export interface MenuBtnProps {
   $content?: string;
   $active?: boolean;
   $setSelectedMenu?: any;
+  $menuFiled?: string;
 }
 
-export const MenuBtn = ({ $size, $content, $active, $setSelectedMenu }: MenuBtnProps) => {
+export const MenuBtn = ({ $size, $content, $active, $setSelectedMenu, $menuFiled }: MenuBtnProps) => {
   return (
-    <Wrapper $size={$size} $active={$active} onClick={() => $setSelectedMenu($content)}>
+    <Wrapper $size={$size} $active={$active} onClick={() => $setSelectedMenu($menuFiled)}>
       {$content}
     </Wrapper>
   );
