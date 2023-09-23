@@ -38,7 +38,7 @@ export const ChildrenInfoModal = () => {
   const [faceScale, setFaceScale] = useState<number>(0.5);
 
   const handleImageUpload = () => {
-    const acceptedFiles = [croppedImage, 'img/남샘플.png'];
+    const acceptedFiles = [croppedImage];
     console.log(acceptedFiles);
     // 이미지를 업로드하고 images 상태에 추가
     setImages([...images, ...acceptedFiles]);

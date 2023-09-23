@@ -51,12 +51,12 @@ const Component = ({ hashTag, user, imageUrls }: IDailylookList) => {
       </ImageBox>
       <BottomContent>
         <TagBox>
-          {hashTag
+          {/* {hashTag
             .split('#')
             .slice(1)
             .map((v) => (
               <Tag key={v}>#{v}</Tag>
-            ))}
+            ))} */}
           {/* <Tag>#강쥐</Tag>
           <Tag>#댕댕이</Tag>
           <Tag>#귀엽다</Tag> */}

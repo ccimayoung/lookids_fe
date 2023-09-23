@@ -1,0 +1,83 @@
+{
+  "topList": [
+    {
+      "clothId": "top1",
+      "closetType:": "TOP",
+      "scaleList": [
+        { "sizeType": "s", "height": 37, "width": 28 },
+        { "sizeType": "m", "height": 44, "width": 32 },
+        { "sizeType": "l", "height": 55, "width": 37 }
+      ],
+      "colorList": [
+        { "color": "화이트", "closetImg": "" },
+        { "color": "블랙", "closetImg": "" },
+        { "color": "블랙", "closetImg": "" }
+      ]
+    },
+    {
+      "clothId": "top2",
+      "closetType:": "TOP",
+      "scaleList": [
+        { "sizeType": "s", "height": 51, "width": 38 },
+        { "sizeType": "m", "height": 61, "width": 42 },
+        { "sizeType": "l", "height": 76, "width": 49 }
+      ],
+      "colorList": [
+        { "color": "그레이", "closetImg": "" },
+        { "color": "옐로우", "closetImg": "" }
+      ]
+    },
+    {
+      "clothId": "top3",
+      "closetType:": "TOP",
+      "scaleList": [
+        { "sizeType": "s", "height": 51, "width": 38 },
+        { "sizeType": "m", "height": 61, "width": 42 },
+        { "sizeType": "l", "height": 76, "width": 49 }
+      ],
+      "colorList": [{ "color": "오렌지", "closetImg": "" }]
+    }
+  ],
+  "bottomList": [
+    {
+      "clothId": "bottom1",
+      "closetType:": "BOTTOM",
+      "scaleList": [
+        { "sizeType": "s", "height": 65, "width": 38 },
+        { "sizeType": "m", "height": 75, "width": 42 },
+        { "sizeType": "l", "height": 90, "width": 47 }
+      ],
+      "colorList": [{ "color": "배색", "closetImg": "" }]
+    },
+    {
+      "clothId": "bottom2",
+      "closetType:": "BOTTOM",
+      "scaleList": [
+        { "sizeType": "s", "height": 30, "width": 38 },
+        { "sizeType": "m", "height": 35, "width": 43 },
+        { "sizeType": "l", "height": 40, "width": 47 }
+      ],
+      "colorList": [{ "color": "스카이블루", "closetImg": "" }]
+    }
+  ],
+  "OuterList": [
+    {
+      "clothId": "outer1",
+      "closetType:": "OUTER",
+      "scaleList": [
+        { "sizeType": "s", "height": 30, "width": 34 },
+        { "sizeType": "m", "height": 35, "width": 36 },
+        { "sizeType": "l", "height": 40, "width": 39 }
+      ],
+      "colorList": [{ "color": "아이보리", "closetImg": "" }]
+    }
+  ],
+  "accessoryList": [
+    {
+      "clothId": "accessory1",
+      "closetType:": "ACCESSORY",
+      "scaleList": [{ "sizeType": "free", "height": 55, "width": 23 }],
+      "colorList": [{ "color": "아이보리", "closetImg": "" }]
+    }
+  ]
+}
