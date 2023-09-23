@@ -38,7 +38,7 @@ export const ChildrenInfoModal = () => {
   const [faceScale, setFaceScale] = useState<number>(0.5);
 
   const handleImageUpload = () => {
-    const acceptedFiles = [croppedImage, 'img/남샘플.png'];
+    const acceptedFiles = [croppedImage];
     console.log(acceptedFiles);
     // 이미지를 업로드하고 images 상태에 추가
     setImages([...images, ...acceptedFiles]);
@@ -121,21 +121,22 @@ export const ChildrenInfoModal = () => {
 
     // 클리핑 해제
     ctx.restore();
-
+    // setPosition({ x: offset.x, y: offset.y });
     // ctx.drawImage(base64Img, offset.x, offset.y, base64Img.width * faceScale, base64Img.height * faceScale);
   };
 
   const handleMouseDown = (e: any) => {
     setDragging(true);
-    setPosition({ x: e.clientX, y: e.clientY });
+    setPosition({ x: e.clientX - 45, y: e.clientY });
   };
 
   const handleMouseMove = (e: any) => {
     // console.log(e);
     if (dragging) {
       setOffset({ x: e.clientX - position.x, y: e.clientY - position.y });
-      // setPosition({ x: e.clientX - offset.x, y: e.clientY - offset.y });
+
       move(baseImg);
+      // setPosition({ x: e.clientX - offset.x, y: e.clientY - offset.y });
     }
   };
 

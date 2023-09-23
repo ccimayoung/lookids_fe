@@ -98,7 +98,7 @@ export const childrenInfoAtom = atom<childrenInfoProps>({
     gender: '여',
     age: 10,
     height: 130,
-    weight: 22,
+    weight: 24,
   },
 });
 
