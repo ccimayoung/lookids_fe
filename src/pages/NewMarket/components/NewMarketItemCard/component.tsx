@@ -4,13 +4,13 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import withCommas from '../../../../utils/withCommas';
 interface IResellItemProps {
-  id:number;
+  id: number;
   productName: string;
   productPrice: number;
-  productImageUrls: string;
+  productImageUrl: string;
   isActive?: boolean;
 }
-const Component = ({id, productName, productPrice, productImageUrls, isActive = false }: IResellItemProps) => {
+const Component = ({ id, productName, productPrice, productImageUrl, isActive = false }: IResellItemProps) => {
   const [imageHeight, setImageHeight] = useState(0);
   const navigate = useNavigate();
   const elementRef = useRef<HTMLDivElement>(null);
@@ -43,7 +43,7 @@ const Component = ({id, productName, productPrice, productImageUrls, isActive = 
       >
         <HangerImage src={isActive ? '/img/activehanger.png' : '/img/hanger.png'} />
       </HangerImageBox>
-      <ProductImage height={imageHeight.toString()} src={productImageUrls} />
+      <ProductImage height={imageHeight.toString()} src={productImageUrl} />
       <TextContainer>
         {/* <BrandText>{brandName}</BrandText> */}
         <ProductName>{productName}</ProductName>

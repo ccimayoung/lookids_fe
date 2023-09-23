@@ -3,7 +3,7 @@ import { newMarketApis } from '../apis/new';
 
 export interface INewMarketItemProps {
   id:number;
-  productImageUrls: string;
+  productImageUrl: string;
   productName: string;
   productPrice: number;
 }
