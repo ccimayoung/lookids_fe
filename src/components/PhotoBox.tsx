@@ -3,35 +3,37 @@ import { ReactComponent as TrashSvg } from '../assets/svg/trash.svg';
 import { ReactComponent as WearOnSvg } from '../assets/svg/wearOn.svg';
 import { ReactComponent as WearOffSvg } from '../assets/svg/wearOff.svg';
 import { useRecoilState } from 'recoil';
-import { modalGatherAtom, wearArrayAtom, wearArrayProps } from '../recolil/atom';
+import { modalGatherAtom, wantPropertyClothIdAtom, wearArrayAtom, wearArrayProps } from '../recolil/atom';
 import { useEffect, useState } from 'react';
+import { oneClothProps } from './props';
 
 export interface photoBoxProps {
   $boxSize?: string;
   $work?: string;
   $type?: string;
   $wear?: boolean;
-  $img?: any;
   $clothId?: string;
   $codyId?: string;
-  $size?: string;
-  $color?: string;
+  $img?: any;
+  $cloth?: oneClothProps;
 }
 
-export const PhotoBox = ({ $clothId, $boxSize, $type, $wear, $work, $img, $size, $color }: photoBoxProps) => {
+export const PhotoBox = ({ $clothId, $boxSize, $type, $wear, $work, $img, $cloth }: photoBoxProps) => {
   const [wearArray, setWearArray] = useRecoilState(wearArrayAtom);
   const [nowWear, setNowWear] = useState<boolean>(false);
   const [modalGather, setModalGather] = useRecoilState(modalGatherAtom);
+  const [wantPropertyClothId, setWantPropertyClothId] = useRecoilState(wantPropertyClothIdAtom);
 
   const getWearFunc = () => {
-    if ($clothId && $img && $color && $size && $type) {
+    if ($cloth) {
       let array: wearArrayProps[] = [];
       array = [...wearArray];
       let newArray: wearArrayProps[] = [];
-      if (array.length > 0 && array.some((wear) => wear.clothId === $clothId)) {
-        newArray = array.filter((wear) => wear.clothId !== $clothId);
+      if (array.length > 0 && array.some((wear) => wear.clothId === $cloth.clothId)) {
+        newArray = array.filter((wear) => wear.clothId !== $cloth.clothId);
         setWearArray(newArray);
       } else {
+        setWantPropertyClothId($cloth.clothId);
         setModalGather({
           ...modalGather,
           clothProperty: true,
@@ -41,7 +43,7 @@ export const PhotoBox = ({ $clothId, $boxSize, $type, $wear, $work, $img, $size,
   };
 
   const checkWearFunc = () => {
-    if (wearArray.length > 0 && wearArray.some((wear) => wear.clothId === $clothId)) {
+    if (wearArray.length > 0 && wearArray.some((wear) => wear.clothId === $cloth?.clothId)) {
       setNowWear(true);
     } else {
       setNowWear(false);
@@ -50,7 +52,6 @@ export const PhotoBox = ({ $clothId, $boxSize, $type, $wear, $work, $img, $size,
 
   useEffect(() => {
     checkWearFunc();
-    console.log(wearArray);
   }, [wearArray]);
 
   return (

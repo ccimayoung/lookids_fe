@@ -18,7 +18,6 @@ const Component: React.FC<ImagePickerProps> = ({ maxImages, images, setImages })
     const handleResize = () => {
       if (element) {
         const width = element.offsetWidth;
-        console.log(width);
         setImageHeight(width);
       }
     };
@@ -75,7 +74,7 @@ const Component: React.FC<ImagePickerProps> = ({ maxImages, images, setImages })
 
 export default Component;
 
-const ImageUploadButton = styled.button<{ height: string }>`
+export const ImageUploadButton = styled.button<{ height: string }>`
   width: 100%;
   height: ${({ height }) => height};
   border: none;

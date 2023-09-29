@@ -18,7 +18,7 @@ interface IGetNewMarket {
 
 export const newMarketApis = {
   getNewMarketList: async (props: IGetNewMarket) => {
-    return await baseUrl.get(`/new?category=${props.category || ''}&kidType=${props.kidType || ''}&query=${props.query || ''}&page=0&pageSize=200`);
+    return JSON.parse(JSON.stringify(await baseUrl.get(`/new?category=${props.category || ''}&kidType=${props.kidType || ''}&query=${props.query || ''}&page=0&pageSize=200`)));
   },
   getNewMarketHotList: async () => {
     return await baseUrl.get('/new/hot?page=0&pageSize=200');

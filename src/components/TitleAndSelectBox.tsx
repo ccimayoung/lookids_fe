@@ -4,6 +4,8 @@ import { divProps, titleAndSelectBoxProps } from './props';
 import { SelectBox } from './SelectBox';
 
 export const TitleAndSelectBox = ({ $title, $titleWidth, $content, $list, $contentSize }: titleAndSelectBoxProps) => {
+  const [content, setContent] = useState<string>('');
+
   return (
     <Wrap>
       <Title $titleWidth={$titleWidth}>{$title}</Title>

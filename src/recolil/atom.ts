@@ -98,7 +98,7 @@ export const childrenInfoAtom = atom<childrenInfoProps>({
     gender: '여',
     age: 10,
     height: 130,
-    weight: 22,
+    weight: 24,
   },
 });
 
@@ -112,7 +112,12 @@ export const getCaptureAtom = atom<boolean>({
   default: false,
 });
 
-export const showPhotoAtom = atom<any>({
+export const showPhotoAtom = atom<any[]>({
   key: 'showPhotoAtom',
-  default: null,
+  default: [],
+});
+
+export const wantPropertyClothIdAtom = atom<string>({
+  key: 'wantPropertyClothIdAtom',
+  default: '',
 });

@@ -29,3 +29,11 @@ export const usePostResell = () => {
     },
   });
 };
+export const usePhotoEngine = () => {
+  const queryClinet = useQueryClient();
+  return useMutation((data: FormData) => resellApis.searchPhoto(data), {
+    onSuccess: () => {
+      queryClinet.invalidateQueries(['resll-list']);
+    },
+  });
+};

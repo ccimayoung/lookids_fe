@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import { CanvasWrapper } from './three/CanvasWrapper';
 import styled, { useTheme } from 'styled-components';
 import { PhotoBox } from '../../components/PhotoBox';
@@ -10,23 +10,46 @@ import { ReactComponent as SaveSvg } from '../../assets/svg/save.svg';
 import { useRecoilState } from 'recoil';
 import { childrenInfoAtom, getCaptureAtom, modalGatherAtom, showPhotoAtom, simpleModalAtom, wearArrayAtom } from '../../recolil/atom';
 import { ChildrenInfoModal } from '../../components/Modal/ChildrenInfoModal';
-import { divProps } from '../../components/props';
+import { clothCategoryListProps, divProps, oneClothProps } from '../../components/props';
 import { ClothPropertyModal } from '../../components/Modal/ClothPropertyModal';
 import html2canvas from 'html2canvas';
+import { useMutation } from '@tanstack/react-query';
+import { closetClothListApi } from '../../apis/closet';
 
 export default function CoordinationRoom() {
-  const [selectedMenu, setSelectedMenu] = React.useState<string>('상의');
+  const [selectedMenu, setSelectedMenu] = useState<string>('topList');
   const [modalGather, setModalGather] = useRecoilState(modalGatherAtom);
   const [simpleModal, setSimpleModal] = useRecoilState(simpleModalAtom);
   const [childrenInfo, setChildrenInfo] = useRecoilState(childrenInfoAtom);
   const [getCapture, setGetCapture] = useRecoilState(getCaptureAtom);
   const [showPhoto, setShowPhoto] = useRecoilState(showPhotoAtom);
+  const [clothList, setClothList] = useState<clothCategoryListProps | any>(null);
+
+  const clothListCumm = useMutation(() => closetClothListApi(), {
+    onSuccess: (res: any) => {
+      console.log(res);
+      if (res.data) {
+        const data = res.data;
+        setClothList(data);
+      }
+    },
+    onError: (err: any) => {
+      console.log(err);
+    },
+  });
+
+  useEffect(() => {
+    clothListCumm.mutate();
+  }, []);
+
+  useEffect(() => {
+    console.log(selectedMenu, clothList);
+  }, [selectedMenu]);
 
   return (
     <Wrapper>
       <TopWrap>
         <CanvasWrapper />
-
         <SettingBtnWrap>
           <Circle onClick={() => setModalGather({ ...modalGather, closetQuestion: true })}>
             <QuestionSvg />
@@ -71,43 +94,55 @@ export default function CoordinationRoom() {
           </Circle>
         </SettingBtnWrap>
         <CodyWrap>
-          <PhotoBox $codyId={'샘플코디1'} $boxSize="s" $type="cody" $img={showPhoto} />
-          <PhotoBox $codyId={'샘플코디2'} $boxSize="s" $type="cody" $img={'img/샘플옷2.png'} />
-          <PhotoBox $codyId={'샘플코디3'} $boxSize="s" $type="cody" $img={'img/샘플옷.png'} />
-          <PhotoBox $codyId={'샘플코디4'} $boxSize="s" $type="cody" $img={'img/샘플옷.png'} />
+          {showPhoto.length > 0 ? (
+            <>
+              {showPhoto.map((val: any, index: number) => {
+                return <PhotoBox key={index} $codyId={'샘플코디1'} $boxSize="s" $type="cody" $img={val} />;
+              })}
+              <PhotoBox $codyId={'샘플코디2'} $boxSize="s" $type="cody" $img={'img/샘플옷2.png'} />
+              <PhotoBox $codyId={'샘플코디3'} $boxSize="s" $type="cody" $img={'img/샘플옷.png'} />
+            </>
+          ) : (
+            <>
+              <PhotoBox $codyId={'샘플코디2'} $boxSize="s" $type="cody" $img={'img/샘플옷2.png'} />
+              <PhotoBox $codyId={'샘플코디3'} $boxSize="s" $type="cody" $img={'img/샘플옷.png'} />
+            </>
+          )}
         </CodyWrap>
       </TopWrap>
       <ClothWrap>
         <RowDiv>
-          <MenuBtn $size="s" $content="상의" $active={selectedMenu === '상의'} $setSelectedMenu={setSelectedMenu} />
-          <MenuBtn $size="s" $content="하의" $active={selectedMenu === '하의'} $setSelectedMenu={setSelectedMenu} />
-          <MenuBtn $size="s" $content="아우터" $active={selectedMenu === '아우터'} $setSelectedMenu={setSelectedMenu} />
-          <MenuBtn $size="s" $content="악세사리" $active={selectedMenu === '악세사리'} $setSelectedMenu={setSelectedMenu} />
-          <MenuBtn $size="s" $content="신발" $active={selectedMenu === '신발'} $setSelectedMenu={setSelectedMenu} />
-          <MenuBtn $size="s" $content="기타" $active={selectedMenu === '기타'} $setSelectedMenu={setSelectedMenu} />
-        </RowDiv>
-        <RowDiv>
-          <PhotoBox
-            $clothId={'op1'}
-            $boxSize="s"
-            $work="cloth"
-            $wear={true}
-            $type={'원피스'}
-            $img={'img/op1-아이보리.png'}
+          <MenuBtn $size="s" $content="상의" $active={selectedMenu === 'topList'} $setSelectedMenu={setSelectedMenu} $menuFiled={'topList'} />
+          <MenuBtn $size="s" $content="하의" $active={selectedMenu === 'bottomList'} $setSelectedMenu={setSelectedMenu} $menuFiled={'bottomList'} />
+          <MenuBtn $size="s" $content="아우터" $active={selectedMenu === 'outerList'} $setSelectedMenu={setSelectedMenu} $menuFiled={'outerList'} />
+          <MenuBtn $size="s" $content="신발" $active={selectedMenu === 'shoesList'} $setSelectedMenu={setSelectedMenu} $menuFiled={'shoesList'} />
+          <MenuBtn
             $size="s"
-            $color="아이보리"
+            $content="악세사리"
+            $active={selectedMenu === 'accessoryList'}
+            $setSelectedMenu={setSelectedMenu}
+            $menuFiled={'accessoryList'}
           />
-          <PhotoBox $clothId={'top1'} $boxSize="s" $work="cloth" $wear={true} $type={'상의'} $img={'img/top1.png'} $size="s" $color="줄무늬" />
-          <PhotoBox $clothId={'top3'} $boxSize="s" $work="cloth" $wear={true} $type={'상의'} $img={'img/top3.png'} $size="l" $color="퍼플" />
+          <MenuBtn $size="s" $content="기타" $active={selectedMenu === 'etcList'} $setSelectedMenu={setSelectedMenu} $menuFiled={'etcList'} />
         </RowDiv>
-        <RowDiv>
-          <PhotoBox $clothId={'skirt1'} $boxSize="s" $work="cloth" $wear={true} $type={'치마'} $img={'img/skirt1.png'} $size="s" $color="하늘" />
-          <PhotoBox $clothId={'top5'} $boxSize="s" $work="cloth" $wear={true} $type={'상의'} $img={'img/top2.png'} $size="s" $color="줄무늬" />
-          <PhotoBox $clothId={'top6'} $boxSize="s" $work="cloth" $wear={true} $type={'상의'} $img={'img/top3.png'} $size="s" $color="줄무늬" />
-        </RowDiv>
+        <ListWrap>
+          {clothList && clothList[selectedMenu]?.length > 0
+            ? clothList[selectedMenu].map((cloth: oneClothProps, index: number) => {
+                return (
+                  <RowDiv key={cloth.clothId}>
+                    <PhotoBox $cloth={cloth} $boxSize="s" $work="cloth" $wear={true} $type={cloth.type} $img={cloth.colorList[0].img} />
+                  </RowDiv>
+                );
+              })
+            : null}
+        </ListWrap>
       </ClothWrap>
       <ChildrenInfoModal />
-      <ClothPropertyModal />
+      {clothList && clothList[selectedMenu]?.length > 0 ? (
+        <>
+          <ClothPropertyModal clothList={clothList[selectedMenu]} />
+        </>
+      ) : null}
     </Wrapper>
   );
 }
@@ -151,6 +186,12 @@ const ClothWrap = styled.div`
   background-color: ${({ theme }) => theme.colors.yellow[1]};
   border-radius: 10px;
   padding: 5px;
+`;
+
+const ListWrap = styled.div`
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, auto));
 `;
 
 export const RowDiv = styled.div<divProps>`

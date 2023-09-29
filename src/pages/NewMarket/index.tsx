@@ -77,9 +77,7 @@ export default function NewMarket() {
     };
   }, []);
 
-  useEffect(() => {
-    console.log(getNewMarketList?.data);
-  }, [getNewMarketList]);
+
 
   useEffect(() => {
     if (!isOpen) handleDropdownAllClose();
@@ -90,24 +88,23 @@ export default function NewMarket() {
       <TrendItemCarouselBox>
         <TrendThim>
           요즘 핫한 신상
-          <IndigatorBox>{selectItem + 1} / {getNewMarketHotList?.data?.lookidsProducts[0].productImageUrls?.length
-            && getNewMarketHotList?.data?.lookidsProducts[0].productImageUrls?.length || 0}</IndigatorBox>
+          <IndigatorBox>{selectItem + 1} / {getNewMarketHotList?.data?.lookidsProducts?.length
+            && getNewMarketHotList?.data?.lookidsProducts?.length || 0}</IndigatorBox>
         </TrendThim>
-        {getNewMarketHotList?.data?.lookidsProducts[0].productImageUrls?.length
-          && getNewMarketHotList?.data?.lookidsProducts[0].productImageUrls?.length > 1
+        {getNewMarketHotList?.data?.lookidsProducts?.length
+          && getNewMarketHotList?.data?.lookidsProducts?.length > 1
           ? <NewMarketCarousel setSelectItem={setSelectItem}>
-            {getNewMarketHotList?.data?.lookidsProducts[0].productImageUrls.map((image, index) => {
-              return <NewMarketImage key={image + index} src={image} /> as ReactChild;
+            {getNewMarketHotList?.data?.lookidsProducts.map((image, index) => {
+              return <NewMarketImage key={image.id} src={image.productImageUrls} /> as ReactChild;
             })}
 
             {/* <NewMarketImage src="https://m.cooingkids.com/web/product/big/20200313/38849db602ae21192a82938c26241542.jpg" />
           <NewMarketImage src="https://m.cooingkids.com/web/product/big/20200313/38849db602ae21192a82938c26241542.jpg" />
           <NewMarketImage src="https://m.cooingkids.com/web/product/big/20200313/38849db602ae21192a82938c26241542.jpg" /> */}
-          </NewMarketCarousel> : <>
-            {getNewMarketHotList?.data?.lookidsProducts[0].productImageUrls.map((image, index) => {
-              return <NewMarketImage key={image + index} src={image} /> as ReactChild;
-            })}
-          </>}
+          </NewMarketCarousel> : 
+          <NewMarketImage key={getNewMarketHotList?.data?.lookidsProducts[0].id} 
+            src={getNewMarketHotList?.data?.lookidsProducts[0].productImageUrls} />
+        }
       </TrendItemCarouselBox>
       <ContentContainer>
         <CategoryContainer>
@@ -196,11 +193,9 @@ export default function NewMarket() {
         <ProductContainer>
           {getNewMarketList?.data?.lookidsProducts?.map((newMarket: INewMarketItemProps) => {
             return <NewMarketItemCard
-              key={newMarket.productName}
-              productName={newMarket.productName}
-              price={newMarket.productPrice}
+              key={newMarket.id}
+              {...newMarket}
               isActive={true}
-              imgUrl={newMarket?.productImageUrls[0]}
             />;
           })}
 

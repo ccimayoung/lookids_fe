@@ -3,14 +3,14 @@ import styled from 'styled-components';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import withCommas from '../../../../utils/withCommas';
-
 interface IResellItemProps {
+  id:number;
   productName: string;
-  price: number;
-  imgUrl: string;
+  productPrice: number;
+  productImageUrls: string;
   isActive?: boolean;
 }
-const Component = ({ productName, price, imgUrl, isActive = false }: IResellItemProps) => {
+const Component = ({id, productName, productPrice, productImageUrls, isActive = false }: IResellItemProps) => {
   const [imageHeight, setImageHeight] = useState(0);
   const navigate = useNavigate();
   const elementRef = useRef<HTMLDivElement>(null);
@@ -35,7 +35,7 @@ const Component = ({ productName, price, imgUrl, isActive = false }: IResellItem
   }, []);
 
   return (
-    <ProductCard ref={elementRef} height={imageHeight.toString()} onClick={() => navigate('new-detail')}>
+    <ProductCard ref={elementRef} height={imageHeight.toString()} onClick={() => navigate(`new-detail/${id}`)}>
       <HangerImageBox
         onClick={(e) => {
           e.stopPropagation();
@@ -43,11 +43,11 @@ const Component = ({ productName, price, imgUrl, isActive = false }: IResellItem
       >
         <HangerImage src={isActive ? '/img/activehanger.png' : '/img/hanger.png'} />
       </HangerImageBox>
-      <ProductImage height={imageHeight.toString()} src={imgUrl} />
+      <ProductImage height={imageHeight.toString()} src={productImageUrls} />
       <TextContainer>
         {/* <BrandText>{brandName}</BrandText> */}
         <ProductName>{productName}</ProductName>
-        <Price>{withCommas(price)}원</Price>
+        <Price>{withCommas(productPrice)}원</Price>
       </TextContainer>
     </ProductCard>
   );

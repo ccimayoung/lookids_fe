@@ -5,25 +5,50 @@ import { CameraIcon } from '../../components/GlobalIcon';
 import { useNavigate } from 'react-router';
 import { ResellItemCard } from './components/ResellItemCard';
 import { useDropzone } from 'react-dropzone';
+import { usePhotoEngine } from '../../hooks/useResell';
+import { useRecoilState } from 'recoil';
+import { modalStatus } from '../../recolil/atom';
+import { Spinner } from '../../components/Spinner';
 
 export interface IAppProps {}
 
 export default function ResellMarketPhotoEngine() {
   const contentsRef = useRef<HTMLDivElement | null>(null);
+  const [isModalOpen, setIsModalOpen] = useRecoilState(modalStatus);
   const elementRef = useRef<HTMLDivElement>(null);
   const themeApp = useTheme();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const [imageHeight, setImageHeight] = useState(0);
   const [imageFile, setImageFile] = useState<File[] | undefined>();
+  const {mutateAsync : searchPhoto}=usePhotoEngine();
   const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
+    async(acceptedFiles: File[]) => {
       // 이미지가 선택되었을 때 실행됩니다.
       // 최대 이미지 개수를 초과하는 경우 경고를 표시합니다.
-      if (acceptedFiles.length > 1) {
-        alert(`최대 ${1}개까지 이미지를 선택할 수 있습니다.`);
-      } else {
-        setImageFile(acceptedFiles);
+      setIsLoading(true);
+      setIsModalOpen(true);
+      try {
+        if (acceptedFiles.length > 1) {
+          alert(`최대 ${1}개까지 이미지를 선택할 수 있습니다.`);
+        } else {
+          const formData = new FormData();
+          for (const file of acceptedFiles) {
+            formData.append('image',file,file.name);
+          }
+          await searchPhoto(formData);
+          setImageFile(acceptedFiles);
+        }
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error(error.message);
+          alert(error.message.toString());
+        }
+      }finally{
+        setIsModalOpen(false);
+        setIsLoading(false);
       }
+      
     },
     [imageFile],
   );
@@ -47,9 +72,12 @@ export default function ResellMarketPhotoEngine() {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-
+ 
   return (
     <Container>
+      {isLoading && <BlackThim >
+        <Spinner />
+      </BlackThim>}
       <ContentContainer>
         <CategoryContainer>
           <Content ref={contentsRef}>
@@ -138,6 +166,7 @@ export default function ResellMarketPhotoEngine() {
 const Container = styled.div`
   padding: 20px;
   display: flex;
+  position: relative;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -150,6 +179,19 @@ const Content = styled.div`
   position: sticky;
   top: 0;
 `;
+const BlackThim =styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  background-color: #000000b3;
+  z-index: 999;
+`;
+
 const ContentContainer = styled.div`
   width: 100%;
 `;

@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IDailylookList } from '../..';
 
-const Component = ({ hashTag, user, imageUrls }: IDailylookList) => {
+const Component = ({ hashTag, user, imageUrls ,dailyLookId}: IDailylookList) => {
   const themeApp = useTheme();
   const navigate = useNavigate();
   const [isLike, setIsLike] = useState(false);
@@ -30,12 +30,13 @@ const Component = ({ hashTag, user, imageUrls }: IDailylookList) => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
   return (
     <Wrap
       imageheight={imageHeight}
       ref={elementRef}
       onClick={() => {
-        navigate('dailylook/1');
+        navigate(`dailylook/${dailyLookId}`);
       }}
     >
       <LikeButton
@@ -51,15 +52,9 @@ const Component = ({ hashTag, user, imageUrls }: IDailylookList) => {
       </ImageBox>
       <BottomContent>
         <TagBox>
-          {hashTag
-            .split('#')
-            .slice(1)
-            .map((v) => (
-              <Tag key={v}>#{v}</Tag>
-            ))}
-          {/* <Tag>#강쥐</Tag>
-          <Tag>#댕댕이</Tag>
-          <Tag>#귀엽다</Tag> */}
+          {hashTag.map((hash:string)=>{
+            return<Tag key={hash}>{hash}</Tag>;
+          })};
         </TagBox>
         <Writer>{user.name}</Writer>
       </BottomContent>
