@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { ReactChild, useEffect, useRef, useState } from 'react';
 import { styled } from 'styled-components';
 import { SearchBox } from '../../components/SearchBox';
 import { useRecoilState } from 'recoil';
@@ -8,23 +8,24 @@ import { FilterIcon, MenuBoxArrow } from '../../components/GlobalIcon';
 import { Dropdown } from '../../components/Dropdown';
 import { NewMarketItemCard } from './components/NewMarketItemCard';
 import { NewMarketCarousel } from '../../components/NewMarketCarousel';
+import { INewMarketItemProps, useGetNewMarketHotList, useGetNewMarketList } from '../../hooks/useNewMarket';
 
-export interface IAppProps {}
+export interface IAppProps { }
 
 const targetOptions = [
-  { label: '전체', value: 0 },
-  { label: '베이비', value: 1 },
-  { label: '키즈(남)', value: 2 },
-  { label: '키즈(여)', value: 3 },
+  { label: '전체', value: '' },
+  { label: '베이비', value: 'BABY' },
+  { label: '키즈(남)', value: 'BOY' },
+  { label: '키즈(여)', value: 'GIRL' },
 ];
 const categoryOptions = [
-  { label: '전체', value: 0 },
-  { label: '상의', value: 1 },
-  { label: '하의', value: 2 },
-  { label: '아우터', value: 3 },
-  { label: '악세사리', value: 4 },
-  { label: '신발', value: 5 },
-  { label: '기타', value: 6 },
+  { label: '전체', value: '' },
+  { label: '상의', value: 'TOP' },
+  { label: '하의', value: 'BOTTOM' },
+  { label: '아우터', value: 'OUTER' },
+  { label: '악세사리', value: 'ACCESSORY' },
+  { label: '신발', value: 'SHOES' },
+  { label: '기타', value: 'ETC' },
 ];
 
 export default function NewMarket() {
@@ -33,11 +34,19 @@ export default function NewMarket() {
   const [imageHeight, setImageHeight] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const [, setIsModalOpen] = useRecoilState(modalStatus);
+  const [query, setQuery] = useState<string>();
   const [selectItem, setSelectItem] = useState(0);
   const [isTargetDropdownOpen, setIsTargetDropdownOpen] = useState<boolean>(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState<boolean>(false);
   const [selectedTarget, setSelectedTarget] = useRecoilState<Option | null>(selectedSeasonsAtom);
   const [selectedCategory, setSelectedCategory] = useRecoilState<Option | null>(selectedCategoryAtom);
+
+  const { data: getNewMarketList, refetch: newMarketRefetch } = useGetNewMarketList({
+    category: selectedCategory?.value || '',
+    kidType: selectedTarget?.value || '',
+    query: query || ''
+  });
+  const { data: getNewMarketHotList } = useGetNewMarketHotList();
 
   const handleOptionSelectTarget = (option: Option | null) => {
     setSelectedTarget(option);
@@ -67,6 +76,11 @@ export default function NewMarket() {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    console.log(getNewMarketList?.data);
+  }, [getNewMarketList]);
+
   useEffect(() => {
     if (!isOpen) handleDropdownAllClose();
   }, [isOpen]);
@@ -76,31 +90,48 @@ export default function NewMarket() {
       <TrendItemCarouselBox>
         <TrendThim>
           요즘 핫한 신상
-          <IndigatorBox>{selectItem + 1} / 4</IndigatorBox>
+          <IndigatorBox>{selectItem + 1} / {getNewMarketHotList?.data?.lookidsProducts[0].productImageUrls?.length
+            && getNewMarketHotList?.data?.lookidsProducts[0].productImageUrls?.length || 0}</IndigatorBox>
         </TrendThim>
-        <NewMarketCarousel setSelectItem={setSelectItem}>
+        {getNewMarketHotList?.data?.lookidsProducts[0].productImageUrls?.length
+          && getNewMarketHotList?.data?.lookidsProducts[0].productImageUrls?.length > 1
+          ? <NewMarketCarousel setSelectItem={setSelectItem}>
+            {getNewMarketHotList?.data?.lookidsProducts[0].productImageUrls.map((image, index) => {
+              return <NewMarketImage key={image + index} src={image} /> as ReactChild;
+            })}
+
+            {/* <NewMarketImage src="https://m.cooingkids.com/web/product/big/20200313/38849db602ae21192a82938c26241542.jpg" />
           <NewMarketImage src="https://m.cooingkids.com/web/product/big/20200313/38849db602ae21192a82938c26241542.jpg" />
-          <NewMarketImage src="https://m.cooingkids.com/web/product/big/20200313/38849db602ae21192a82938c26241542.jpg" />
-          <NewMarketImage src="https://m.cooingkids.com/web/product/big/20200313/38849db602ae21192a82938c26241542.jpg" />
-          <NewMarketImage src="https://m.cooingkids.com/web/product/big/20200313/38849db602ae21192a82938c26241542.jpg" />
-        </NewMarketCarousel>
+          <NewMarketImage src="https://m.cooingkids.com/web/product/big/20200313/38849db602ae21192a82938c26241542.jpg" /> */}
+          </NewMarketCarousel> : <>
+            {getNewMarketHotList?.data?.lookidsProducts[0].productImageUrls.map((image, index) => {
+              return <NewMarketImage key={image + index} src={image} /> as ReactChild;
+            })}
+          </>}
       </TrendItemCarouselBox>
       <ContentContainer>
         <CategoryContainer>
           <Content ref={contentsRef}>
-            <SearchBox
-              placeholder="신상을 검색해보세요!"
-              isCamera={false}
-              onClick={() => {
-                if (contentsRef.current) {
-                  contentsRef.current?.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}
-            />
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              newMarketRefetch();
+            }}>
+              <SearchBox
+                placeholder="신상을 검색해보세요!"
+                isCamera={false}
+                onChange={(e) => setQuery(e.target.value)}
+                onClick={() => {
+                  if (contentsRef.current) {
+                    contentsRef.current?.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+              />
+            </form>
           </Content>
 
           <ContentsHeader>
-            <Total>전체 0개</Total>
+            <Total>전체 {getNewMarketList?.data?.lookidsProducts?.length
+              && getNewMarketList?.data?.lookidsProducts?.length || 0}개</Total>
             <FilterButton
               onClick={() => {
                 setIsModalOpen(true);
@@ -163,56 +194,17 @@ export default function NewMarket() {
           />
         )}
         <ProductContainer>
-          <NewMarketItemCard
-            brandName="맘맘님"
-            productName="밀크웨이 맨투맨"
-            price={8000}
-            isActive={true}
-            imgUrl={'https://ae01.alicdn.com/kf/Sdd4c439b63744832b6115c365eca76a46/-.jpg_220x220.jpg_.webp'}
-          />
-          <NewMarketItemCard
-            brandName="맘맘님"
-            productName="밀크웨이 맨투맨"
-            price={8000}
-            imgUrl={'https://m.cooingkids.com/web/product/big/20200313/38849db602ae21192a82938c26241542.jpg'}
-          />
-          <NewMarketItemCard
-            brandName="맘맘님"
-            productName="밀크웨이 맨투맨"
-            price={8000}
-            isActive={true}
-            imgUrl={'https://cdn.011st.com/11dims/resize/600x600/quality/75/11src/product/4848639433/B.jpg?730000000'}
-          />
-          <NewMarketItemCard
-            brandName="맘맘님"
-            productName="밀크웨이 맨투맨"
-            price={8000}
-            imgUrl={'https://ae01.alicdn.com/kf/Sdd4c439b63744832b6115c365eca76a46/-.jpg_220x220.jpg_.webp'}
-          />
-          <NewMarketItemCard
-            brandName="맘맘님"
-            productName="밀크웨이 맨투맨"
-            price={8000}
-            imgUrl={'https://m.cooingkids.com/web/product/big/20200313/38849db602ae21192a82938c26241542.jpg'}
-          />
-          <NewMarketItemCard
-            brandName="맘맘님"
-            productName="밀크웨이 맨투맨"
-            price={8000}
-            imgUrl={'https://cdn.011st.com/11dims/resize/600x600/quality/75/11src/product/4848639433/B.jpg?730000000'}
-          />
-          <NewMarketItemCard
-            brandName="맘맘님"
-            productName="밀크웨이 맨투맨"
-            price={8000}
-            imgUrl={'https://cdn.011st.com/11dims/resize/600x600/quality/75/11src/product/4848639433/B.jpg?730000000'}
-          />
-          <NewMarketItemCard
-            brandName="맘맘님"
-            productName="밀크웨이 맨투맨"
-            price={8000}
-            imgUrl={'https://cdn.011st.com/11dims/resize/600x600/quality/75/11src/product/4848639433/B.jpg?730000000'}
-          />
+          {getNewMarketList?.data?.lookidsProducts?.map((newMarket: INewMarketItemProps) => {
+            return <NewMarketItemCard
+              key={newMarket.productName}
+              productName={newMarket.productName}
+              price={newMarket.productPrice}
+              isActive={true}
+              imgUrl={newMarket?.productImageUrls[0]}
+            />;
+          })}
+
+
         </ProductContainer>
       </ContentContainer>
       {/* <FloatingButton onClick={() => navigate('resell-post')}>
@@ -358,7 +350,7 @@ const CategorySelectMenu = styled.div`
   width: 100%;
   background-color: white;
   border-radius: 10px;
-  gap: 5px;
+  gap: 10px;
 `;
 const CategoryItem = styled.div`
   display: flex;
@@ -373,7 +365,7 @@ const ContentsHeader = styled.div`
   display: flex;
 `;
 const Total = styled.div`
-  font-size: 12px;
+  font-size: 0.9rem;
   font-weight: 600;
   display: flex;
 `;

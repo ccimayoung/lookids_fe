@@ -10,31 +10,33 @@ import { Dropdown } from '../../components/Dropdown';
 import { FloatingButton } from '../../components/FloatingButton';
 import { useNavigate } from 'react-router';
 import { ResellItemCard } from './components/ResellItemCard';
-import { modalResllStatus, selectedResllCategoryAtom, selectedResllSalesStatusAtom, selectedResllSeasonsAtom } from './atom/atom';
+import { selectedResllCategoryAtom, selectedResllSalesStatusAtom, selectedResllSeasonsAtom } from './atom/atom';
+import { useGetResellList } from '../../hooks/useResell';
+import { modalStatus } from '../../recolil/atom';
 
-export interface IAppProps {}
+export interface IAppProps { }
 
 const seasonsOptions = [
-  { label: '전체', value: 0 },
-  { label: '봄', value: 1 },
-  { label: '여름', value: 2 },
-  { label: '가을', value: 3 },
-  { label: '겨울', value: 4 },
+  { label: '전체', value: '' },
+  { label: '봄', value: 'SPRING' },
+  { label: '여름', value: 'SUMMER' },
+  { label: '가을', value: 'AUTUMN' },
+  { label: '겨울', value: 'WINTER' },
 ];
 const targetOptions = [
-  { label: '전체', value: 0 },
-  { label: '베이비', value: 1 },
-  { label: '키즈(남)', value: 2 },
-  { label: '키즈(여)', value: 3 },
+  { label: '전체', value: '' },
+  { label: '베이비', value: 'BABY' },
+  { label: '키즈(남)', value: 'BOY' },
+  { label: '키즈(여)', value: 'GIRL' },
 ];
 const categoryOptions = [
-  { label: '전체', value: 0 },
-  { label: '상의', value: 1 },
-  { label: '하의', value: 2 },
-  { label: '아우터', value: 3 },
-  { label: '악세사리', value: 4 },
-  { label: '신발', value: 5 },
-  { label: '기타', value: 6 },
+  { label: '전체', value: '' },
+  { label: '상의', value: 'TOP' },
+  { label: '하의', value: 'BOTTOM' },
+  { label: '아우터', value: 'OUTER' },
+  { label: '악세사리', value: 'ACCESSORY' },
+  { label: '신발', value: 'SHOES' },
+  { label: '기타', value: 'ETC' },
 ];
 
 export default function ResellMarket() {
@@ -44,14 +46,22 @@ export default function ResellMarket() {
   const navigate = useNavigate();
   const [imageHeight, setImageHeight] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
-  const [, setIsModalOpen] = useRecoilState(modalResllStatus);
+  const [, setIsModalOpen] = useRecoilState(modalStatus);
+  const [serchText, setSearchText] = useState<string>();
   const [isSalesStatusDropdownOpen, setIsSalesStatusDropdownOpen] = useState<boolean>(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState<boolean>(false);
   const [isTargetDropdownOpen, setIsTargetDropdownOpen] = useState<boolean>(false);
   const [selectedSalesStatus, setSelectedSalesStatus] = useRecoilState<Option | null>(selectedResllSalesStatusAtom);
   const [selectedCategory, setSelectedCategory] = useRecoilState<Option | null>(selectedResllCategoryAtom);
   const [selectedTarget, setSelectedTarget] = useRecoilState<Option | null>(selectedResllSeasonsAtom);
-
+  const { data: resellList, refetch: resellListRefetch } = useGetResellList(
+    {
+      saleStatus: selectedSalesStatus?.value,
+      category: selectedCategory?.value,
+      searchKeyword: serchText,
+      target: selectedTarget?.value,
+    }
+  );
   const handleOptionSelectSalesStatus = (option: Option | null) => {
     setSelectedSalesStatus(option);
   };
@@ -65,6 +75,7 @@ export default function ResellMarket() {
     setIsTargetDropdownOpen(false);
     setIsSalesStatusDropdownOpen(false);
     setIsCategoryDropdownOpen(false);
+    resellListRefetch();
   };
 
   useEffect(() => {
@@ -84,29 +95,36 @@ export default function ResellMarket() {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
   useEffect(() => {
     if (!isOpen) handleDropdownAllClose();
   }, [isOpen]);
 
   return (
-    <Container>
+    <Container >
       <BestSellerText>이 달의 베스트 셀러</BestSellerText>
       <CustomCarousel />
       <ContentContainer>
         <CategoryContainer>
           <Content ref={contentsRef}>
-            <SearchBox
-              placeholder="오른쪽 이미지 검색도 이용해보세요!"
-              onClick={() => {
-                if (contentsRef.current) {
-                  contentsRef.current?.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}
-            />
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              resellListRefetch();
+            }}>
+              <SearchBox
+                placeholder="오른쪽 이미지 검색도 이용해보세요!"
+                onChange={(e) => setSearchText(e.target.value)}
+                onClick={() => {
+                  if (contentsRef.current) {
+                    contentsRef.current?.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+              />
+            </form>
           </Content>
 
           <ContentsHeader>
-            <Total>전체 0개</Total>
+            <Total>전체 {resellList?.data?.resellProductResponse?.length || 0}개</Total>
             <FilterButton
               onClick={() => {
                 setIsModalOpen(true);
@@ -180,55 +198,22 @@ export default function ResellMarket() {
             }}
           />
         )}
-        <ProductContainer>
-          <ResellItemCard
-            brandName="맘맘님"
-            productName="밀크웨이 맨투맨"
-            price={8000}
-            imgUrl={'https://ae01.alicdn.com/kf/Sdd4c439b63744832b6115c365eca76a46/-.jpg_220x220.jpg_.webp'}
-          />
-          <ResellItemCard
-            brandName="맘맘님"
-            productName="밀크웨이 맨투맨"
-            price={8000}
-            imgUrl={'https://m.cooingkids.com/web/product/big/20200313/38849db602ae21192a82938c26241542.jpg'}
-          />
-          <ResellItemCard
-            brandName="맘맘님"
-            productName="밀크웨이 맨투맨"
-            price={8000}
-            imgUrl={'https://cdn.011st.com/11dims/resize/600x600/quality/75/11src/product/4848639433/B.jpg?730000000'}
-          />
-          <ResellItemCard
-            brandName="맘맘님"
-            productName="밀크웨이 맨투맨"
-            price={8000}
-            imgUrl={'https://ae01.alicdn.com/kf/Sdd4c439b63744832b6115c365eca76a46/-.jpg_220x220.jpg_.webp'}
-          />
-          <ResellItemCard
-            brandName="맘맘님"
-            productName="밀크웨이 맨투맨"
-            price={8000}
-            imgUrl={'https://m.cooingkids.com/web/product/big/20200313/38849db602ae21192a82938c26241542.jpg'}
-          />
-          <ResellItemCard
-            brandName="맘맘님"
-            productName="밀크웨이 맨투맨"
-            price={8000}
-            imgUrl={'https://cdn.011st.com/11dims/resize/600x600/quality/75/11src/product/4848639433/B.jpg?730000000'}
-          />
-          <ResellItemCard
-            brandName="맘맘님"
-            productName="밀크웨이 맨투맨"
-            price={8000}
-            imgUrl={'https://cdn.011st.com/11dims/resize/600x600/quality/75/11src/product/4848639433/B.jpg?730000000'}
-          />
-          <ResellItemCard
-            brandName="맘맘님"
-            productName="밀크웨이 맨투맨"
-            price={8000}
-            imgUrl={'https://cdn.011st.com/11dims/resize/600x600/quality/75/11src/product/4848639433/B.jpg?730000000'}
-          />
+        <ProductContainer $isscroll={resellList?.data?.resellProductResponse?.length
+          && resellList?.data?.resellProductResponse?.length > 0 || false}>
+          {resellList?.data?.resellProductResponse?.length
+            && resellList?.data?.resellProductResponse?.length > 0 ? resellList?.data?.resellProductResponse?.map((v) => {
+              return <ResellItemCard
+                key={v.productName + v.userId}
+                brandName={v.sellerNickname}
+                productName={v.productName}
+                price={v.productPrice}
+                imgUrl={v.productImage}
+              />;
+            }) :
+            <NonProduct >등록된 상품이 없습니다.</NonProduct>
+          }
+
+
         </ProductContainer>
       </ContentContainer>
       <FloatingButton onClick={() => navigate('resell-post')}>
@@ -245,7 +230,16 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   text-align: center;
-  overflow: 'auto';
+  overflow:'auto';
+`;
+const NonProduct = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding-top: 100px;
+  flex:1;
 `;
 const BestSellerText = styled.div`
   font-size: 18px;
@@ -265,9 +259,10 @@ const ContentContainer = styled.div`
   width: 100%;
   padding: 20px;
   margin-top: 20px;
+  
 `;
-const ProductContainer = styled.div`
-  min-height: 90vh;
+const ProductContainer = styled.div<{ $isscroll: boolean }>`
+  min-height: ${({ $isscroll }) => $isscroll ? '80vh' : '40vh'};
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
@@ -276,7 +271,7 @@ const ProductContainer = styled.div`
 
 const ThemeBlack = styled.div`
   position: absolute;
-  z-index: 1;
+  z-index: 999;
   top: 0;
   left: 0;
   width: 100%;
@@ -285,7 +280,7 @@ const ThemeBlack = styled.div`
 `;
 const ThemeWhite = styled.div`
   position: absolute;
-  z-index: 2;
+  z-index: 1000;
   top: 90px;
   right: 0;
   width: 50%;
@@ -322,7 +317,7 @@ const CategoryContainer = styled.div`
   padding-bottom: 10px;
   gap: 10px;
   top: 0;
-  z-index: 2;
+  z-index: 2000;
   width: 100%;
 `;
 
@@ -334,7 +329,7 @@ const CategorySelectMenu = styled.div`
   width: 100%;
   background-color: white;
   border-radius: 10px;
-  gap: 4px;
+  gap: 10px;
 `;
 const CategoryItem = styled.div`
   display: flex;
@@ -349,7 +344,7 @@ const ContentsHeader = styled.div`
   display: flex;
 `;
 const Total = styled.div`
-  font-size: 12px;
+  font-size: 0.9rem;
   font-weight: 600;
   display: flex;
 `;

@@ -3,6 +3,9 @@ import { styled, useTheme } from 'styled-components';
 import { ImagePicker } from '../../components/ImagePicker';
 import { Label } from '../../components/Label';
 import { Star } from '../../components/GlobalIcon';
+import { usePostResell } from '../../hooks/useResell';
+import { Category, Season } from '../../utils/statusFormatter/dailylookStatus';
+import { useNavigate } from 'react-router-dom';
 
 export interface IPurchaseInfo {
   id: number;
@@ -14,11 +17,33 @@ export interface IPurchaseInfo {
 
 export default function PostResell() {
   const themeApp = useTheme();
-  const [category, setCategory] = useState<number[]>([]);
-  const [seasons, setSeasons] = useState<number[]>([]);
+  const [category, setCategory] = useState<string[]>([]);
+  const [seasons, setSeasons] = useState<string[]>([]);
+  const navigate = useNavigate();
 
   const [images, setImages] = useState<File[]>([]);
-  const [tag, setTag] = useState<string | undefined>();
+  const [product, setProduct] = useState<string | undefined>();
+  const [brand, setBrand] = useState<string | undefined>();
+  const [price, setPrice] = useState<number | undefined>();
+  const { mutateAsync: postResell } = usePostResell();
+  const handlePostResell = async () => {
+    const req = {
+      'productImage': 'https://berrycloset.co.kr/web/product/big/202303/a5d5c4203bc553ea8049b80e444f9a89.jpg',
+      'productName': product || '',
+      'productPrice': Number(price),
+      'sellerNickname': brand || '',
+      'userId': 0
+    };
+    try {
+      await postResell(req);
+      navigate(-1);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(error.message);
+        alert(error.message.toString());
+      }
+    }
+  };
 
   return (
     <Container>
@@ -40,8 +65,8 @@ export default function PostResell() {
             width={'100%'}
             placeholder={'추가하고싶은 정보를 입력해주세요.'}
             center={false}
-            value={tag}
-            onChange={(e) => setTag(e.target.value)}
+            value={product || ''}
+            onChange={(e) => setProduct(e.target.value)}
           />
         </CategoryContents>
       </ContentsBox>
@@ -61,8 +86,8 @@ export default function PostResell() {
             width={'100%'}
             placeholder={'추가하고싶은 정보를 입력해주세요.'}
             center={false}
-            value={tag}
-            onChange={(e) => setTag(e.target.value)}
+            value={brand || ''}
+            onChange={(e) => setBrand(e.target.value)}
           />
         </CategoryContents>
       </ContentsBox>
@@ -82,8 +107,10 @@ export default function PostResell() {
             width={'100%'}
             placeholder={'추가하고싶은 정보를 입력해주세요.'}
             center={false}
-            value={tag}
-            onChange={(e) => setTag(e.target.value)}
+            value={price?.toString() || ''}
+            onChange={(e) => {
+              setPrice(Number(e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')));
+            }}
           />
         </CategoryContents>
       </ContentsBox>
@@ -98,68 +125,68 @@ export default function PostResell() {
         </ContentsTitle>
         <CategoryContents>
           <Label
-            color={category.includes(0) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            color={category.includes(Category.TOP) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
             height={'20'}
             text="상의"
             width={'55'}
             onClick={() => {
-              if (!category.includes(0)) setCategory([...category, 0]);
-              if (category.includes(0)) setCategory(category.filter((v) => v !== 0));
+              if (!category.includes(Category.TOP)) setCategory([...category, Category.TOP]);
+              if (category.includes(Category.TOP)) setCategory(category.filter((v) => v !== Category.TOP));
             }}
             center={true}
           />
           <Label
-            color={category.includes(1) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            color={category.includes(Category.BOTTOM) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
             height={'20'}
             text="하의"
             width={'55'}
             onClick={() => {
-              if (!category.includes(1)) setCategory([...category, 1]);
-              if (category.includes(1)) setCategory(category.filter((v) => v !== 1));
+              if (!category.includes(Category.BOTTOM)) setCategory([...category, Category.BOTTOM]);
+              if (category.includes(Category.BOTTOM)) setCategory(category.filter((v) => v !== Category.BOTTOM));
             }}
             center={true}
           />
           <Label
-            color={category.includes(2) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            color={category.includes(Category.OUTER) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
             height={'20'}
             text="아우터"
             width={'55'}
             onClick={() => {
-              if (!category.includes(2)) setCategory([...category, 2]);
-              if (category.includes(2)) setCategory(category.filter((v) => v !== 2));
+              if (!category.includes(Category.OUTER)) setCategory([...category, Category.OUTER]);
+              if (category.includes(Category.OUTER)) setCategory(category.filter((v) => v !== Category.OUTER));
             }}
             center={true}
           />
           <Label
-            color={category.includes(3) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            color={category.includes(Category.ACCESSORY) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
             height={'20'}
             text="악세사리"
             width={'55'}
             onClick={() => {
-              if (!category.includes(3)) setCategory([...category, 3]);
-              if (category.includes(3)) setCategory(category.filter((v) => v !== 3));
+              if (!category.includes(Category.ACCESSORY)) setCategory([...category, Category.ACCESSORY]);
+              if (category.includes(Category.ACCESSORY)) setCategory(category.filter((v) => v !== Category.ACCESSORY));
             }}
             center={true}
           />
           <Label
-            color={category.includes(4) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            color={category.includes(Category.SHOES) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
             height={'20'}
             text="신발"
             width={'55'}
             onClick={() => {
-              if (!category.includes(4)) setCategory([...category, 4]);
-              if (category.includes(4)) setCategory(category.filter((v) => v !== 4));
+              if (!category.includes(Category.SHOES)) setCategory([...category, Category.SHOES]);
+              if (category.includes(Category.SHOES)) setCategory(category.filter((v) => v !== Category.SHOES));
             }}
             center={true}
           />
           <Label
-            color={category.includes(5) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            color={category.includes(Category.ETC) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
             height={'20'}
             text="기타"
             width={'55'}
             onClick={() => {
-              if (!category.includes(5)) setCategory([...category, 5]);
-              if (category.includes(5)) setCategory(category.filter((v) => v !== 5));
+              if (!category.includes(Category.ETC)) setCategory([...category, Category.ETC]);
+              if (category.includes(Category.ETC)) setCategory(category.filter((v) => v !== Category.ETC));
             }}
             center={true}
           />
@@ -176,46 +203,46 @@ export default function PostResell() {
         </ContentsTitle>
         <CategoryContents>
           <Label
-            color={seasons.includes(0) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            color={seasons.includes(Season.SPRING) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
             height={'20'}
             text="봄"
             width={'55'}
             onClick={() => {
-              if (!seasons.includes(0)) setSeasons([...seasons, 0]);
-              if (seasons.includes(0)) setSeasons(seasons.filter((v) => v !== 0));
+              if (!seasons.includes(Season.SPRING)) setSeasons([...seasons, Season.SPRING]);
+              if (seasons.includes(Season.SPRING)) setSeasons(seasons.filter((v) => v !== Season.SPRING));
             }}
             center={true}
           />
           <Label
-            color={seasons.includes(1) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            color={seasons.includes(Season.SUMMER) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
             height={'20'}
             text="여름"
             width={'55'}
             onClick={() => {
-              if (!seasons.includes(1)) setSeasons([...seasons, 1]);
-              if (seasons.includes(1)) setSeasons(seasons.filter((v) => v !== 1));
+              if (!seasons.includes(Season.SUMMER)) setSeasons([...seasons, Season.SUMMER]);
+              if (seasons.includes(Season.SUMMER)) setSeasons(seasons.filter((v) => v !== Season.SUMMER));
             }}
             center={true}
           />
           <Label
-            color={seasons.includes(2) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            color={seasons.includes(Season.AUTUMN) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
             height={'20'}
             text="가을"
             width={'55'}
             onClick={() => {
-              if (!seasons.includes(2)) setSeasons([...seasons, 2]);
-              if (seasons.includes(2)) setSeasons(seasons.filter((v) => v !== 2));
+              if (!seasons.includes(Season.AUTUMN)) setSeasons([...seasons, Season.AUTUMN]);
+              if (seasons.includes(Season.AUTUMN)) setSeasons(seasons.filter((v) => v !== Season.AUTUMN));
             }}
             center={true}
           />
           <Label
-            color={seasons.includes(3) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
+            color={seasons.includes(Season.WINTER) ? themeApp.colors.yellow[2] : themeApp.colors.neutral[1]}
             height={'20'}
             text="겨울"
             width={'55'}
             onClick={() => {
-              if (!seasons.includes(3)) setSeasons([...seasons, 3]);
-              if (seasons.includes(3)) setSeasons(seasons.filter((v) => v !== 3));
+              if (!seasons.includes(Season.WINTER)) setSeasons([...seasons, Season.WINTER]);
+              if (seasons.includes(Season.WINTER)) setSeasons(seasons.filter((v) => v !== Season.WINTER));
             }}
             center={true}
           />
@@ -234,7 +261,7 @@ export default function PostResell() {
       </ContentsBox>
 
       <Complate>
-        <Label color={themeApp.colors.green[300]} height={'30'} text="등록" width={'60'} onClick={() => {}} center={true} bold={true} />
+        <Label color={themeApp.colors.green[300]} height={'30'} text="등록" width={'60'} onClick={handlePostResell} center={true} bold={true} />
       </Complate>
     </Container>
   );
@@ -252,7 +279,7 @@ const ImagePickerBox = styled.div`
 
 const ChildInfoLabel = styled.div`
   font-weight: 600;
-  font-size: 12px;
+  font-size: 0.9rem;
 `;
 
 const Tag = styled.div`
@@ -286,7 +313,7 @@ const DescriptionBox = styled.textarea`
   resize: none;
   border: ${({ theme }) => `1px solid ${theme.colors.yellow[3]}`};
   padding: 7px;
-  font-size: 12px;
+  font-size: 0.9rem;
   border-radius: 5px;
   outline-color: ${({ theme }) => theme.colors.yellow[3]};
 `;

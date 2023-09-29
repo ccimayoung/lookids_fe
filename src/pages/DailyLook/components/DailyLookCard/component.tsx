@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import styled, { useTheme } from 'styled-components';
 import { LikeHeart } from '../../../../components/GlobalIcon';
-import { MutableRefObject, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IDailylookList } from '../..';
 
@@ -35,7 +35,7 @@ const Component = ({ hashTag, user, imageUrls }: IDailylookList) => {
       imageheight={imageHeight}
       ref={elementRef}
       onClick={() => {
-        navigate('dailylook-detail');
+        navigate('dailylook/1');
       }}
     >
       <LikeButton
@@ -55,7 +55,7 @@ const Component = ({ hashTag, user, imageUrls }: IDailylookList) => {
             .split('#')
             .slice(1)
             .map((v) => (
-              <Tag>#{v}</Tag>
+              <Tag key={v}>#{v}</Tag>
             ))}
           {/* <Tag>#강쥐</Tag>
           <Tag>#댕댕이</Tag>
@@ -89,7 +89,7 @@ const ImageBox = styled.div`
   width: 100%;
 `;
 const Tag = styled.article`
-  font-size: 12px;
+  font-size: 0.9rem;
   color: white;
 `;
 const BottomContent = styled.div`

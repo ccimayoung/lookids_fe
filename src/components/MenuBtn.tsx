@@ -23,7 +23,7 @@ const Wrapper = styled.div<MenuBtnProps>`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 12px;
+  font-size: 0.9rem;
   cursor: pointer;
   border-radius: 5px;
 `;

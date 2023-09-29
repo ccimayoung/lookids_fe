@@ -1,41 +1,43 @@
+import { AxiosRequestConfig } from 'axios';
 import baseUrl from '../utils/axios/baseUrl';
-import mSleep from '../utils/mSleep';
 
-export const dailyLookApis ={
-  getDailyLookList:async()=> {
-    await mSleep(500);
-    return {data:[
-      {
-        'hashTag': '#강쥐 #댕댕이 #귀엽다',
-        'imageUrls': [
-          'http://image.dongascience.com/Photo/2020/03/5bddba7b6574b95d37b6079c199d7101.jpg'
-        ],
-        'user': {
-          'name': 'F2B2',
-          'userId': 'F2B2'
-        }
-      },
-      {
-        'hashTag': '#강쥐 #댕댕이 #귀엽다',
-        'imageUrls': [
-          'http://image.dongascience.com/Photo/2020/03/5bddba7b6574b95d37b6079c199d7101.jpg'
-        ],
-        'user': {
-          'name': 'F2B2',
-          'userId': 'F2B2'
-        }
-      },
-      {
-        'hashTag': '#강쥐 #댕댕이 #귀엽다',
-        'imageUrls': [
-          'http://image.dongascience.com/Photo/2020/03/5bddba7b6574b95d37b6079c199d7101.jpg'
-        ],
-        'user': {
-          'name': 'F2B2',
-          'userId': 'F2B2'
-        }
-      }
-    ]};
-    return await baseUrl.get('/daily/clothes');
-  }
+interface IPurchaseInfoProps {
+  brand: string;
+  description: string;
+  link: string;
+}
+export interface IPostDailylookProps {
+  age: number;
+  category: string;
+  description: string;
+  hashTag: Array<string> | undefined;
+  height: number;
+  imageUrls: Array<string>;
+  purchaseInfos: Array<IPurchaseInfoProps>;
+  season: string;
+  sex: string;
+  userId: number;
+  weight: number;
+}
+export interface IGetDailylookProps {
+  height: string | number | undefined;
+  category: number | string | undefined;
+  season: number | string | undefined;
+  sex: number | string | undefined;
+  weigh: number | string | undefined;
+}
+export const dailyLookApis = {
+  getDailyLookList: async (props: IGetDailylookProps) => {
+    return await baseUrl.get(
+      `/daily/clothes?category=${props.category || ''}&height=${props.height || ''}&season=${props.season || ''}&sex=${props.sex || ''}&weigh=${
+        props.weigh || ''
+      }&page=0&pageSize=200`,
+    );
+  },
+  getDailyLookDetail: async (dailyfoodId: number) => {
+    return await baseUrl.get(`/daily/clothes/${dailyfoodId}`);
+  },
+  postDailyLook: async (data: IPostDailylookProps) => {
+    return await baseUrl.post('/daily/clothes', data);
+  },
 };

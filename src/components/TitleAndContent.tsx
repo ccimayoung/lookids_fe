@@ -43,14 +43,14 @@ const Title = styled.div<divProps>`
   display: flex;
   align-items: center;
   font-family: 'NSNB';
-  font-size: 12px;
+  font-size: 0.9rem;
   width: ${(props) => (props.$titleWidth ? props.$titleWidth : '45px')};
 `;
 
 const ContentInput = styled.input<titleAndContentProps>`
   width: ${(props) => (props.$contentSize === 's' ? '60px' : '80px')};
   height: 26px;
-  font-size: 12px;
+  font-size: 0.9rem;
   padding: 0 7px;
   align-items: center;
   border: 1px solid ${({ theme }) => theme.colors.yellow[3]};
@@ -71,7 +71,7 @@ export const ContentBox = styled.div<titleAndContentProps>`
   width: ${(props) => (props.$contentSize === 's' ? '55px' : '80px')};
   padding: 0 7px;
   height: 26px;
-  font-size: 12px;
+  font-size: 0.9rem;
   display: flex;
   align-items: center;
   border-radius: 5px;

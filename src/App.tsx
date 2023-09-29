@@ -27,7 +27,7 @@ const router = createBrowserRouter([
             element: <DailyLook />,
           },
           {
-            path: 'dailylook-detail',
+            path: 'dailylook/:dailylookId',
             element: <DailylookDetail />,
           },
           {
@@ -44,7 +44,7 @@ const router = createBrowserRouter([
             element: <NewMarket />,
           },
           {
-            path: 'new-detail',
+            path: 'new-detail/:marketProductId',
             element: <NewMarketDetail />,
           },
         ],
