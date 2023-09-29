@@ -17,6 +17,8 @@ import { Dropdown } from '../../components/Dropdown';
 import { useNavigate } from 'react-router';
 import { useGetDailylookList, useGetEvent } from '../../hooks/useDailyLook';
 import { NewMarketCarousel } from '../../components/NewMarketCarousel';
+import { Label } from '../../components/Label';
+import { Height, Weight } from '../../utils/statusFormatter/dailylookStatus';
 
 export interface IAppProps {}
 export interface IDailylookList {
@@ -35,18 +37,19 @@ const genderOptions = [
 ];
 const heightOptions = [
   { label: '전체', value: '' },
-  { label: '70cm 이하', value: 1 },
-  { label: '71~90cm', value: 2 },
-  { label: '91~110cm', value: 3 },
-  { label: '110cm', value: 4 },
+  { label: '70cm 이하', value: Height.HEIGHT_70 },
+  { label: '71~90cm', value: Height.HEIGHT_71_90 },
+  { label: '91~110cm', value: Height.HEIGHT_91_110 },
+  { label: '110cm', value: Height.HEIGHT_110 },
 ];
 const weightOptions = [
-  { label: '전체', value: 0 },
-  { label: '10kg 이하', value: 1 },
-  { label: '11-15kg', value: 2 },
-  { label: '16-20kg', value: 3 },
-  { label: '21-30kg', value: 4 },
-  { label: '30kg 이상', value: 5 },
+  { label: '전체', value: '' },
+  { label: '10kg 이하', value: Weight.WEIGHT_10 },
+  { label: '11-15kg', value: Weight.WEIGHT_11_15 },
+  { label: '16-20kg', value: Weight.WEIGHT_16_20 },
+  { label: '21-25kg', value: Weight.WEIGHT_21_25 },
+  { label: '26-30kg', value: Weight.WEIGHT_26_30 },
+  { label: '30kg 이상', value: Weight.WEIGHT_30 },
 ];
 
 const seasonsOptions = [
@@ -70,6 +73,8 @@ export default function DailyLook() {
   const [isOpen, setIsOpen] = useState(false);
   const [, setIsModalOpen] = useRecoilState(modalStatus);
   const [selectItem, setSelectItem] = useState(0);
+  const [height, setHeight] = useState(0);
+  const [weight, setWeight] = useState(0);
   const themeApp = useTheme();
   const navigate = useNavigate();
   const [isGenderDropdownOpen, setIsGenderDropdownOpen] = useState<boolean>(false);
@@ -108,11 +113,11 @@ export default function DailyLook() {
   };
 
   const { data: dailylookList, refetch: dailylookListRefetch } = useGetDailylookList({
-    height: selectedGender?.value,
-    category: selectedHeight?.value,
-    season: selectedWeight?.value,
-    sex: selectedSeasons?.value,
-    weigh: selectedCategory?.value,
+    height: selectedHeight?.value,
+    category: selectedCategory?.value,
+    season: selectedSeasons?.value,
+    sex: selectedGender?.value,
+    weight: selectedWeight?.value,
   });
   const { data: getGetEvent } = useGetEvent();
   useEffect(() => {
@@ -178,6 +183,17 @@ export default function DailyLook() {
                   </CategoryItem>
                   <CategoryItem>
                     <CategoryBox>키</CategoryBox>
+                    {/* <Label
+                      color={themeApp.colors.neutral[0]}
+                      height={'26'}
+                      text="120"
+                      width={'125'}
+                      placeholder="120"
+                      onClick={() => {}}
+                      center={false}
+                      value={height?.toString()}
+                      onChange={(e) => setHeight(Number(e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')))}
+                    /> */}
                     <Dropdown
                       options={heightOptions}
                       select={selectedHeight}
@@ -189,6 +205,17 @@ export default function DailyLook() {
                   </CategoryItem>
                   <CategoryItem>
                     <CategoryBox>몸무게</CategoryBox>
+                    {/* <Label
+                      color={themeApp.colors.neutral[0]}
+                      height={'26'}
+                      text="31"
+                      width={'125'}
+                      placeholder="120"
+                      onClick={() => {}}
+                      center={false}
+                      value={weight?.toString()}
+                      onChange={(e) => setWeight(Number(e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')))}
+                    /> */}
                     <Dropdown
                       options={weightOptions}
                       select={selectedWeight}
@@ -220,6 +247,14 @@ export default function DailyLook() {
                       allClose={handleDropdownAllClose}
                     />
                   </CategoryItem>
+                  <FilterComplateButton
+                    onClick={() => {
+                      setIsOpen(false);
+                      setIsModalOpen(false);
+                    }}
+                  >
+                    확인
+                  </FilterComplateButton>
                 </CategorySelectMenu>
               </ThemeWhite>
             </ThemeBlack>
@@ -236,16 +271,16 @@ export default function DailyLook() {
         <CardContainer>
           {dailylookList?.data?.dailyLooks?.length && dailylookList?.data?.dailyLooks?.length > 0
             ? dailylookList?.data?.dailyLooks?.map((v: IDailylookList, index: number) => {
-              return (
-                <DailyLookCard
-                  key={v.user.name + v.user.userId + index}
-                  hashTag={v.hashTag}
-                  dailyLookId={v.dailyLookId}
-                  user={v.user}
-                  imageUrls={v.imageUrls}
-                />
-              );
-            })
+                return (
+                  <DailyLookCard
+                    key={v.user.name + v.user.userId + index}
+                    hashTag={v.hashTag}
+                    dailyLookId={v.dailyLookId}
+                    user={v.user}
+                    imageUrls={v.imageUrls}
+                  />
+                );
+              })
             : undefined}
         </CardContainer>
       </Contents>
@@ -272,6 +307,7 @@ const CardContainer = styled.div`
   flex-direction: column;
   margin-top: 10px;
   gap: 20px;
+  min-height: 500px;
 `;
 
 const EventBannerImg = styled.img`
@@ -281,7 +317,7 @@ const EventBannerImg = styled.img`
 `;
 const ThemeBlack = styled.div`
   position: absolute;
-  z-index: 1;
+  z-index: 3;
   top: 0;
   left: 0;
   width: 100%;
@@ -290,7 +326,7 @@ const ThemeBlack = styled.div`
 `;
 const ThemeWhite = styled.div`
   position: absolute;
-  z-index: 2;
+  z-index: 4;
   top: 40px;
   right: 0;
   width: 50%;
@@ -335,7 +371,7 @@ const CategoryContainer = styled.div`
   padding-bottom: 10px;
   gap: 3px;
   top: 0;
-  z-index: 2;
+  z-index: 5;
   width: 100%;
   margin-top: 40px;
 `;
@@ -355,4 +391,23 @@ const CategoryItem = styled.div`
   align-items: center;
   width: 100%;
   justify-content: space-between;
+`;
+
+const FilterComplateButton = styled.button`
+  width: 25%;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  background-color: ${({ theme }) => theme.colors.yellow[3]};
+  color: ${({ theme }) => theme.colors.neutral[5]};
+  font-weight: 600;
+  border: ${({ theme }) => `1px solid ${theme.colors.yellow[3]}`};
+  border-radius: 5px;
+  font-size: 0.7rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: flex-end;
 `;

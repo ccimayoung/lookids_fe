@@ -10,20 +10,26 @@ import { useRecoilState } from 'recoil';
 import { modalStatus } from '../../recolil/atom';
 import { Spinner } from '../../components/Spinner';
 
-export interface IAppProps {}
+export interface IAppProps {
+  productImage: string;
+  productName: string;
+  productPrice: number;
+  resellProductId: number;
+  sellerNickname: string;
+  userId: number;
+}
 
 export default function ResellMarketPhotoEngine() {
   const contentsRef = useRef<HTMLDivElement | null>(null);
   const [isModalOpen, setIsModalOpen] = useRecoilState(modalStatus);
   const elementRef = useRef<HTMLDivElement>(null);
-  const themeApp = useTheme();
-  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [searchResult, setSearchResult] = useState<Array<IAppProps>>([]);
   const [imageHeight, setImageHeight] = useState(0);
   const [imageFile, setImageFile] = useState<File[] | undefined>();
-  const {mutateAsync : searchPhoto}=usePhotoEngine();
+  const { mutateAsync: searchPhoto } = usePhotoEngine();
   const onDrop = useCallback(
-    async(acceptedFiles: File[]) => {
+    async (acceptedFiles: File[]) => {
       // 이미지가 선택되었을 때 실행됩니다.
       // 최대 이미지 개수를 초과하는 경우 경고를 표시합니다.
       setIsLoading(true);
@@ -34,9 +40,10 @@ export default function ResellMarketPhotoEngine() {
         } else {
           const formData = new FormData();
           for (const file of acceptedFiles) {
-            formData.append('image',file,file.name);
+            formData.append('image', file, file.name);
           }
-          await searchPhoto(formData);
+          const res = await searchPhoto(formData);
+          setSearchResult(res?.data?.resellProductResponse);
           setImageFile(acceptedFiles);
         }
       } catch (error) {
@@ -44,11 +51,10 @@ export default function ResellMarketPhotoEngine() {
           console.error(error.message);
           alert(error.message.toString());
         }
-      }finally{
+      } finally {
         setIsModalOpen(false);
         setIsLoading(false);
       }
-      
     },
     [imageFile],
   );
@@ -72,12 +78,14 @@ export default function ResellMarketPhotoEngine() {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
- 
+
   return (
     <Container>
-      {isLoading && <BlackThim >
-        <Spinner />
-      </BlackThim>}
+      {isLoading && (
+        <BlackThim>
+          <Spinner />
+        </BlackThim>
+      )}
       <ContentContainer>
         <CategoryContainer>
           <Content ref={contentsRef}>
@@ -107,56 +115,19 @@ export default function ResellMarketPhotoEngine() {
           </SearchImageBox>
         )}
         <Line />
-        <SubTitle>찾는 이미지와 비슷한 상품 149개</SubTitle>
+        <SubTitle>찾는 이미지와 비슷한 상품 {searchResult.length}개</SubTitle>
         <ProductContainer>
-          <ResellItemCard
-            brandName="맘맘님"
-            productName="밀크웨이 맨투맨"
-            price={8000}
-            imgUrl={'https://ae01.alicdn.com/kf/Sdd4c439b63744832b6115c365eca76a46/-.jpg_220x220.jpg_.webp'}
-          />
-          <ResellItemCard
-            brandName="맘맘님"
-            productName="밀크웨이 맨투맨"
-            price={8000}
-            imgUrl={'https://m.cooingkids.com/web/product/big/20200313/38849db602ae21192a82938c26241542.jpg'}
-          />
-          <ResellItemCard
-            brandName="맘맘님"
-            productName="밀크웨이 맨투맨"
-            price={8000}
-            imgUrl={'https://cdn.011st.com/11dims/resize/600x600/quality/75/11src/product/4848639433/B.jpg?730000000'}
-          />
-          <ResellItemCard
-            brandName="맘맘님"
-            productName="밀크웨이 맨투맨"
-            price={8000}
-            imgUrl={'https://ae01.alicdn.com/kf/Sdd4c439b63744832b6115c365eca76a46/-.jpg_220x220.jpg_.webp'}
-          />
-          <ResellItemCard
-            brandName="맘맘님"
-            productName="밀크웨이 맨투맨"
-            price={8000}
-            imgUrl={'https://m.cooingkids.com/web/product/big/20200313/38849db602ae21192a82938c26241542.jpg'}
-          />
-          <ResellItemCard
-            brandName="맘맘님"
-            productName="밀크웨이 맨투맨"
-            price={8000}
-            imgUrl={'https://cdn.011st.com/11dims/resize/600x600/quality/75/11src/product/4848639433/B.jpg?730000000'}
-          />
-          <ResellItemCard
-            brandName="맘맘님"
-            productName="밀크웨이 맨투맨"
-            price={8000}
-            imgUrl={'https://cdn.011st.com/11dims/resize/600x600/quality/75/11src/product/4848639433/B.jpg?730000000'}
-          />
-          <ResellItemCard
-            brandName="맘맘님"
-            productName="밀크웨이 맨투맨"
-            price={8000}
-            imgUrl={'https://cdn.011st.com/11dims/resize/600x600/quality/75/11src/product/4848639433/B.jpg?730000000'}
-          />
+          {searchResult.map((res) => {
+            return (
+              <ResellItemCard
+                key={res.resellProductId + res.userId}
+                brandName={res.sellerNickname}
+                productName={res.productName}
+                price={res.productPrice}
+                imgUrl={res.productImage}
+              />
+            );
+          })}
         </ProductContainer>
       </ContentContainer>
     </Container>
@@ -179,7 +150,7 @@ const Content = styled.div`
   position: sticky;
   top: 0;
 `;
-const BlackThim =styled.div`
+const BlackThim = styled.div`
   position: absolute;
   top: 0;
   left: 0;
@@ -200,8 +171,10 @@ const ProductContainer = styled.div`
   flex-wrap: wrap;
   align-content: flex-start;
   gap: 18px;
+  height: 100vh;
   margin-top: 10px;
 `;
+
 const AITitle = styled.div`
   font-size: 18px;
   color: black;
@@ -211,6 +184,7 @@ const AITitle = styled.div`
   align-items: center;
   margin-bottom: 20px;
 `;
+
 const CategoryContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -261,6 +235,7 @@ const SubTitle = styled.div`
   display: flex;
   margin-top: 20px;
 `;
+
 const CameraButton = styled.button`
   border: none;
   width: 30vh;
@@ -273,6 +248,7 @@ const CameraButton = styled.button`
   cursor: pointer;
   gap: 7px;
 `;
+
 const CameraText = styled.div`
   font-size: 10px;
 `;

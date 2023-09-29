@@ -5,7 +5,7 @@ import { Label } from '../../components/Label';
 import { Star } from '../../components/GlobalIcon';
 import { usePostResell } from '../../hooks/useResell';
 import { Category, Target, saleStatus } from '../../utils/statusFormatter/dailylookStatus';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { RemoveBackground } from '../../components/RemoveBackground';
 import { Spinner } from '../../components/Spinner';
 import fileToBlob from '../../utils/FiltetoBlob';
@@ -18,7 +18,8 @@ export interface IPurchaseInfo {
   [key: string]: string | number;
 }
 
-export default function PostResell() {
+export default function UpdateResell() {
+  const params = useParams();
   const themeApp = useTheme();
   const [category, setCategory] = useState<string[]>([]);
   const [target, setTarget] = useState<string[]>([]);

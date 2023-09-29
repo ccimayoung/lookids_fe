@@ -10,7 +10,7 @@ import { NewMarketItemCard } from './components/NewMarketItemCard';
 import { NewMarketCarousel } from '../../components/NewMarketCarousel';
 import { INewMarketItemProps, useGetNewMarketHotList, useGetNewMarketList } from '../../hooks/useNewMarket';
 
-export interface IAppProps { }
+export interface IAppProps {}
 
 const targetOptions = [
   { label: '전체', value: '' },
@@ -44,7 +44,7 @@ export default function NewMarket() {
   const { data: getNewMarketList, refetch: newMarketRefetch } = useGetNewMarketList({
     category: selectedCategory?.value || '',
     kidType: selectedTarget?.value || '',
-    query: query || ''
+    query: query || '',
   });
   const { data: getNewMarketHotList } = useGetNewMarketHotList();
 
@@ -57,6 +57,7 @@ export default function NewMarket() {
   const handleDropdownAllClose = () => {
     setIsTargetDropdownOpen(false);
     setIsCategoryDropdownOpen(false);
+    newMarketRefetch();
   };
 
   useEffect(() => {
@@ -77,8 +78,9 @@ export default function NewMarket() {
     };
   }, []);
 
-
-
+  useEffect(() => {
+    console.log(getNewMarketHotList?.data);
+  }, [getNewMarketHotList?.data]);
   useEffect(() => {
     if (!isOpen) handleDropdownAllClose();
   }, [isOpen]);
@@ -88,31 +90,32 @@ export default function NewMarket() {
       <TrendItemCarouselBox>
         <TrendThim>
           요즘 핫한 신상
-          <IndigatorBox>{selectItem + 1} / {getNewMarketHotList?.data?.lookidsProducts?.length
-            && getNewMarketHotList?.data?.lookidsProducts?.length || 0}</IndigatorBox>
+          <IndigatorBox>
+            {selectItem + 1} / {(getNewMarketHotList?.data?.lookidsProducts?.length && getNewMarketHotList?.data?.lookidsProducts?.length) || 0}
+          </IndigatorBox>
         </TrendThim>
-        {getNewMarketHotList?.data?.lookidsProducts?.length
-          && getNewMarketHotList?.data?.lookidsProducts?.length > 1
-          ? <NewMarketCarousel setSelectItem={setSelectItem}>
+        {getNewMarketHotList?.data?.lookidsProducts?.length && getNewMarketHotList?.data?.lookidsProducts?.length > 1 ? (
+          <NewMarketCarousel setSelectItem={setSelectItem}>
             {getNewMarketHotList?.data?.lookidsProducts.map((image, index) => {
-              return <NewMarketImage key={image.id} src={image.productImageUrls} /> as ReactChild;
+              return (<NewMarketImage key={image.id} src={image.productImageUrl} />) as ReactChild;
             })}
-
-            {/* <NewMarketImage src="https://m.cooingkids.com/web/product/big/20200313/38849db602ae21192a82938c26241542.jpg" />
-          <NewMarketImage src="https://m.cooingkids.com/web/product/big/20200313/38849db602ae21192a82938c26241542.jpg" />
-          <NewMarketImage src="https://m.cooingkids.com/web/product/big/20200313/38849db602ae21192a82938c26241542.jpg" /> */}
-          </NewMarketCarousel> : 
-          <NewMarketImage key={getNewMarketHotList?.data?.lookidsProducts[0].id} 
-            src={getNewMarketHotList?.data?.lookidsProducts[0].productImageUrls} />
-        }
+          </NewMarketCarousel>
+        ) : (
+          <NewMarketImage
+            key={getNewMarketHotList?.data?.lookidsProducts[0].id}
+            src={getNewMarketHotList?.data?.lookidsProducts[0].productImageUrl}
+          />
+        )}
       </TrendItemCarouselBox>
       <ContentContainer>
         <CategoryContainer>
           <Content ref={contentsRef}>
-            <form onSubmit={(e) => {
-              e.preventDefault();
-              newMarketRefetch();
-            }}>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                newMarketRefetch();
+              }}
+            >
               <SearchBox
                 placeholder="신상을 검색해보세요!"
                 isCamera={false}
@@ -127,8 +130,7 @@ export default function NewMarket() {
           </Content>
 
           <ContentsHeader>
-            <Total>전체 {getNewMarketList?.data?.lookidsProducts?.length
-              && getNewMarketList?.data?.lookidsProducts?.length || 0}개</Total>
+            <Total>전체 {(getNewMarketList?.data?.lookidsProducts?.length && getNewMarketList?.data?.lookidsProducts?.length) || 0}개</Total>
             <FilterButton
               onClick={() => {
                 setIsModalOpen(true);
@@ -177,6 +179,14 @@ export default function NewMarket() {
                       allClose={handleDropdownAllClose}
                     />
                   </CategoryItem>
+                  <FilterComplateButton
+                    onClick={() => {
+                      setIsOpen(false);
+                      setIsModalOpen(false);
+                    }}
+                  >
+                    확인
+                  </FilterComplateButton>
                 </CategorySelectMenu>
               </ThemeWhite>
             </ThemeBlack>
@@ -192,14 +202,8 @@ export default function NewMarket() {
         )}
         <ProductContainer>
           {getNewMarketList?.data?.lookidsProducts?.map((newMarket: INewMarketItemProps) => {
-            return <NewMarketItemCard
-              key={newMarket.id}
-              {...newMarket}
-              isActive={true}
-            />;
+            return <NewMarketItemCard key={newMarket.id} {...newMarket} isActive={true} />;
           })}
-
-
         </ProductContainer>
       </ContentContainer>
       {/* <FloatingButton onClick={() => navigate('resell-post')}>
@@ -363,4 +367,23 @@ const Total = styled.div`
   font-size: 0.9rem;
   font-weight: 600;
   display: flex;
+`;
+
+const FilterComplateButton = styled.button`
+  width: 25%;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  background-color: ${({ theme }) => theme.colors.yellow[3]};
+  color: ${({ theme }) => theme.colors.neutral[5]};
+  font-weight: 600;
+  border: ${({ theme }) => `1px solid ${theme.colors.yellow[3]}`};
+  border-radius: 5px;
+  font-size: 0.7rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: flex-end;
 `;

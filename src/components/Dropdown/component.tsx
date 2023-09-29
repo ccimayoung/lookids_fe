@@ -29,6 +29,8 @@ const Component = ({ options, select, onSelect, isOpen, setIsOpen, allClose }: D
   const handleOptionClick = (option: Option) => {
     setSelectedOption(option);
     onSelect(option);
+    allClose();
+    setIsOpen(!isOpen);
   };
 
   return (

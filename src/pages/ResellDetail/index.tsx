@@ -1,17 +1,25 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { ReactChild, useEffect, useRef, useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 import { ImageCarousel } from '../../components/ImageCarousel';
 import { ResellDetailCard } from './components/ResellDetailCard';
 import withCommas from '../../utils/withCommas';
 import { Label } from '../../components/Label';
 import { formattedDate } from '../../utils/dateFormatter';
+import { useNavigate, useParams } from 'react-router';
+import { useGetResellDetail } from '../../hooks/useResell';
+import { saleStatus } from '../../utils/statusFormatter/dailylookStatus';
 
-export interface IAppProps { }
+export interface IAppProps {}
 
 export default function ResellDetail() {
   const [imageHeight, setImageHeight] = useState(0);
+  const [salesStatus, setSalesStatus] = useState(saleStatus.SALE);
+  const params = useParams();
+  console.log(params?.resellId);
   const elementRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
   const themeApp = useTheme();
+  const { data: getResellDetail } = useGetResellDetail(Number(params?.resellId || 0));
   useEffect(() => {
     const handleResize = () => {
       const element = elementRef.current;
@@ -23,19 +31,45 @@ export default function ResellDetail() {
     handleResize();
     if (imageHeight === 0) handleResize();
   }, []);
+  useEffect(() => {
+    console.log(getResellDetail?.data);
+  }, [getResellDetail]);
+
+  const getDailyCardList = () => {
+    const imageElements = getResellDetail?.data?.imageUrls?.map((image, i) => {
+      if (image.includes('http'))
+        return (
+          <div key={image + i}>
+            <CardBox>
+              <ResellDetailCard image={image} />
+            </CardBox>
+          </div>
+        );
+      return (
+        <NoImage key={image + i} $imageheight={imageHeight}>
+          <ResellDetailCard
+            image={
+              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdfhMEEdvPSR2zIdXgaxhGLRKhw3ft9ZRSnWUdKG8zYBQ1vpj9suG77t1JevKZ3YlpAwU&usqp=CAU'
+            }
+          />
+        </NoImage>
+      ) as ReactChild;
+    });
+    return imageElements as ReactChild[];
+  };
   return (
     <Container ref={elementRef}>
-      <ImageCarousel>
-        <CardBox>
-          <ResellDetailCard />
-        </CardBox>
-        <CardBox>
-          <ResellDetailCard />
-        </CardBox>
-        <CardBox>
-          <ResellDetailCard />
-        </CardBox>
-      </ImageCarousel>
+      {getResellDetail?.data?.imageUrls?.length && getResellDetail?.data?.imageUrls?.length > 0 ? (
+        <ImageCarousel>{getDailyCardList()}</ImageCarousel>
+      ) : (
+        <NoImage $imageheight={imageHeight}>
+          <ResellDetailCard
+            image={
+              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdfhMEEdvPSR2zIdXgaxhGLRKhw3ft9ZRSnWUdKG8zYBQ1vpj9suG77t1JevKZ3YlpAwU&usqp=CAU'
+            }
+          />
+        </NoImage>
+      )}
       <ContentBox>
         <ProfileContainer>
           <SellerInfo>
@@ -45,7 +79,7 @@ export default function ResellDetail() {
                 <IconImage src="/img/trust.png" />
                 <IconImage src="/img/excellence.png" />
               </IconContainer>
-              <BottomThim>맘맘님</BottomThim>
+              <BottomThim>{getResellDetail?.data?.user?.name}</BottomThim>
             </Profile>
             <ProductInfo>
               <ProductName>밀크웨이 맨투맨</ProductName>
@@ -54,18 +88,46 @@ export default function ResellDetail() {
             </ProductInfo>
           </SellerInfo>
           <ButtonContainer>
-            <Label color={themeApp.colors.yellow[3]} height={'26'} text="글 등록" width={'50'} onClick={() => { }} center={true} bold={true} />
-            <Label color={themeApp.colors.green[300]} height={'26'} text="판매중" width={'50'} onClick={() => { }} center={true} bold={true} />
+            {/* <Label
+              color={themeApp.colors.yellow[3]}
+              height={'26'}
+              text="글 수정"
+              width={'50'}
+              onClick={() => {
+                navigate(`/resell-market/resell-update/${params?.resellId || 0}`);
+              }}
+              center={true}
+              bold={true}
+            /> */}
+            <Label
+              color={themeApp.colors.green[300]}
+              height={'26'}
+              text={salesStatus === 'SALE' ? '판매중' : '판매완료'}
+              width={'60'}
+              onClick={() => {
+                if (salesStatus === saleStatus.SALE) setSalesStatus(saleStatus.DONE);
+                if (salesStatus === saleStatus.DONE) setSalesStatus(saleStatus.SALE);
+              }}
+              center={true}
+              bold={true}
+            />
           </ButtonContainer>
         </ProfileContainer>
         <Line />
         <PostUpdateDate>{formattedDate(new Date(), '-')}</PostUpdateDate>
-        <PostDescription>
-          몇 번 안 입었어요. <br />
-          깨끗하게 세탁해서 드려요~
-        </PostDescription>
+        <PostDescription>{getResellDetail?.data?.description}</PostDescription>
         <ChatingButtonBox>
-          <Label color={themeApp.colors.green[300]} height={'30'} text="채팅하기" width={'60'} onClick={() => { }} center={true} bold={true} />
+          <Label
+            color={themeApp.colors.green[300]}
+            height={'30'}
+            text="채팅하기"
+            width={'60'}
+            onClick={() => {
+              alert('해당 기능은 준비중 입니다.');
+            }}
+            center={true}
+            bold={true}
+          />
         </ChatingButtonBox>
       </ContentBox>
     </Container>
@@ -87,7 +149,7 @@ const SellerInfo = styled.div`
   align-items: flex-end;
 `;
 const CardBox = styled.div`
-  padding-bottom: 35px;
+  padding-bottom: 40px;
 `;
 const ProfileContainer = styled.div`
   width: 100%;
@@ -123,7 +185,13 @@ const Profile = styled.div`
   overflow: hidden;
   position: relative;
 `;
-
+const NoImage = styled.div<{ $imageheight: number }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: ${({ $imageheight }) => `${$imageheight - 40}px`};
+  height: ${({ $imageheight }) => `${$imageheight - 40}px`};
+`;
 const BottomThim = styled.div`
   display: flex;
   justify-content: center;
