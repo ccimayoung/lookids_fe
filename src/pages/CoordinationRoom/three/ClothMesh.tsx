@@ -4,17 +4,26 @@ import { useEffect, useState } from 'react';
 
 interface clothMeshProps {
   $clothId: string;
+  $clothType: string;
   $texture: any;
   $scale: [number, number];
   $position: [number, number, number];
   $target: any;
 }
 
-export const ClothMesh = ({ $clothId, $texture, $scale, $position, $target }: clothMeshProps) => {
+export const ClothMesh = ({
+  $clothId,
+  $texture,
+  $scale,
+  $position,
+  $target,
+  $clothType,
+}: clothMeshProps) => {
   const [selectedCloth, setSelectedCloth] = useRecoilState(selectedClothAtom);
   const [hoveredCloth, setHoveredCloth] = useRecoilState(hoveredClothAtom);
   const [dragActive, setDragActive] = useState<boolean>(false);
-  const [movePosition, setMovePosition] = useState<[number, number, number]>($position);
+  const [movePosition, setMovePosition] =
+    useState<[number, number, number]>($position);
   const [dragOriginPosition, setDragOriginPosition] = useState<{
     x: number;
     y: number;
@@ -44,6 +53,7 @@ export const ClothMesh = ({ $clothId, $texture, $scale, $position, $target }: cl
     if (e.button === 0) {
       setSelectedCloth($clothId);
       setDragActive(false);
+      console.log($scale, $clothType);
     }
   };
 
@@ -90,7 +100,13 @@ export const ClothMesh = ({ $clothId, $texture, $scale, $position, $target }: cl
           onPointerEnter={meshPointerEnterHandler}
           onPointerLeave={meshPointerLeaveHandler}
         >
-          <planeGeometry args={[($scale[0] / imgWidth) * 33, ($scale[1] / imgHeight) * 33]} />
+          <planeGeometry
+            args={
+              $clothType === 'TOP'
+                ? [$scale[0] / 14, $scale[1] / 20]
+                : [$scale[0] / 20, $scale[1] / 20]
+            }
+          />
           <meshBasicMaterial
             map={$texture} // 텍스처 할당
             transparent={true} // 투명 속성 활성화

@@ -1,4 +1,10 @@
-import React, { Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  Suspense,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import styled, { useTheme } from 'styled-components';
 import { OrbitControls, PerspectiveCamera, Plane } from '@react-three/drei';
 import * as THREE from 'three';
@@ -6,7 +12,14 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Canvas, useLoader } from '@react-three/fiber';
 import { ClothMesh } from './ClothMesh';
 import { PersonMesh } from './PersonMesh';
-import { childrenInfoAtom, getCaptureAtom, selectedClothAtom, selectedCodyAtom, showPhotoAtom, wearArrayAtom } from '../../../recolil/atom';
+import {
+  childrenInfoAtom,
+  getCaptureAtom,
+  selectedClothAtom,
+  selectedCodyAtom,
+  showPhotoAtom,
+  wearArrayAtom,
+} from '../../../recolil/atom';
 import dumCodyJson from '../../../data/dum_cody.json';
 import html2canvas from 'html2canvas';
 
@@ -25,7 +38,9 @@ export const CanvasWrapper = () => {
 
   const girlTexture = useLoader(THREE.TextureLoader, 'img/여샘플.png');
   const boyTexture = useLoader(THREE.TextureLoader, 'img/남샘플.png');
-  const [target, setTarget] = useState<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
+  const [target, setTarget] = useState<THREE.Vector3>(
+    new THREE.Vector3(0, 0, 0),
+  );
   const [wearArray, setWearArray] = useRecoilState(wearArrayAtom);
   const [bodyTexture, setBodyTexture] = useState<any>(girlTexture);
   const [bodyScale, setBodyScale] = useState<[number, number]>([2.1, 7]);
@@ -45,14 +60,20 @@ export const CanvasWrapper = () => {
 
   useEffect(() => {
     if (childrenInfo.gender === '여') {
-      setBodyScale([(childrenInfo.weight / 24) * 2.1, (childrenInfo.height / 130) * 7]);
+      setBodyScale([
+        (childrenInfo.weight / 24) * 2.1,
+        (childrenInfo.height / 130) * 7,
+      ]);
       if (childrenInfo.img?.name !== '') {
         console.log(childrenInfo.img);
         // const fileTexture = useLoader(THREE.TextureLoader, childrenInfo.img);
         // setBodyTexture(fileTexture);
       } else setBodyTexture(girlTexture);
     } else {
-      setBodyScale([(childrenInfo.weight / 24) * 2.1, (childrenInfo.height / 130) * 7]);
+      setBodyScale([
+        (childrenInfo.weight / 24) * 2.1,
+        (childrenInfo.height / 130) * 7,
+      ]);
       if (childrenInfo.img?.name !== '') {
         // const fileTexture = useLoader(THREE.TextureLoader, childrenInfo.img);
         // setBodyTexture(fileTexture);
@@ -112,10 +133,21 @@ export const CanvasWrapper = () => {
         gl={{ preserveDrawingBuffer: true }}
       >
         <ambientLight color={themeApp.colors.neutral[0]} intensity={0} />
-        <OrbitControls enableRotate={false} enableDamping={false} minDistance={1} maxDistance={10} zoomSpeed={2} maxPolarAngle={Math.PI} />
+        <OrbitControls
+          enableRotate={false}
+          enableDamping={false}
+          minDistance={1}
+          maxDistance={10}
+          zoomSpeed={2}
+          maxPolarAngle={Math.PI}
+        />
         <mesh onPointerMove={pointerMove} onClick={() => setSelectedCloth('')}>
           <planeGeometry args={[12, 10]} />
-          <meshBasicMaterial color={'#a7866a'} depthWrite={false} depthTest={false} />
+          <meshBasicMaterial
+            color={'#a7866a'}
+            depthWrite={false}
+            depthTest={false}
+          />
           <mesh onPointerMissed={pointerMissed}>
             <PersonMesh $texture={bodyTexture} $scale={bodyScale} />
             {wearArray.map((wear) => {
@@ -127,6 +159,7 @@ export const CanvasWrapper = () => {
                   $scale={wear.scale}
                   $target={target}
                   $position={wear.position}
+                  $clothType={wear.type}
                 />
               );
             })}
