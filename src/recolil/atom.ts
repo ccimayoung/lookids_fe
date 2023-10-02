@@ -66,7 +66,12 @@ export interface simpleModalProps {
 }
 export const simpleModalAtom = atom<simpleModalProps>({
   key: 'simpleModalAtom',
-  default: { simplePopup: false, content: [[]], onClick: () => '', btnContent: '' },
+  default: {
+    simplePopup: false,
+    content: [[]],
+    onClick: () => '',
+    btnContent: '',
+  },
 });
 
 export interface wearArrayProps {
@@ -120,4 +125,9 @@ export const showPhotoAtom = atom<any[]>({
 export const wantPropertyClothIdAtom = atom<string>({
   key: 'wantPropertyClothIdAtom',
   default: '',
+});
+
+export const wantKidRefreshAtom = atom<boolean>({
+  key: 'wantKidRefreshAtom',
+  default: false,
 });

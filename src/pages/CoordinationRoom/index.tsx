@@ -8,13 +8,25 @@ import { ReactComponent as BodySvg } from '../../assets/svg/body.svg';
 import { ReactComponent as QuestionSvg } from '../../assets/svg/question.svg';
 import { ReactComponent as SaveSvg } from '../../assets/svg/save.svg';
 import { useRecoilState } from 'recoil';
-import { childrenInfoAtom, getCaptureAtom, modalGatherAtom, showPhotoAtom, simpleModalAtom, wearArrayAtom } from '../../recolil/atom';
+import {
+  childrenInfoAtom,
+  getCaptureAtom,
+  modalGatherAtom,
+  showPhotoAtom,
+  simpleModalAtom,
+  wantKidRefreshAtom,
+  wearArrayAtom,
+} from '../../recolil/atom';
 import { ChildrenInfoModal } from '../../components/Modal/ChildrenInfoModal';
-import { clothCategoryListProps, divProps, oneClothProps } from '../../components/props';
+import {
+  clothCategoryListProps,
+  divProps,
+  oneClothProps,
+} from '../../components/props';
 import { ClothPropertyModal } from '../../components/Modal/ClothPropertyModal';
 import html2canvas from 'html2canvas';
 import { useMutation } from '@tanstack/react-query';
-import { closetClothListApi } from '../../apis/closet';
+import { closetClothListApi, getKidInfoApi } from '../../apis/closet';
 
 export default function CoordinationRoom() {
   const [selectedMenu, setSelectedMenu] = useState<string>('topList');
@@ -23,7 +35,11 @@ export default function CoordinationRoom() {
   const [childrenInfo, setChildrenInfo] = useRecoilState(childrenInfoAtom);
   const [getCapture, setGetCapture] = useRecoilState(getCaptureAtom);
   const [showPhoto, setShowPhoto] = useRecoilState(showPhotoAtom);
-  const [clothList, setClothList] = useState<clothCategoryListProps | any>(null);
+  const [clothList, setClothList] = useState<clothCategoryListProps | any>(
+    null,
+  );
+  const [wantKidRefresh, setWantKidRefresh] =
+    useRecoilState(wantKidRefreshAtom);
 
   const clothListCumm = useMutation(() => closetClothListApi(), {
     onSuccess: (res: any) => {
@@ -38,23 +54,54 @@ export default function CoordinationRoom() {
     },
   });
 
+  const kidInfoCumm = useMutation(() => getKidInfoApi(), {
+    onSuccess: (res: any) => {
+      console.log(res);
+      if (res.data) {
+        const data = res.data;
+        setChildrenInfo({
+          img: data.image,
+          gender: data.sex === 'BOY' ? '남' : '여',
+          age: data.age,
+          height: data.height,
+          weight: data.weight,
+        });
+      }
+    },
+    onError: (err: any) => {
+      console.log(err);
+    },
+  });
+
   useEffect(() => {
     clothListCumm.mutate();
+    kidInfoCumm.mutate();
   }, []);
 
   useEffect(() => {
-    console.log(selectedMenu, clothList);
-  }, [selectedMenu]);
+    if (wantKidRefresh) {
+      setTimeout(() => {
+        kidInfoCumm.mutate();
+      }, 1500);
+    }
+    setWantKidRefresh(false);
+  }, [wantKidRefresh]);
 
   return (
     <Wrapper>
       <TopWrap>
         <CanvasWrapper />
         <SettingBtnWrap>
-          <Circle onClick={() => setModalGather({ ...modalGather, closetQuestion: true })}>
+          <Circle
+            onClick={() =>
+              setModalGather({ ...modalGather, closetQuestion: true })
+            }
+          >
             <QuestionSvg />
           </Circle>
-          <Circle onClick={() => setModalGather({ ...modalGather, closetBody: true })}>
+          <Circle
+            onClick={() => setModalGather({ ...modalGather, closetBody: true })}
+          >
             <BodySvg />
           </Circle>
           <Circle
@@ -97,25 +144,77 @@ export default function CoordinationRoom() {
           {showPhoto.length > 0 ? (
             <>
               {showPhoto.map((val: any, index: number) => {
-                return <PhotoBox key={index} $codyId={'샘플코디1'} $boxSize="s" $type="cody" $img={val} />;
+                return (
+                  <PhotoBox
+                    key={index}
+                    $codyId={'샘플코디1'}
+                    $boxSize="s"
+                    $type="cody"
+                    $img={val}
+                  />
+                );
               })}
-              <PhotoBox $codyId={'샘플코디2'} $boxSize="s" $type="cody" $img={'img/샘플옷2.png'} />
-              <PhotoBox $codyId={'샘플코디3'} $boxSize="s" $type="cody" $img={'img/샘플옷.png'} />
+              <PhotoBox
+                $codyId={'샘플코디2'}
+                $boxSize="s"
+                $type="cody"
+                $img={'img/샘플옷2.png'}
+              />
+              <PhotoBox
+                $codyId={'샘플코디3'}
+                $boxSize="s"
+                $type="cody"
+                $img={'img/샘플옷.png'}
+              />
             </>
           ) : (
             <>
-              <PhotoBox $codyId={'샘플코디2'} $boxSize="s" $type="cody" $img={'img/샘플옷2.png'} />
-              <PhotoBox $codyId={'샘플코디3'} $boxSize="s" $type="cody" $img={'img/샘플옷.png'} />
+              <PhotoBox
+                $codyId={'샘플코디2'}
+                $boxSize="s"
+                $type="cody"
+                $img={'img/샘플옷2.png'}
+              />
+              <PhotoBox
+                $codyId={'샘플코디3'}
+                $boxSize="s"
+                $type="cody"
+                $img={'img/샘플옷.png'}
+              />
             </>
           )}
         </CodyWrap>
       </TopWrap>
       <ClothWrap>
         <RowDiv>
-          <MenuBtn $size="s" $content="상의" $active={selectedMenu === 'topList'} $setSelectedMenu={setSelectedMenu} $menuFiled={'topList'} />
-          <MenuBtn $size="s" $content="하의" $active={selectedMenu === 'bottomList'} $setSelectedMenu={setSelectedMenu} $menuFiled={'bottomList'} />
-          <MenuBtn $size="s" $content="아우터" $active={selectedMenu === 'outerList'} $setSelectedMenu={setSelectedMenu} $menuFiled={'outerList'} />
-          <MenuBtn $size="s" $content="신발" $active={selectedMenu === 'shoesList'} $setSelectedMenu={setSelectedMenu} $menuFiled={'shoesList'} />
+          <MenuBtn
+            $size="s"
+            $content="상의"
+            $active={selectedMenu === 'topList'}
+            $setSelectedMenu={setSelectedMenu}
+            $menuFiled={'topList'}
+          />
+          <MenuBtn
+            $size="s"
+            $content="하의"
+            $active={selectedMenu === 'bottomList'}
+            $setSelectedMenu={setSelectedMenu}
+            $menuFiled={'bottomList'}
+          />
+          <MenuBtn
+            $size="s"
+            $content="아우터"
+            $active={selectedMenu === 'outerList'}
+            $setSelectedMenu={setSelectedMenu}
+            $menuFiled={'outerList'}
+          />
+          <MenuBtn
+            $size="s"
+            $content="신발"
+            $active={selectedMenu === 'shoesList'}
+            $setSelectedMenu={setSelectedMenu}
+            $menuFiled={'shoesList'}
+          />
           <MenuBtn
             $size="s"
             $content="악세사리"
@@ -123,17 +222,32 @@ export default function CoordinationRoom() {
             $setSelectedMenu={setSelectedMenu}
             $menuFiled={'accessoryList'}
           />
-          <MenuBtn $size="s" $content="기타" $active={selectedMenu === 'etcList'} $setSelectedMenu={setSelectedMenu} $menuFiled={'etcList'} />
+          <MenuBtn
+            $size="s"
+            $content="기타"
+            $active={selectedMenu === 'etcList'}
+            $setSelectedMenu={setSelectedMenu}
+            $menuFiled={'etcList'}
+          />
         </RowDiv>
         <ListWrap>
           {clothList && clothList[selectedMenu]?.length > 0
-            ? clothList[selectedMenu].map((cloth: oneClothProps, index: number) => {
-                return (
-                  <RowDiv key={cloth.clothId}>
-                    <PhotoBox $cloth={cloth} $boxSize="s" $work="cloth" $wear={true} $type={cloth.type} $img={cloth.colorList[0].img} />
-                  </RowDiv>
-                );
-              })
+            ? clothList[selectedMenu].map(
+                (cloth: oneClothProps, index: number) => {
+                  return (
+                    <RowDiv key={cloth.clothId}>
+                      <PhotoBox
+                        $cloth={cloth}
+                        $boxSize="s"
+                        $work="cloth"
+                        $wear={true}
+                        $type={cloth.type}
+                        $img={cloth.colorList[0].img}
+                      />
+                    </RowDiv>
+                  );
+                },
+              )
             : null}
         </ListWrap>
       </ClothWrap>

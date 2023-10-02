@@ -18,6 +18,7 @@ import {
   selectedClothAtom,
   selectedCodyAtom,
   showPhotoAtom,
+  wantKidRefreshAtom,
   wearArrayAtom,
 } from '../../../recolil/atom';
 import dumCodyJson from '../../../data/dum_cody.json';
@@ -27,14 +28,9 @@ export const CanvasWrapper = () => {
   const themeApp = useTheme();
   const [selectedCloth, setSelectedCloth] = useRecoilState(selectedClothAtom);
   const [childrenInfo, setChildrenInfo] = useRecoilState(childrenInfoAtom);
-  const [codyJsonList, setCodyJsonList] = useState<any>(dumCodyJson);
+  // const [codyJsonList, setCodyJsonList] = useState<any>(dumCodyJson);
   const [selectedCody, setSelectedCody] = useRecoilState(selectedCodyAtom);
   const [getCapture, setGetCapture] = useRecoilState(getCaptureAtom);
-
-  const getTexture = (img: any) => {
-    const texture: any = useLoader(THREE.TextureLoader, img);
-    return texture;
-  };
 
   const girlTexture = useLoader(THREE.TextureLoader, 'img/여샘플.png');
   const boyTexture = useLoader(THREE.TextureLoader, 'img/남샘플.png');
@@ -42,6 +38,8 @@ export const CanvasWrapper = () => {
     new THREE.Vector3(0, 0, 0),
   );
   const [wearArray, setWearArray] = useRecoilState(wearArrayAtom);
+  const [wantKidRefresh, setWantKidRefresh] =
+    useRecoilState(wantKidRefreshAtom);
   const [bodyTexture, setBodyTexture] = useState<any>(girlTexture);
   const [bodyScale, setBodyScale] = useState<[number, number]>([2.1, 7]);
   const canvasRef = React.useRef<any>(null);
@@ -58,39 +56,38 @@ export const CanvasWrapper = () => {
     setSelectedCloth('');
   };
 
-  useEffect(() => {
-    if (childrenInfo.gender === '여') {
-      setBodyScale([
-        (childrenInfo.weight / 24) * 2.1,
-        (childrenInfo.height / 130) * 7,
-      ]);
-      if (childrenInfo.img?.name !== '') {
-        console.log(childrenInfo.img);
-        // const fileTexture = useLoader(THREE.TextureLoader, childrenInfo.img);
-        // setBodyTexture(fileTexture);
-      } else setBodyTexture(girlTexture);
-    } else {
-      setBodyScale([
-        (childrenInfo.weight / 24) * 2.1,
-        (childrenInfo.height / 130) * 7,
-      ]);
-      if (childrenInfo.img?.name !== '') {
-        // const fileTexture = useLoader(THREE.TextureLoader, childrenInfo.img);
-        // setBodyTexture(fileTexture);
-      } else setBodyTexture(boyTexture);
-    }
-  }, [childrenInfo]);
+  const getTexture = (img: any) => {
+    const texture: any = useLoader(THREE.TextureLoader, img);
+    return texture;
+  };
 
-  // useEffect(() => {
-  //   if (selectedCody !== '' && codyJsonList) {
-  //     codyJsonList.list.forEach((val: any) => {
-  //       if (val.codyId === selectedCody) {
-  //         setWearArray(val.cody);
-  //         setChildrenInfo({ img: null, gender: val.gender, age: val.age, height: val.height, weight: val.weight });
-  //       }
-  //     });
-  //   }
-  // }, [codyJsonList, selectedCody]);
+  useEffect(() => {
+    const loadTexture = async () => {
+      setBodyScale([
+        (childrenInfo.weight / 24) * 2.1,
+        (childrenInfo.height / 130) * 7,
+      ]);
+      if (childrenInfo.img !== '') {
+        try {
+          const texture = await new Promise((resolve, reject) => {
+            const loader = new THREE.TextureLoader();
+            loader.load(childrenInfo.img, resolve, undefined, reject);
+          });
+          setBodyTexture(texture);
+        } catch (error) {
+          // console.error('Failed to load texture:', error);
+          // 에러 처리 로직 추가
+        }
+      } else {
+        if (childrenInfo.gender === '여') {
+          setBodyTexture(girlTexture);
+        } else {
+          setBodyTexture(boyTexture);
+        }
+      }
+    };
+    loadTexture();
+  }, [childrenInfo.img, childrenInfo]);
 
   const handleCapture = () => {
     if (canvasRef.current) {
