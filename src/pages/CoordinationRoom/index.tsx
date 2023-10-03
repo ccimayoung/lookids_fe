@@ -26,7 +26,11 @@ import {
 import { ClothPropertyModal } from '../../components/Modal/ClothPropertyModal';
 import html2canvas from 'html2canvas';
 import { useMutation } from '@tanstack/react-query';
-import { closetClothListApi, getKidInfoApi } from '../../apis/closet';
+import {
+  closetClothListApi,
+  getCodyApi,
+  getKidInfoApi,
+} from '../../apis/closet';
 
 export default function CoordinationRoom() {
   const [selectedMenu, setSelectedMenu] = useState<string>('topList');
@@ -40,6 +44,27 @@ export default function CoordinationRoom() {
   );
   const [wantKidRefresh, setWantKidRefresh] =
     useRecoilState(wantKidRefreshAtom);
+
+  const codyListCumm = useMutation(() => getCodyApi(), {
+    onSuccess: (res: any) => {
+      console.log(res);
+      if (res.data) {
+        const data = res.data;
+        if (data.codeList?.length > 0) {
+          const newList: any[] = [];
+          data.codeList.forEach((val: any) => {
+            newList.push(val.codyImg);
+          });
+          setShowPhoto(newList);
+        }
+      }
+    },
+    onError: (err: any) => {
+      console.log(err);
+    },
+  });
+
+  //todo : 튜토리얼
 
   const clothListCumm = useMutation(() => closetClothListApi(), {
     onSuccess: (res: any) => {
@@ -76,6 +101,7 @@ export default function CoordinationRoom() {
   useEffect(() => {
     clothListCumm.mutate();
     kidInfoCumm.mutate();
+    codyListCumm.mutate();
   }, []);
 
   useEffect(() => {
@@ -143,7 +169,7 @@ export default function CoordinationRoom() {
         <CodyWrap>
           {showPhoto.length > 0 ? (
             <>
-              {showPhoto.map((val: any, index: number) => {
+              {[...showPhoto].reverse().map((val: any, index: number) => {
                 return (
                   <PhotoBox
                     key={index}

@@ -174,33 +174,30 @@ export const ChildrenInfoModal = () => {
 
   function b64toBlob(b64Data: any, contentType = '', sliceSize = 512) {
     const image_data = atob(b64Data.split(',')[1]); // data:image/gif;base64 필요없으니 떼주고, base64 인코딩을 풀어준다
-
     const arraybuffer = new ArrayBuffer(image_data.length);
     const view = new Uint8Array(arraybuffer);
-
     for (let i = 0; i < image_data.length; i++) {
       view[i] = image_data.charCodeAt(i) & 0xff;
       // charCodeAt() 메서드는 주어진 인덱스에 대한 UTF-16 코드를 나타내는 0부터 65535 사이의 정수를 반환
       // 비트연산자 & 와 0xff(255) 값은 숫자를 양수로 표현하기 위한 설정
     }
-
     return new Blob([arraybuffer], { type: contentType });
   }
 
-  const finishFunc = () => {
-    setTimeout(() => {
-      const canvas = canvasRef.current;
-      const dataURL = canvas.toDataURL('image/png');
-      const a = document.createElement('a');
-      a.href = dataURL;
-      a.download = 'merged_image.png';
-      a.click();
-      setModalGather({
-        ...modalGather,
-        closetBody: false,
-      });
-    }, 100);
-  };
+  // const finishFunc = () => {
+  //   setTimeout(() => {
+  //     const canvas = canvasRef.current;
+  //     const dataURL = canvas.toDataURL('image/png');
+  //     const a = document.createElement('a');
+  //     a.href = dataURL;
+  //     a.download = 'merged_image.png';
+  //     a.click();
+  //     setModalGather({
+  //       ...modalGather,
+  //       closetBody: false,
+  //     });
+  //   }, 100);
+  // };
 
   const CreateKidInfoCumm = useMutation(
     (params: FormData) => postKidInfoApi(params),
@@ -212,18 +209,15 @@ export const ChildrenInfoModal = () => {
 
   const CreateKidInfo = async () => {
     const formData = new FormData();
-
     try {
       const canvas = canvasRef.current;
       const dataURL = canvas.toDataURL('image/png');
       const contentType = 'image/png';
-
       const blob = b64toBlob(dataURL, contentType); // base64 -> blob
       formData.append('img', blob);
     } catch (error) {
       console.error('변환 중 오류 발생:', error);
     }
-
     const req = {
       age: childrenInfo.age,
       sex: childrenInfo.gender === '남' ? 'BOY' : 'GIRL',
@@ -231,7 +225,6 @@ export const ChildrenInfoModal = () => {
       weight: childrenInfo.weight,
     };
     const json = JSON.stringify(req);
-
     formData.append('req', json);
     try {
       await CreateKidInfoCumm.mutate(formData);
@@ -242,7 +235,6 @@ export const ChildrenInfoModal = () => {
       }
     }
     setWantKidRefresh(true);
-
     setTimeout(() => {
       setModalGather({
         ...modalGather,

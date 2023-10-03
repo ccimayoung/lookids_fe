@@ -23,6 +23,8 @@ import {
 } from '../../../recolil/atom';
 import dumCodyJson from '../../../data/dum_cody.json';
 import html2canvas from 'html2canvas';
+import { postCodyApi } from '../../../apis/closet';
+import { useMutation } from '@tanstack/react-query';
 
 export const CanvasWrapper = () => {
   const themeApp = useTheme();
@@ -89,6 +91,18 @@ export const CanvasWrapper = () => {
     loadTexture();
   }, [childrenInfo.img, childrenInfo]);
 
+  function b64toBlob(b64Data: any, contentType = '', sliceSize = 512) {
+    const image_data = atob(b64Data.split(',')[1]); // data:image/gif;base64 필요없으니 떼주고, base64 인코딩을 풀어준다
+    const arraybuffer = new ArrayBuffer(image_data.length);
+    const view = new Uint8Array(arraybuffer);
+    for (let i = 0; i < image_data.length; i++) {
+      view[i] = image_data.charCodeAt(i) & 0xff;
+      // charCodeAt() 메서드는 주어진 인덱스에 대한 UTF-16 코드를 나타내는 0부터 65535 사이의 정수를 반환
+      // 비트연산자 & 와 0xff(255) 값은 숫자를 양수로 표현하기 위한 설정
+    }
+    return new Blob([arraybuffer], { type: contentType });
+  }
+
   const handleCapture = () => {
     if (canvasRef.current) {
       // Canvas 컴포넌트의 렌더링이 완료된 후에 스크린샷을 찍도록 비동기로 처리
@@ -98,17 +112,47 @@ export const CanvasWrapper = () => {
         // Canvas 컴포넌트를 html2canvas를 사용하여 스크린샷으로 변환
         html2canvas(canvasToCapture, {
           useCORS: true, // CORS 이슈가 있는 경우 true로 설정
-        }).then((canvas) => {
+        }).then(async (canvas) => {
           // 스크린샷을 이미지로 변환
           const imageDataURL = canvas.toDataURL('image/png');
+          const contentType = 'image/png';
+          const blob = b64toBlob(imageDataURL, contentType);
+          const formData = new FormData();
+          formData.append('bodyImg', blob);
+          formData.append('codyImg', blob);
+          const req = {
+            age: childrenInfo.age,
+            gender: childrenInfo.gender === '남' ? 'BOY' : 'GIRL',
+            cody: [],
+          };
+          const json = JSON.stringify(req);
+          formData.append('req', json);
+          try {
+            await CreateCodyCumm.mutate(formData);
+          } catch (error: unknown) {
+            if (error instanceof Error) {
+              console.error(error.message);
+              alert(error.message.toString());
+            }
+          }
+          // setWantKidRefresh(true);
           const newArray = [...showPhoto];
           newArray.push(imageDataURL);
           setShowPhoto(newArray);
+          // 백엔드 get 안되서 임의저장
           setGetCapture(false);
         });
       }, 1000);
     }
   };
+
+  const CreateCodyCumm = useMutation(
+    (params: FormData) => postCodyApi(params),
+    {
+      onSuccess: (res: any) => {},
+      onError: (err: any) => {},
+    },
+  );
 
   useEffect(() => {
     if (getCapture) {

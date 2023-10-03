@@ -18,3 +18,15 @@ export const getKidInfoApi = () => {
   // console.log(params);
   return axios.get(`${base}/closet/kid-info`);
 };
+
+// 내 코디 불러오기
+export const getCodyApi = () => {
+  // console.log(params);
+  return axios.get(`${base}/closet/my-style`);
+};
+
+// 내 코디 저장하기
+export const postCodyApi = (params: FormData) => {
+  console.log(params);
+  return axios.post(`${base}/closet/my-style`, params);
+};
