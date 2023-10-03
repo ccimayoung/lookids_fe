@@ -6,6 +6,7 @@ import { GrayCircle, MenuBtn } from '../../components/MenuBtn';
 import { ReactComponent as CartSvg } from '../../assets/svg/cart.svg';
 import { ReactComponent as BodySvg } from '../../assets/svg/body.svg';
 import { ReactComponent as QuestionSvg } from '../../assets/svg/question.svg';
+import { ReactComponent as RefreshSvg } from '../../assets/svg/refresh.svg';
 import { ReactComponent as SaveSvg } from '../../assets/svg/save.svg';
 import { useRecoilState } from 'recoil';
 import {
@@ -31,6 +32,7 @@ import {
   getCodyApi,
   getKidInfoApi,
 } from '../../apis/closet';
+import { CodyExplainModal } from '../../components/Modal/CodyExplainModal';
 
 export default function CoordinationRoom() {
   const [selectedMenu, setSelectedMenu] = useState<string>('topList');
@@ -42,6 +44,7 @@ export default function CoordinationRoom() {
   const [clothList, setClothList] = useState<clothCategoryListProps | any>(
     null,
   );
+  const [wearArray, setWearArray] = useRecoilState(wearArrayAtom);
   const [wantKidRefresh, setWantKidRefresh] =
     useRecoilState(wantKidRefreshAtom);
 
@@ -120,7 +123,7 @@ export default function CoordinationRoom() {
         <SettingBtnWrap>
           <Circle
             onClick={() =>
-              setModalGather({ ...modalGather, closetQuestion: true })
+              setModalGather({ ...modalGather, codyExplain: true })
             }
           >
             <QuestionSvg />
@@ -129,6 +132,9 @@ export default function CoordinationRoom() {
             onClick={() => setModalGather({ ...modalGather, closetBody: true })}
           >
             <BodySvg />
+          </Circle>
+          <Circle onClick={() => setWearArray([])}>
+            <RefreshSvg />
           </Circle>
           <Circle
             onClick={() => {
@@ -278,6 +284,7 @@ export default function CoordinationRoom() {
         </ListWrap>
       </ClothWrap>
       <ChildrenInfoModal />
+      <CodyExplainModal />
       {clothList && clothList[selectedMenu]?.length > 0 ? (
         <>
           <ClothPropertyModal clothList={clothList[selectedMenu]} />

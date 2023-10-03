@@ -43,18 +43,18 @@ export const hoveredClothAtom = atom<string>({
 });
 
 export interface modalGatherProps {
-  closetQuestion: boolean;
   closetBody: boolean;
   closetCart: boolean;
   clothProperty: boolean;
+  codyExplain: boolean;
 }
 export const modalGatherAtom = atom<modalGatherProps>({
   key: 'modalGatherAtom',
   default: {
-    closetQuestion: false,
     closetBody: false,
     closetCart: false,
     clothProperty: false,
+    codyExplain: false,
   },
 });
 

@@ -21,10 +21,16 @@ export const SimplePopup = () => {
           <ModalBox onClick={(e) => e.stopPropagation()}>
             <ContentBox>
               {simpleModal.content.map((v: string[], index: number) => {
-                return <ContentFont key={index}>{v[0] === 'span' ? <span>{v[1]}</span> : v[1]}</ContentFont>;
+                return (
+                  <ContentFont key={index}>
+                    {v[0] === 'span' ? <span>{v[1]}</span> : v[1]}
+                  </ContentFont>
+                );
               })}
             </ContentBox>
-            <ModalBtn onClick={simpleModal.onClick}>{simpleModal.btnContent}</ModalBtn>
+            <ModalBtn onClick={simpleModal.onClick}>
+              {simpleModal.btnContent}
+            </ModalBtn>
           </ModalBox>
         </Wrap>
       )}
@@ -68,11 +74,12 @@ const ContentBox = styled.div`
   margin-top: 30px;
 `;
 
-const ContentFont = styled.p`
+export const ContentFont = styled.p`
   white-space: pre-line;
   font-size: 14px;
   text-align: center;
   color: ${({ theme }) => theme.colors.neutral[4]};
+  line-height: 18px;
   /* background-color: pink; */
 
   & > span:nth-of-type(1) {

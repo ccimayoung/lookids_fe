@@ -10,7 +10,7 @@ import {
 import { ReactComponent as YellowArrow } from '../../assets/svg/yellowArrow.svg';
 import { ReactComponent as PlusSvg } from '../../assets/svg/plus.svg';
 import { ReactComponent as MinusSvg } from '../../assets/svg/minus.svg';
-import { ModalBtn } from './SimplePopup';
+import { ContentFont, ModalBtn } from './SimplePopup';
 import { TitleAndContent } from '../TitleAndContent';
 import { TitleAndSelectBox } from '../TitleAndSelectBox';
 import { RowDiv } from '../../pages/CoordinationRoom';
@@ -36,16 +36,20 @@ export const ChildrenInfoModal = () => {
   const [page, setPage] = useState<number>(1);
   const [wantKidRefresh, setWantKidRefresh] =
     useRecoilState(wantKidRefreshAtom);
+  const [baseImg, setBaseImg] = useState<any>(null);
+  const [dragging, setDragging] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const imageInput = useRef<any>(null);
+  const [images, setImages] = useState<any[]>([]);
+  const canvasRef = useRef<any>(null);
+  const [faceScale, setFaceScale] = useState<number>(0.5);
 
   const onCrop = () => {
     const imageElement = cropperRef?.current;
     const cropper = imageElement?.cropper;
     setCroppedImage(cropper.getCroppedCanvas().toDataURL());
   };
-
-  const [images, setImages] = useState<any[]>([]);
-  const canvasRef = useRef<any>(null);
-  const [faceScale, setFaceScale] = useState<number>(0.5);
 
   const handleImageUpload = () => {
     const acceptedFiles = [croppedImage, 'img/여샘플.png'];
@@ -54,11 +58,6 @@ export const ChildrenInfoModal = () => {
     setImages([...images, ...acceptedFiles]);
   };
 
-  const [baseImg, setBaseImg] = useState<any>(null);
-  const [dragging, setDragging] = useState(false);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
-  const imageInput = useRef<any>(null);
   const onCickImageUpload = () => {
     imageInput.current.click();
   };
@@ -143,12 +142,14 @@ export const ChildrenInfoModal = () => {
   };
 
   const handleMouseDown = (e: any) => {
-    setDragging(true);
-    setPosition({ x: e.clientX - 45, y: e.clientY });
+    if (croppedImage) {
+      setDragging(true);
+      setPosition({ x: e.clientX - 45, y: e.clientY });
+    }
   };
 
   const handleMouseMove = (e: any) => {
-    if (dragging) {
+    if (dragging && croppedImage) {
       setOffset({ x: e.clientX - position.x, y: e.clientY - position.y });
       move(baseImg);
     }
@@ -244,7 +245,7 @@ export const ChildrenInfoModal = () => {
   };
 
   useEffect(() => {
-    if (baseImg && faceScale) {
+    if (baseImg && faceScale && croppedImage) {
       move(baseImg);
     }
   }, [faceScale]);
@@ -261,6 +262,7 @@ export const ChildrenInfoModal = () => {
     setCroppedImage(null);
     setBaseImg(null);
     setPage(1);
+    setFaceScale(0.5);
     return () => {
       setInputImage(null);
       setImages([]);
@@ -322,6 +324,12 @@ export const ChildrenInfoModal = () => {
                     <CropImage src={croppedImage} />
                   </PhotoBox>
                 </RowDiv>
+                <ContentFont
+                  style={{ fontSize: '12px', margin: '-10px 0 20px 0' }}
+                >
+                  {`얼굴 합성은 pc에서 가능합니다.
+                  합성이 필요 없다면 사진은 스킵 해주세요!`}
+                </ContentFont>
                 <RowDiv $cGap="10px" ref={firstRef}>
                   <TitleAndSelectBox
                     $title="성별"
@@ -339,7 +347,7 @@ export const ChildrenInfoModal = () => {
                 </RowDiv>
                 <RowDiv
                   $cGap="10px"
-                  style={{ marginTop: '10px' }}
+                  style={{ marginTop: '15px' }}
                   ref={secondRef}
                 >
                   <TitleAndContent
@@ -363,25 +371,28 @@ export const ChildrenInfoModal = () => {
               <>
                 <canvas
                   ref={canvasRef}
-                  width={180} // 캔버스 크기를 조절하세요
+                  width={180}
                   height={400}
                   style={{ border: '1px solid black' }}
                   onMouseDown={handleMouseDown}
                   onMouseMove={handleMouseMove}
                   onMouseUp={handleMouseUp}
                 />
-                <RowDiv
-                  $cGap="5px"
-                  style={{ width: '170px', marginTop: '15px' }}
-                >
-                  얼굴 크기 조절
-                  <GrayCircle onClick={() => setFaceScale(faceScale * 1.1)}>
-                    <PlusSvg />
-                  </GrayCircle>
-                  <GrayCircle onClick={() => setFaceScale(faceScale * 0.9)}>
-                    <MinusSvg />
-                  </GrayCircle>
-                </RowDiv>
+                {croppedImage && (
+                  <RowDiv
+                    $cGap="5px"
+                    style={{ width: '170px', marginTop: '15px' }}
+                  >
+                    얼굴 크기 조절
+                    <GrayCircle onClick={() => setFaceScale(faceScale * 1.1)}>
+                      <PlusSvg />
+                    </GrayCircle>
+                    <GrayCircle onClick={() => setFaceScale(faceScale * 0.9)}>
+                      <MinusSvg />
+                    </GrayCircle>
+                  </RowDiv>
+                )}
+
                 <RowDiv
                   $cGap="20px"
                   style={{ width: '180px', marginTop: '-15px' }}
@@ -390,7 +401,12 @@ export const ChildrenInfoModal = () => {
                     style={{ width: '80px' }}
                     className="secondBtn"
                     onClick={() => {
+                      setInputImage(null);
+                      setImages([]);
+                      setCroppedImage(null);
+                      setBaseImg(null);
                       setPage(1);
+                      setFaceScale(0.5);
                     }}
                   >
                     이전

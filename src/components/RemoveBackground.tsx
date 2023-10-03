@@ -1,4 +1,11 @@
-import React, { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import removeBackground from '@imgly/background-removal';
 import styled, { useTheme } from 'styled-components';
 import { useDropzone } from 'react-dropzone';
@@ -8,7 +15,15 @@ import { RowDiv } from '../pages/CoordinationRoom';
 import { Cropper } from 'react-cropper';
 import { MenuBtn } from './MenuBtn';
 
-export const RemoveBackground = ({isLoading ,setIsLoading} : {isLoading?:boolean|undefined; setIsLoading?:Dispatch<SetStateAction<boolean>>}) => {
+export const RemoveBackground = ({
+  isLoading,
+  setIsLoading,
+  setRemoveBgImg,
+}: {
+  isLoading?: boolean | undefined;
+  setIsLoading?: Dispatch<SetStateAction<boolean>>;
+  setRemoveBgImg?: any;
+}) => {
   const themeApp = useTheme();
   const [inputImage, setInputImage] = useState<any>(null);
   const [croppedOutputImage, setCroppedOutputImage] = useState<any>(null);
@@ -34,19 +49,18 @@ export const RemoveBackground = ({isLoading ,setIsLoading} : {isLoading?:boolean
 
   const handleRemoveImg = async (event: any) => {
     // URL 형태의 이미지를 처리하고 배경 제거
-    if(setIsLoading)
-      setIsLoading(true);
+    if (setIsLoading) setIsLoading(true);
     try {
       const blob = await removeBackground(croppedOutputImage);
       const blobUrl = URL.createObjectURL(blob);
-
+      console.log(blob, blobUrl);
       // 결과 이미지를 state에 저장
       setBgOutputImage(blobUrl);
+      setRemoveBgImg(blob);
     } catch (error) {
       console.error('Error removing background:', error);
-    }finally{
-      if(setIsLoading)
-        setIsLoading(false);
+    } finally {
+      if (setIsLoading) setIsLoading(false);
     }
   };
 
@@ -57,12 +71,21 @@ export const RemoveBackground = ({isLoading ,setIsLoading} : {isLoading?:boolean
   const onCickImageUpload = () => {
     imageInput.current.click();
   };
-  
+
   return (
     <>
-      <RowDiv $cGap="7px" style={{ justifyContent: 'left', alignItems: 'flex-start' }}>
+      <RowDiv
+        $cGap="7px"
+        style={{ justifyContent: 'left', alignItems: 'flex-start' }}
+      >
         <ImageUploadButtonBox>
-          <input type="file" accept="image/*" ref={imageInput} onChange={handleImageUpload} style={{ display: 'none' }} />
+          <input
+            type="file"
+            accept="image/*"
+            ref={imageInput}
+            onChange={handleImageUpload}
+            style={{ display: 'none' }}
+          />
           <ImageUploadButton height="50px" onClick={onCickImageUpload}>
             <ExplanationSvg />
           </ImageUploadButton>
@@ -78,9 +101,17 @@ export const RemoveBackground = ({isLoading ,setIsLoading} : {isLoading?:boolean
               {inputImage && (
                 <>
                   <BeforePhotoBox>
-                    <Cropper src={inputImage} crop={onCrop} ref={cropperRef} scaleX={0.9} scaleY={0.9} />
+                    <Cropper
+                      src={inputImage}
+                      crop={onCrop}
+                      ref={cropperRef}
+                      scaleX={0.9}
+                      scaleY={0.9}
+                    />
                   </BeforePhotoBox>
-                  <BeforePhotoBox style={{ backgroundColor: themeApp.colors.brown[2] }}>
+                  <BeforePhotoBox
+                    style={{ backgroundColor: themeApp.colors.brown[2] }}
+                  >
                     <CropImage src={croppedOutputImage} />
                   </BeforePhotoBox>
                 </>
@@ -97,7 +128,12 @@ export const RemoveBackground = ({isLoading ,setIsLoading} : {isLoading?:boolean
               <>
                 <YellowArrow className="arrow" />
                 <AfterPhotoBox>
-                  <img src={bgOutputImage} alt="crop" width={277} height={277} />
+                  <img
+                    src={bgOutputImage}
+                    alt="crop"
+                    width={277}
+                    height={277}
+                  />
                 </AfterPhotoBox>
                 <Btn onClick={handleFinish}>완료</Btn>
               </>
